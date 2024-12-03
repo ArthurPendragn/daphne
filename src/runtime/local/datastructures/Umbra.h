@@ -8,6 +8,7 @@
 #include <cstring>
 #include <cassert>
 #include <cstddef>
+#include <cstdint>
 #include <functional>
 
 /**
@@ -270,6 +271,11 @@ public:
         return !(*this < str) && *this != str;
     }
 
+    // TODO is this necessary?
+    operator std::string() const {
+    return this->to_string();
+    }
+
     // Concatenation Operation with other Umbra Strings.
     Umbra_t operator+(const Umbra_t &other) const
     {
@@ -328,6 +334,45 @@ public:
     size_t size() const
     {
         return length;
+    }
+
+    // Method to check if string is stored in long format
+    bool is_long() const {
+    return length > 12;
+    }
+
+    // TODO implement this method in all other methods where if/else is used to check for length
+    const char* get() const {
+        if (is_long()) {
+            return long_str.ptr;
+        }
+        return short_str;
+    }
+
+    // Method to set the String. Check for better implementation
+    void set(const char *str) {
+        size_t len = std::strlen(str);
+
+         if (len > UINT32_MAX) {
+            throw std::length_error("String length exceeds maximum allowed");
+        }
+        
+        if (is_long()) {
+            delete[] long_str.ptr; // Clean up old string if previously long
+        }
+
+        length = static_cast<uint32_t>(len);
+
+        if (length <= 12) {
+            std::memcpy(short_str, str, length);
+            std::fill(short_str + length, short_str + 12, '\0');
+            
+        } else {
+            std::memcpy(long_str.prefix, str, 4);
+            long_str.ptr = new char[length + 1];
+            std::memcpy(long_str.ptr, str, length);
+            long_str.ptr[length] = '\0';
+        }
     }
 
     std::string to_string() const

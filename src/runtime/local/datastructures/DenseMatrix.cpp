@@ -344,3 +344,4 @@ template class DenseMatrix<unsigned long>;
 template class DenseMatrix<bool>;
 template class DenseMatrix<std::string>;
 template class DenseMatrix<FixedStr16>;
+template class DenseMatrix<Umbra_t>;

@@ -170,6 +170,13 @@ template <typename VT> struct OneHot<DenseMatrix<VT>, DenseMatrix<FixedStr16>> {
     }
 };
 
+template <typename VT> struct OneHot<DenseMatrix<VT>, DenseMatrix<Umbra_t>> {
+    static void apply(DenseMatrix<VT> *&res, const DenseMatrix<Umbra_t> *arg, const DenseMatrix<int64_t> *info,
+                      DCTX(ctx)) {
+        oneHotString<VT, Umbra_t>(res, arg, info, ctx);
+    }
+};
+
 // ----------------------------------------------------------------------------
 // Matrix <- Matrix
 // ----------------------------------------------------------------------------
