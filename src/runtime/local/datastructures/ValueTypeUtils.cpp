@@ -97,6 +97,7 @@ template <> const ValueTypeCode ValueTypeUtils::codeFor<float> = ValueTypeCode::
 template <> const ValueTypeCode ValueTypeUtils::codeFor<double> = ValueTypeCode::F64;
 template <> const ValueTypeCode ValueTypeUtils::codeFor<std::string> = ValueTypeCode::STR;
 template <> const ValueTypeCode ValueTypeUtils::codeFor<FixedStr16> = ValueTypeCode::FIXEDSTR16;
+template <> const ValueTypeCode ValueTypeUtils::codeFor<Umbra_t> = ValueTypeCode::UMBRA;
 
 template <> const std::string ValueTypeUtils::cppNameFor<int8_t> = "int8_t";
 template <> const std::string ValueTypeUtils::cppNameFor<int32_t> = "int32_t";
@@ -110,6 +111,7 @@ template <> const std::string ValueTypeUtils::cppNameFor<bool> = "bool";
 template <> const std::string ValueTypeUtils::cppNameFor<const char *> = "const char*";
 template <> const std::string ValueTypeUtils::cppNameFor<std::string> = "std::string";
 template <> const std::string ValueTypeUtils::cppNameFor<FixedStr16> = "FixedStr";
+template <> const std::string ValueTypeUtils::cppNameFor<Umbra_t> = "Umbra";
 
 template <> const std::string ValueTypeUtils::irNameFor<int8_t> = "si8";
 template <> const std::string ValueTypeUtils::irNameFor<int32_t> = "si32";
@@ -132,6 +134,7 @@ template <> const bool ValueTypeUtils::defaultValue<bool> = false;
 template <> const char *ValueTypeUtils::defaultValue<const char *> = "";
 template <> const std::string ValueTypeUtils::defaultValue<std::string> = std::string("");
 template <> const FixedStr16 ValueTypeUtils::defaultValue<FixedStr16> = FixedStr16();
+template <> const Umbra_t ValueTypeUtils::defaultValue<Umbra_t> = Umbra_t();
 
 const std::string ValueTypeUtils::cppNameForCode(ValueTypeCode type) {
     switch (type) {
