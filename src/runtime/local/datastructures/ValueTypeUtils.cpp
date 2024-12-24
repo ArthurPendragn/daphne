@@ -46,6 +46,8 @@ size_t ValueTypeUtils::sizeOf(ValueTypeCode type) {
         return sizeof(std::string);
     case ValueTypeCode::FIXEDSTR16:
         return sizeof(FixedStr16);
+    case ValueTypeCode::UMBRA:
+        return sizeof(Umbra_t);
     default:
         throw std::runtime_error("ValueTypeUtils::sizeOf: unknown value type code");
     }
@@ -81,6 +83,9 @@ void ValueTypeUtils::printValue(std::ostream &os, ValueTypeCode type, const void
         break;
     case ValueTypeCode::STR:
         os << reinterpret_cast<const std::string *>(array)[pos];
+        break;
+    case ValueTypeCode::UMBRA:
+        os << reinterpret_cast<const Umbra_t *>(array)[pos];
         break;
     default:
         throw std::runtime_error("ValueTypeUtils::printValue: unknown value type code");
@@ -156,6 +161,8 @@ const std::string ValueTypeUtils::cppNameForCode(ValueTypeCode type) {
         return cppNameFor<double>;
     case ValueTypeCode::STR:
         return cppNameFor<std::string>;
+    case ValueTypeCode::UMBRA:
+        return cppNameFor<Umbra_t>;
     default:
         throw std::runtime_error("ValueTypeUtils::cppNameForCode: unknown value type code");
     }

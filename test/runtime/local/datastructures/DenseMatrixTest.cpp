@@ -228,15 +228,33 @@ TEMPLATE_TEST_CASE("DenseMatrix with string value type", TAG_DATASTRUCTURES, ALL
         const size_t numCols = 4;
 
         DenseMatrix<ValueType> *m = DataObjectFactory::create<DenseMatrix<ValueType>>(numRows, numCols, false);
-        expectedStrings exp = {ValueType("0"),  ValueType(""), ValueType(""), ValueType("3"),
-                               ValueType("10"), ValueType(""), ValueType(""), ValueType("13"),
-                               ValueType("20"), ValueType(""), ValueType(""), ValueType("23")};
+        expectedStrings exp = {ValueType("0"),
+                               ValueType("abcdefghijklm"),
+                               ValueType("abcdefghijklmnopqrstuvwxyz"),
+                               ValueType("3"),
+                               ValueType("10"),
+                               ValueType("abcdefghijkl"),
+                               ValueType(""),
+                               ValueType("13"),
+                               ValueType("20"),
+                               ValueType(""),
+                               ValueType(""),
+                               ValueType("23")};
         m->prepareAppend();
 
-        for (size_t r = 0; r < numRows; r++)
-            for (size_t c = 0; c < numCols; c++)
-                if (c % 3 == 0)
-                    m->append(r, c, ValueType(std::to_string(r * 10 + c).c_str()));
+        for (size_t r = 0; r < numRows; r++) {
+            for (size_t c = 0; c < numCols; c++) {
+                if (c % 3 == 0) {
+                    m->append(r, c, ValueType(std::to_string(r * 10 + c)).c_str());
+                } else if (c == 1 && r == 0) {
+                    m->append(r, c, ValueType("abcdefghijklm"));
+                } else if (c == 2 && r == 0) {
+                    m->append(r, c, ValueType("abcdefghijklmnopqrstuvwxyz"));
+                } else if (c == 1 && r == 1) {
+                    m->append(r, c, ValueType("abcdefghijkl"));
+                }
+            }
+        }
 
         m->finishAppend();
 
@@ -248,13 +266,15 @@ TEMPLATE_TEST_CASE("DenseMatrix with string value type", TAG_DATASTRUCTURES, ALL
     SECTION("Set") {
         const size_t numRows = 3;
         const size_t numCols = 4;
-        expectedStrings exp1 = {ValueType(""), ValueType("1"),  ValueType(""), ValueType("3"),
-                                ValueType(""), ValueType("11"), ValueType(""), ValueType("13"),
-                                ValueType(""), ValueType("21"), ValueType(""), ValueType("23")};
+        expectedStrings exp1 = {
+            ValueType("abcdefghijklm"), ValueType("1"),  ValueType("abcdefghijklm"), ValueType("3"),
+            ValueType("abcdefghijklm"), ValueType("11"), ValueType("abcdefghijklm"), ValueType("13"),
+            ValueType("abcdefghijklm"), ValueType("21"), ValueType("abcdefghijklm"), ValueType("23")};
 
-        expectedStrings exp2 = {ValueType("0"),  ValueType("1"),  ValueType("2"),  ValueType("3"),
-                                ValueType("10"), ValueType("11"), ValueType("12"), ValueType("13"),
-                                ValueType("20"), ValueType("21"), ValueType("22"), ValueType("23")};
+        expectedStrings exp2 = {ValueType("abcdefghijklm"), ValueType("abcdefghijkl"),  ValueType("abcdefghijklm"),
+                                ValueType("abcdefghijkl"),  ValueType("abcdefghijklm"), ValueType("abcdefghijkl"),
+                                ValueType("abcdefghijklm"), ValueType("abcdefghijkl"),  ValueType("abcdefghijklm"),
+                                ValueType("abcdefghijkl"),  ValueType("abcdefghijklm"), ValueType("abcdefghijkl")};
         DenseMatrix<ValueType> *m = DataObjectFactory::create<DenseMatrix<ValueType>>(numRows, numCols, false);
 
         for (size_t r = 0; r < numRows; r++)
@@ -262,6 +282,8 @@ TEMPLATE_TEST_CASE("DenseMatrix with string value type", TAG_DATASTRUCTURES, ALL
                 size_t num = r * 10 + c;
                 if (num % 2) {
                     m->set(r, c, ValueType(std::to_string(num).c_str()));
+                } else {
+                    m->set(r, c, ValueType("abcdefghijklm"));
                 }
             }
         CHECK(compareMatToArr(m, exp1));
@@ -271,6 +293,8 @@ TEMPLATE_TEST_CASE("DenseMatrix with string value type", TAG_DATASTRUCTURES, ALL
                 size_t num = r * 10 + c;
                 if (!(num % 2)) {
                     m->set(r, c, ValueType(std::to_string(num).c_str()));
+                } else {
+                    m->set(r, c, ValueType("abcdefghijkl"));
                 }
             }
         CHECK(compareMatToArr(m, exp2));
@@ -283,14 +307,14 @@ TEMPLATE_TEST_CASE("DenseMatrix with string value type", TAG_DATASTRUCTURES, ALL
         const size_t numCols = 4;
         expectedStrings exp1 = {ValueType("1"), ValueType("2"), ValueType("11"), "12"};
         expectedStrings exp2 = {ValueType("1"), ValueType("2"), ValueType("11"),
-                                ValueType(std::string(5, 'X').c_str())};
+                                ValueType(std::string(13, 'X').c_str())};
         expectedStrings exp3 = {ValueType("0"),
                                 ValueType("1"),
                                 ValueType("2"),
                                 ValueType("3"),
                                 ValueType("10"),
                                 ValueType("11"),
-                                ValueType(std::string(5, 'X').c_str()),
+                                ValueType(std::string(13, 'X').c_str()),
                                 ValueType("13"),
                                 ValueType("20"),
                                 ValueType("21"),
@@ -303,7 +327,7 @@ TEMPLATE_TEST_CASE("DenseMatrix with string value type", TAG_DATASTRUCTURES, ALL
         auto mView = DataObjectFactory::create<DenseMatrix<ValueType>>(m, 0, 2, 1, 3);
         CHECK(compareMatToArr(mView, exp1));
 
-        mView->set(1, 1, ValueType(std::string(5, 'X').c_str()));
+        mView->set(1, 1, ValueType(std::string(13, 'X').c_str()));
         CHECK(compareMatToArr(mView, exp2));
 
         CHECK(compareMatToArr(m, exp3));
