@@ -245,7 +245,7 @@ TEMPLATE_TEST_CASE("DenseMatrix with string value type", TAG_DATASTRUCTURES, ALL
         for (size_t r = 0; r < numRows; r++) {
             for (size_t c = 0; c < numCols; c++) {
                 if (c % 3 == 0) {
-                    m->append(r, c, ValueType(std::to_string(r * 10 + c)).c_str());
+                    m->append(r, c, ValueType(std::to_string(r * 10 + c).c_str()));
                 } else if (c == 1 && r == 0) {
                     m->append(r, c, ValueType("abcdefghijklm"));
                 } else if (c == 2 && r == 0) {
