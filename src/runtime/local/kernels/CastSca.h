@@ -127,25 +127,13 @@ template <typename VTRes> struct CastSca<VTRes, Umbra_t> {
     static VTRes apply(Umbra_t arg, DCTX(ctx)) {
         if constexpr (std::is_integral<VTRes>::value) {
             if constexpr (std::is_unsigned<VTRes>::value)
-                if (arg.length <= 12)
-                    return static_cast<VTRes>(std::stoull(arg.short_str));
-                else
-                    return static_cast<VTRes>(std::stoull(arg.long_str.ptr));
+                return static_cast<VTRes>(std::stoull(arg.to_string()));
             else
-                if (arg.length <= 12)
-                    return static_cast<VTRes>(std::stoll(arg.short_str));
-                else
-                    return static_cast<VTRes>(std::stoll(arg.long_str.ptr));
+                return static_cast<VTRes>(std::stoll(arg.to_string()));
         } else if constexpr (std::is_same<VTRes, double>::value)
-            if (arg.length <= 12)
-                return static_cast<VTRes>(std::stold(arg.short_str));
-            else
-                return static_cast<VTRes>(std::stold(arg.long_str.ptr));
+            return static_cast<VTRes>(std::stold(arg.to_string()));
         else if constexpr (std::is_same<VTRes, float>::value)
-            if (arg.length <= 12)
-                return static_cast<VTRes>(std::stof(arg.short_str));
-            else
-                return static_cast<VTRes>(std::stof(arg.long_str.ptr));
+            return static_cast<VTRes>(std::stof(arg.to_string()));
         else {
             // Trigger a compiler warning using deprecated attribute.
             return throwUnsupportedType(arg);
