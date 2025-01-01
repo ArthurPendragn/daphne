@@ -22,12 +22,12 @@ void StringTestEwBinaryMat(BinaryOpCode opCode, const DTArg *lhs, const DTArg *r
     DataObjectFactory::destroy(res);
 }
 
-template <BinaryOpCode opCode> void checkEwBinarySca(std::string lhs, std::string rhs, int64_t exp) {
+template <BinaryOpCode opCode> void StringTestEwBinarySca(std::string lhs, std::string rhs, int64_t exp) {
     CHECK(EwBinarySca<opCode, int64_t, std::string, std::string>::apply(lhs, rhs, nullptr) == exp);
     CHECK(ewBinarySca<int64_t, std::string, std::string>(opCode, lhs, rhs, nullptr) == exp);
 }
 
-template <BinaryOpCode opCode> void checkEwBinarySca(Umbra_t lhs, Umbra_t rhs, int64_t exp) {
+template <BinaryOpCode opCode> void StringTestEwBinarySca(Umbra_t lhs, Umbra_t rhs, int64_t exp) {
     CHECK(EwBinarySca<opCode, int64_t, Umbra_t, Umbra_t>::apply(lhs, rhs, nullptr) == exp);
     CHECK(ewBinarySca<int64_t, Umbra_t, Umbra_t>(opCode, lhs, rhs, nullptr) == exp);
 }
@@ -89,7 +89,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca"), TAG_IO, (DenseMatrix), (PARTIA
     readCsv(m, filename, numRows, numCols, delim);
 
     for (size_t r = 0; r < numRows - 1; ++r) {
-        CHECK(checkEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r + 1, 0), 0)); // Expect no duplicate rows
+        CHECK(StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r + 1, 0), 0)); // Expect no duplicate rows
     }
 
     DataObjectFactory::destroy(m);
