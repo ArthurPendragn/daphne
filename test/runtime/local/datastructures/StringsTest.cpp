@@ -92,5 +92,9 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca"), TAG_IO, (DenseMatrix), (PARTIA
         StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r + 1, 0), 0);
     }
 
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LE>(m->get(r, 0), m->get(r + 1, 0), 0);
+    }
+
     DataObjectFactory::destroy(m);
 }
