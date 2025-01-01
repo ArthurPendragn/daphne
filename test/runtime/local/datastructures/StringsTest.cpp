@@ -50,7 +50,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv"), TAG_IO, (DenseMatrix), (PARTIAL
     DataObjectFactory::destroy(m);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq"), TAG_KERNELS, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq- Mat"), TAG_KERNELS, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     using DTRes = DenseMatrix<int64_t>;
 
@@ -76,8 +76,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq"), TAG_KERNELS, (DenseMatrix), (PARTIAL
     DataObjectFactory::destroy(m2);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE("Element-wise Comparisons, Join, and Sort", TAG_IO, (DenseMatrix),
-                           (PARTIAL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca"), TAG_IO, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
 
@@ -94,5 +93,4 @@ TEMPLATE_PRODUCT_TEST_CASE("Element-wise Comparisons, Join, and Sort", TAG_IO, (
     }
 
     DataObjectFactory::destroy(m);
-    DataObjectFactory::destroy(joinedMatrix);
 }
