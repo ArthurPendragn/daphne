@@ -43,8 +43,8 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq"), TAG_KERNELS, (DenseMatrix), (ALL_STR
     char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
     char delim = ',';
 
-    readCsv(m, filename, numRows, numCols, delim);
-    readCsv(m, filename, numRows, numCols, delim);
+    readCsv(m1, filename, numRows, numCols, delim);
+    readCsv(m2, filename, numRows, numCols, delim);
 
     DTRes *res = nullptr;
     ewBinaryMat<DTRes, DTArg, DTArg>((BinaryOpCode::EQ, res, m1, m2, nullptr);
