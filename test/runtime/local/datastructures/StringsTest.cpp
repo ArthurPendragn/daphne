@@ -32,16 +32,23 @@ template <BinaryOpCode opCode> void StringTestEwBinarySca(Umbra_t lhs, Umbra_t r
     ewBinarySca<int64_t, Umbra_t, Umbra_t>(opCode, lhs, rhs, nullptr);
 }
 
-using DT = TestType;
-DT *m = nullptr;
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv"), TAG_IO, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
+    using DT = TestType;
+    DT *m = nullptr;
 
-size_t numRows = 5000;
-size_t numCols = 5;
+    size_t numRows = 5000;
+    size_t numCols = 5;
 
-char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
-char delim = ',';
+    char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
+    char delim = ',';
 
-readCsv(m, filename, numRows, numCols, delim);
+    readCsv(m, filename, numRows, numCols, delim);
+
+    REQUIRE(m->getNumRows() == numRows);
+    REQUIRE(m->getNumCols() == numCols);
+
+    DataObjectFactory::destroy(m);
+}
 
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq- Mat"), TAG_KERNELS, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
     using DT = TestType;
@@ -70,9 +77,22 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq- Mat"), TAG_KERNELS, (DenseMatrix), (PA
 }
 
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca"), TAG_IO, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
-    for (size_t r = 0; r < numRows - 1; ++r) {
-        for (size_t r2 = 0; r < numRows - 1; ++r)
-            StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 2), m->get(r2, 2), 0);
+    using DT = TestType;
+    DT *m = nullptr;
+
+    size_t numRows = 5000;
+    size_t numCols = 5;
+
+    char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
+    char delim = ',';
+
+    readCsv(m, filename, numRows, numCols, delim);
+
+    for (size_t i; i < 1000; ++i) {
+        for (size_t r = 0; r < numRows - 1; ++r) {
+            for (size_t r2 = 0; r < numRows - 1; ++r)
+                StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 2), m->get(r2, 2), 0);
+        }
     }
 
     DataObjectFactory::destroy(m);
