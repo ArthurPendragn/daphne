@@ -12,6 +12,12 @@
 
 #define TEST_NAME(opName) "Strings (" opName ")"
 
+template <class DTArg, class DTRes>
+void StringTestEwBinaryMat(BinaryOpCode opCode, const DTArg *lhs, const DTArg *rhs, const DTRes *exp) {
+    DTRes *res = nullptr;
+    ewBinaryMat<DTRes, DTArg, DTArg>(opCode, res, lhs, rhs, nullptr);
+}
+
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv"), TAG_IO, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
@@ -47,7 +53,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq"), TAG_KERNELS, (DenseMatrix), (ALL_STR
     readCsv(m2, filename, numRows, numCols, delim);
 
     DTRes *res = nullptr;
-    ewBinaryMat<DTRes, DTArg, DTArg>((BinaryOpCode::EQ, res, m1, m2, nullptr));
+    ewBinaryMat(BinaryOpCode::EQ, res, m1, m2, nullptr);
 
     DataObjectFactory::destroy(m1);
     DataObjectFactory::destroy(m2);
