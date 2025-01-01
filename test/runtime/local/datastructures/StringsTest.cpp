@@ -95,6 +95,60 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca"), TAG_IO, (DenseMatrix), (PARTIA
     for (size_t r = 0; r < numRows - 1; ++r) {
         StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
     }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r + 1, 2), 0);
+    }
 
     DataObjectFactory::destroy(m);
 }
