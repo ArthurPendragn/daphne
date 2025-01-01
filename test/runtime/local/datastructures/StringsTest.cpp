@@ -54,7 +54,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq"), TAG_KERNELS, (DenseMatrix), (ALL_STR
     readCsv(m2, filename, numRows, numCols, delim);
 
     DTRes *res = nullptr;
-    StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::EQ, m1, m2, nullptr);
+    StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::EQ, m1, m2);
 
     DataObjectFactory::destroy(m1);
     DataObjectFactory::destroy(m2);
