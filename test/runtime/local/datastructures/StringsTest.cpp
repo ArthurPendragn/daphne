@@ -16,6 +16,7 @@ template <class DTArg, class DTRes>
 void StringTestEwBinaryMat(BinaryOpCode opCode, const DTArg *lhs, const DTArg *rhs, const DTRes *exp) {
     DTRes *res = nullptr;
     ewBinaryMat<DTRes, DTArg, DTArg>(opCode, res, lhs, rhs, nullptr);
+    DataObjectFactory::destroy(res);
 }
 
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv"), TAG_IO, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
@@ -38,9 +39,9 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv"), TAG_IO, (DenseMatrix), (ALL_STR
 
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq"), TAG_KERNELS, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
-    DT *m1 = nullptr;
+    using ResDT = DenseMatrix<int64_t>;
 
-    using DT = TestType;
+    DT *m1 = nullptr;
     DT *m2 = nullptr;
 
     size_t numRows = 5000;
@@ -53,7 +54,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq"), TAG_KERNELS, (DenseMatrix), (ALL_STR
     readCsv(m2, filename, numRows, numCols, delim);
 
     DTRes *res = nullptr;
-    ewBinaryMat(BinaryOpCode::EQ, res, m1, m2, nullptr);
+    StringTestEwBinaryMat<DT, ResDT>(BinaryOpCode::EQ, m1, m2, nullptr);
 
     DataObjectFactory::destroy(m1);
     DataObjectFactory::destroy(m2);
