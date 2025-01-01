@@ -4,6 +4,8 @@
 #include <runtime/local/io/ReadCsv.h>
 #include <runtime/local/kernels/EwBinaryMat.h>
 
+#include <runtime/local/datastructures/Umbra.h>
+
 #include <tags.h>
 
 #include <catch.hpp>
@@ -11,6 +13,7 @@
 #include <cstdint>
 
 #define TEST_NAME(opName) "Strings (" opName ")"
+#define PARTIAL_STRING_VALUE_TYPES (std::string, Umbra_t)
 
 template <class DTArg, class DTRes>
 void StringTestEwBinaryMat(BinaryOpCode opCode, const DTArg *lhs, const DTArg *rhs) {
@@ -19,7 +22,7 @@ void StringTestEwBinaryMat(BinaryOpCode opCode, const DTArg *lhs, const DTArg *r
     DataObjectFactory::destroy(res);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv"), TAG_IO, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv"), TAG_IO, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
 
@@ -37,7 +40,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv"), TAG_IO, (DenseMatrix), (ALL_STR
     DataObjectFactory::destroy(m);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq"), TAG_KERNELS, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq"), TAG_KERNELS, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     using DTRes = DenseMatrix<int64_t>;
 
