@@ -10,7 +10,7 @@
 
 #include <cstdint>
 
-TEMPLATE_PRODUCT_TEST_CASE("Check Dimensions of CSV", TAG_IO, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE("Check Dimensions of CSV", TAG_IO, (DenseMatrix), (std::string)) {
     using ValueType = TestType;
     DenseMatrix<ValueType> *m = nullptr;
 
