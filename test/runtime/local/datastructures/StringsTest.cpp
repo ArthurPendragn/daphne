@@ -1,6 +1,7 @@
 #include <runtime/local/datastructures/DataObjectFactory.h>
 #include <runtime/local/datastructures/DenseMatrix.h>
 #include <runtime/local/datastructures/ValueTypeUtils.h>
+#include <runtime/local/io/File.h>
 #include <runtime/local/io/ReadCsv.h>
 #include <runtime/local/kernels/EwBinarySca.h>
 
@@ -11,8 +12,8 @@
 #include <cstdint>
 
 TEMPLATE_PRODUCT_TEST_CASE("Check Dimensions of CSV", TAG_IO, (DenseMatrix), (std::string)) {
-    using ValueType = TestType;
-    DenseMatrix<ValueType> *m = nullptr;
+    using DT = TestType;
+    DT *m = nullptr;
 
     size_t numRows = 5000;
     size_t numCols = 5;
