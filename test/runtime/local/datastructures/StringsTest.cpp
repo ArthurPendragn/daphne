@@ -1,10 +1,10 @@
 #include <runtime/local/datastructures/DataObjectFactory.h>
 #include <runtime/local/datastructures/DenseMatrix.h>
+#include <runtime/local/datastructures/Umbra.h>
 #include <runtime/local/datastructures/ValueTypeUtils.h>
 #include <runtime/local/io/ReadCsv.h>
 #include <runtime/local/kernels/EwBinaryMat.h>
-
-#include <runtime/local/datastructures/Umbra.h>
+#include <runtime/local/kernels/EwBinarySca.h>
 
 #include <tags.h>
 
@@ -22,7 +22,17 @@ void StringTestEwBinaryMat(BinaryOpCode opCode, const DTArg *lhs, const DTArg *r
     DataObjectFactory::destroy(res);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv"), TAG_IO, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+template <BinaryOpCode opCode> void checkEwBinarySca(std::string lhs, std::string rhs, int64_t exp) {
+    CHECK(EwBinarySca<opCode, int64_t, std::string, std::string>::apply(lhs, rhs, nullptr) == exp);
+    CHECK(ewBinarySca<int64_t, std::string, std::string>(opCode, lhs, rhs, nullptr) == exp);
+}
+
+template <BinaryOpCode opCode> void checkEwBinarySca(Umbra_t lhs, Umbra_t rhs, int64_t exp) {
+    CHECK(EwBinarySca<opCode, int64_t, Umbra_t, Umbra_t>::apply(lhs, rhs, nullptr) == exp);
+    CHECK(ewBinarySca<int64_t, Umbra_t, Umbra_t>(opCode, lhs, rhs, nullptr) == exp);
+}
+
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv"), TAG_IO, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
 
@@ -59,6 +69,30 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq"), TAG_KERNELS, (DenseMatrix), (PARTIAL
     DTRes *res = nullptr;
     StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::EQ, m1, m2);
 
+    REQUIRE(m1->getNumRows() == numRows);
+    REQUIRE(m1->getNumCols() == numCols);
+
     DataObjectFactory::destroy(m1);
     DataObjectFactory::destroy(m2);
+}
+
+TEMPLATE_PRODUCT_TEST_CASE("Element-wise Comparisons, Join, and Sort", TAG_IO, (DenseMatrix),
+                           (PARTIAL_STRING_VALUE_TYPES)) {
+    using DT = TestType;
+    DT *m = nullptr;
+
+    size_t numRows = 5000;
+    size_t numCols = 5;
+
+    char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
+    char delim = ',';
+
+    readCsv(m, filename, numRows, numCols, delim);
+
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        CHECK(checkEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r + 1, 0), 0)); // Expect no duplicate rows
+    }
+
+    DataObjectFactory::destroy(m);
+    DataObjectFactory::destroy(joinedMatrix);
 }
