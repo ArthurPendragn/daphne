@@ -12,6 +12,7 @@
 #include <catch.hpp>
 
 #include <cstdint>
+#include <random>
 
 #define TEST_NAME(opName) "Strings (" opName ")"
 #define PARTIAL_STRING_VALUE_TYPES std::string, Umbra_t
@@ -103,14 +104,14 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca"), TAG_DATASTRUCTURES, (DenseMatr
     for (size_t i = 0; i < 1000; i++) {
         for (size_t r = 0; r < numRows - 1; ++r) {
             for (size_t r2 = 0; r < numRows - 1; ++r)
-                m->get(r, 0);
+                StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r2, 0), 0);
         }
     }
 
     for (size_t i = 0; i < 1000; i++) {
         for (size_t r = 0; r < numRows - 1; ++r) {
             for (size_t r2 = 0; r < numRows - 1; ++r)
-                m->get(r, 2);
+                StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r2, 2), 0);
         }
     }
 
@@ -133,4 +134,98 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Upper"), TAG_DATASTRUCTURES, (DenseMatrix)
         StringTestEwUnaryMat<DT, DT>(UnaryOpCode::UPPER, m);
 
     DataObjectFactory::destroy(m);
+}
+
+TEMPLATE_PRODUCT_TEST_CASE("ConcatenateAllRows", TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+    using DT = TestType;
+    using VT = typename DT::VT;
+
+    DT *m = nullptr;
+    size_t numRows = 50000;
+    size_t numCols = 5;
+    char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
+    char delim = ',';
+    readCsv(m, filename, numRows, numCols, delim);
+
+    VT resultConcat;
+    for (size_t r = 0; r < numRows; r++) {
+        resultConcat = ewBinarySca<VT, VT, VT>(BinaryOpCode::CONCAT, resultConcat, m->get(r, 0), nullptr);
+    }
+
+    DenseMatrix<VT> *res = DataObjectFactory::create<DenseMatrix<VT>>(1, 1, false);
+    res->set(0, 0, resultConcat);
+
+    DataObjectFactory::destroy(m);
+    DataObjectFactory::destroy(res);
+}
+
+TEMPLATE_PRODUCT_TEST_CASE("RecodeAndOneHotStrings", TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+    using DT = TestType;
+    using VT = typename DT::VT;
+    using DTRes = DenseMatrix<int64_t>;
+
+    DT *arg = nullptr;
+    size_t numRows = 50000;
+    size_t numCols = 5;
+    readCsv(arg, "./test/data/strings/uniform_synthetic_random_strings.csv", numRows, numCols, ',');
+
+    // We'll recode columns 0 and 1 into numeric IDs (arbitrary).
+    auto *recodeRes = DataObjectFactory::create<DTRes>(numRows, 2, false);
+
+    // 1) Recode each string to an integer ID. For performance, we might store them in a map<VT, int64_t>.
+    std::unordered_map<VT, int64_t> dictCol0;
+    std::unordered_map<VT, int64_t> dictCol1;
+    int64_t nextId0 = 0, nextId1 = 0;
+
+    // Build dictionary for column 0 and column 1
+    for (size_t r = 0; r < numRows; r++) {
+        // col 0
+        auto val0 = arg->get(r, 0);
+        if (dictCol0.find(val0) == dictCol0.end())
+            dictCol0[val0] = nextId0++;
+        // col 1
+        auto val1 = arg->get(r, 1);
+        if (dictCol1.find(val1) == dictCol1.end())
+            dictCol1[val1] = nextId1++;
+    }
+
+    // Apply dictionary to create recoded matrix
+    for (size_t r = 0; r < numRows; r++) {
+        recodeRes->set(r, 0, dictCol0[arg->get(r, 0)]);
+        recodeRes->set(r, 1, dictCol1[arg->get(r, 1)]);
+    }
+
+    DTRes *oneHotRes = nullptr;
+    oneHot(oneHotRes, recodeRes, nullptr);
+
+    REQUIRE(oneHotRes->getNumRows() == numRows);
+
+    DataObjectFactory::destroy(arg, recodeRes, oneHotRes);
+}
+
+TEMPLATE_PRODUCT_TEST_CASE("SampleStringData", TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+    using DT = TestType;
+    using VT = typename DT::VT;
+
+    DT *m = nullptr;
+    size_t numRows = 50000;
+    size_t numCols = 5;
+    readCsv(m, "./test/data/strings/uniform_synthetic_random_strings.csv", numRows, numCols, ',');
+
+    size_t sampleSize = 100;
+    DT *sample = DataObjectFactory::create<DT>(sampleSize, numCols, false);
+
+    std::mt19937 rng(42); // fixed seed for reproducibility
+    std::uniform_int_distribution<size_t> dist(0, numRows - 1);
+
+    for (size_t i = 0; i < sampleSize; i++) {
+        size_t rowIdx = dist(rng);
+        for (size_t c = 0; c < numCols; c++) {
+            sample->set(i, c, m->get(rowIdx, c));
+        }
+    }
+
+    REQUIRE(sample->getNumRows() == sampleSize);
+
+    DataObjectFactory::destroy(m, sample);
 }
