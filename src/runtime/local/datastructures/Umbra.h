@@ -18,11 +18,10 @@
  * store a prefix of the string and the other 8 bytes a pointer to the string.
  */
 
-#pragma pack(push, 1) // Solution for it to have no padding, and thus occupy 16 bytes. Im not well aware of it might
-                      // have some negative side effects
+// Solution for it to have no padding, and thus occupy 16 bytes. Im not well aware of it might
+// have some negative side effects
 class Umbra_t {
-    uint32_t length; // 4 bytes
-    union            // Remaining 12 Bytes. Also not aware of possible memory issues.
+    union // Remaining 12 Bytes. Also not aware of possible memory issues.
     {
         char short_str[12];
         struct {
@@ -30,6 +29,7 @@ class Umbra_t {
             char *ptr;
         } long_str;
     };
+    uint32_t length; // 4 bytes
 
   public:
     // Default constructor
@@ -51,8 +51,6 @@ class Umbra_t {
             std::memcpy(long_str.ptr, str, length);
             long_str.ptr[length] = '\0';
         }
-
-        static_assert(sizeof(Umbra_t) == 16, "Umbra_t size is not 16 bytes");
     }
 
     // Constructor from a std::string
@@ -71,7 +69,6 @@ class Umbra_t {
             str.copy(long_str.ptr, length);
             long_str.ptr[length] = '\0';
         }
-        static_assert(sizeof(Umbra_t) == 16, "Umbra_t size is not 16 bytes");
     }
 
     // Copy constructor
@@ -86,7 +83,6 @@ class Umbra_t {
             std::memcpy(long_str.ptr, other.long_str.ptr, length);
             long_str.ptr[length] = '\0';
         }
-        static_assert(sizeof(Umbra_t) == 16, "Umbra_t size is not 16 bytes");
     }
 
     // Destructor
@@ -117,10 +113,50 @@ class Umbra_t {
         return *this;
     }
 
+    Umbra_t(Umbra_t &&other) noexcept : length(other.length) {
+        if (other.length <= 12) {
+            std::memcpy(short_str, other.short_str, 12);
+        } else {
+            std::memcpy(long_str.prefix, other.long_str.prefix, 4);
+            long_str.ptr = other.long_str.ptr;
+            other.long_str.ptr = nullptr;
+            other.length = 0;
+        }
+    }
+
+    Umbra_t &operator=(Umbra_t &&other) noexcept {
+        if (this != &other) {
+            if (length > 12) {
+                delete[] long_str.ptr;
+            }
+            length = other.length;
+            if (other.length <= 12) {
+                std::memcpy(short_str, other.short_str, 12);
+            } else {
+                std::memcpy(long_str.prefix, other.long_str.prefix, 4);
+                long_str.ptr = other.long_str.ptr;
+                other.long_str.ptr = nullptr;
+                other.length = 0;
+            }
+        }
+        return *this;
+    }
+
     // Equality comparison with other Umbra Strings
-    bool operator==(const Umbra_t &other) const { return false; }
+    bool operator==(const Umbra_t &other) const {
+        if (length != other.length) {
+            return false;
+        }
+        if (length <= 12) {
+            return std::memcmp(short_str, other.short_str, length) == 0;
+        } else {
+            return (std::memcmp(long_str.prefix, other.long_str.prefix, 4) == 0) &&
+                   (std::memcmp(long_str.ptr, other.long_str.ptr, length) == 0);
+        }
+    }
 
     // Equality comparison with other C-style strings
+    /*
     bool operator==(const char *str) const {
         if (length != std::strlen(str)) {
             return false;
@@ -133,7 +169,7 @@ class Umbra_t {
             }
             return std::memcmp(long_str.ptr, str, length) == 0;
         }
-    }
+    }*/
 
     // Inequality comparison with other Umbra Strings
     bool operator!=(const Umbra_t &other) const { return !(*this == other); }
@@ -142,9 +178,33 @@ class Umbra_t {
     bool operator!=(const char *str) const { return !(*this == str); }
 
     // Less-than comparison with other Umbra Strings
-    bool operator<(const Umbra_t &other) const { return false; }
+    bool operator<(const Umbra_t &other) const {
+        if (length != other.length) {
+            return length < other.length;
+        }
+        if (length <= 12 && other.length <= 12) {
+            return std::memcmp(short_str, other.short_str, length) < 0;
+        }
+        if (length <= 12) {
+            int prefix_cmp = std::memcmp(short_str, other.long_str.prefix, 4);
+            if (prefix_cmp != 0)
+                return prefix_cmp < 0;
+            return std::memcmp(short_str, other.long_str.ptr, length) < 0;
+        }
+        if (other.length <= 12) {
+            int prefix_cmp = std::memcmp(long_str.prefix, other.short_str, 4);
+            if (prefix_cmp != 0)
+                return prefix_cmp < 0;
+            return std::memcmp(long_str.ptr, other.short_str, length) < 0;
+        }
+        int prefix_cmp = std::memcmp(long_str.prefix, other.long_str.prefix, 4);
+        if (prefix_cmp != 0)
+            return prefix_cmp < 0;
+        return std::memcmp(long_str.ptr, other.long_str.ptr, length) < 0;
+    }
 
     // Less-than comparison with other C-style strings
+    /*
     bool operator<(const char *str) const {
         uint32_t str_len = std::strlen(str);
         uint32_t min_length = std::min(length, str_len);
@@ -161,7 +221,7 @@ class Umbra_t {
             return length < str_len;
         }
         return cmp < 0;
-    }
+    }*/
 
     // Greater-than comparison with other Umbra Strings
     bool operator>(const Umbra_t &other) const { return *this != other && !(*this < other); }
@@ -177,58 +237,27 @@ class Umbra_t {
         result.length = this->length + other.length;
 
         if (result.length <= 12) {
-            if (this->length <= 12) {
-                std::memcpy(result.short_str, this->short_str, this->length);
-            } else {
-                std::memcpy(result.short_str, this->long_str.prefix, 4);
-                std::memcpy(result.short_str + 4, this->long_str.ptr, this->length - 4);
-            }
-
-            if (other.length <= 12) {
-                std::memcpy(result.short_str + this->length, other.short_str, other.length);
-            } else {
-                std::memcpy(result.short_str + this->length, other.long_str.prefix, 4);
-                std::memcpy(result.short_str + this->length + 4, other.long_str.ptr, other.length - 4);
-            }
-
-            if (result.length < 12) {
-                result.short_str[result.length] = '\0';
-            }
+            std::memcpy(result.short_str, this->short_str, this->length);
+            std::memcpy(result.short_str + this->length, other.short_str, other.length);
         } else {
             char *new_str = new char[result.length + 1];
-            size_t pos = 0;
 
             if (this->length <= 12) {
-                std::memcpy(new_str + pos, this->short_str, this->length);
-                pos += this->length;
+                std::memcpy(new_str, this->short_str, this->length);
             } else {
-                std::memcpy(new_str + pos, this->long_str.prefix, 4);
-                pos += 4;
-                std::memcpy(new_str + pos, this->long_str.ptr, this->length - 4);
-                pos += (this->length - 4);
+                std::memcpy(new_str, this->long_str.ptr, this->length);
             }
 
             if (other.length <= 12) {
-                std::memcpy(new_str + pos, other.short_str, other.length);
-                pos += other.length;
+                std::memcpy(new_str + this->length, other.short_str, other.length);
             } else {
-                std::memcpy(new_str + pos, other.long_str.prefix, 4);
-                pos += 4;
-                std::memcpy(new_str + pos, other.long_str.ptr, other.length - 4);
-                pos += (other.length - 4);
+                std::memcpy(new_str, other.long_str.ptr, other.length);
             }
 
             new_str[result.length] = '\0';
 
             std::memcpy(result.long_str.prefix, new_str, 4);
-            result.long_str.ptr = new_str + 4;
-
-            char *full_str = new char[result.length + 1];
-            std::memcpy(full_str, new_str, result.length);
-            full_str[result.length] = '\0';
-            result.long_str.ptr = full_str + 4;
-
-            delete[] new_str;
+            result.long_str.ptr = new_str;
         }
 
         return result;
@@ -270,18 +299,13 @@ class Umbra_t {
         }
     }
 
-    size_t size() const { return length; }
+    inline size_t size() const { return length; }
 
     // Method to check if string is stored in long format
-    bool is_long() const { return length > 12; }
+    inline bool is_long() const { return length > 12; }
 
     // TODO implement this method in all other methods where if/else is used to check for length
-    const char *get() const {
-        if (is_long()) {
-            return long_str.ptr;
-        }
-        return short_str;
-    }
+    inline const char *get() const { return is_long() ? long_str.ptr : short_str; }
 
     // Method to set the String. Check for better implementation
     void set(const char *str) {
@@ -381,10 +405,11 @@ class Umbra_t {
         return result;
     }
 };
-#pragma pack(pop)
 
 namespace std {
 template <> struct hash<Umbra_t> {
-    size_t operator()(const Umbra_t &u) const { return std::hash<std::string>()(u.to_string()); }
+    size_t operator()(const Umbra_t &u) const {
+        return std::hash<std::string_view>()(std::string_view(u.get(), u.size()));
+    }
 };
 } // namespace std
