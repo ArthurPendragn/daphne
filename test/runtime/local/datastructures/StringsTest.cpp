@@ -126,7 +126,7 @@ TEMPLATE_PRODUCT_TEST_CASE("Convert Strings to Uppercase", TAG_DATASTRUCTURES, (
 
     readCsv(m, filename, numRows, numCols, delim);
 
-    StringTestEwUnaryMat(m);
+    StringTestEwUnaryMat(UnaryOpCode::UPPER, m);
 
     DataObjectFactory::destroy(m);
 }
