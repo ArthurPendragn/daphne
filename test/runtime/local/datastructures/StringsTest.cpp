@@ -173,7 +173,7 @@ TEMPLATE_PRODUCT_TEST_CASE("RecodeAndOneHotStrings", TAG_DATASTRUCTURES, (DenseM
 
     // We'll recode columns 0 and 1 into numeric IDs (arbitrary).
     auto *recodeRes = DataObjectFactory::create<DTRes>(numRows, 2, false);
-    info = genGivenVals<DenseMatrix<int64_t>>(1, {-1, 3, 2, 1, 2});
+    DenseMatrix<int64_t> *info = genGivenVals<DenseMatrix<int64_t>>(1, {-1, 3, 2, 1, 2});
 
     DTRes *oneHotRes = nullptr;
     oneHot(oneHotRes, recodeRes, info, nullptr);
