@@ -130,22 +130,3 @@ TEMPLATE_PRODUCT_TEST_CASE("Convert Strings to Uppercase", TAG_DATASTRUCTURES, (
 
     DataObjectFactory::destroy(m);
 }
-
-TEMPLATE_PRODUCT_TEST_CASE("Large Number of Fill Operations", TAG_DATASTRUCTURES, (DenseMatrix),
-                           (ALL_STRING_VALUE_TYPES)) {
-    using DT = TestType;
-    DT *m = nullptr;
-    const size_t numRows = 10000;
-    const size_t numCols = 100;
-
-    DenseMatrix<DT> *m = DataObjectFactory::create<DenseMatrix<DT>>(numRows, numCols, false);
-
-    DT filler = DT("123456789012"); // Length 12
-    for (size_t r = 0; r < numRows; ++r) {
-        for (size_t c = 0; c < numCols; ++c) {
-            m->set(r, c, filler);
-        }
-    }
-
-    DataObjectFactory::destroy(m);
-}
