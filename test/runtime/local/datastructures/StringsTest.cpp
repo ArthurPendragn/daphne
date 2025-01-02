@@ -38,7 +38,7 @@ template <BinaryOpCode opCode> void StringTestEwBinarySca(Umbra_t lhs, Umbra_t r
     ewBinarySca<int64_t, Umbra_t, Umbra_t>(opCode, lhs, rhs, nullptr);
 }
 
-template <typename DTRes, typename DTArg> void StringTestEwUnaryMat(UnaryOpCode opCode, const DTArg *arg) {
+template <class DTArg, class DTRes> void StringTestEwUnaryMat(UnaryOpCode opCode, const DTArg *arg) {
     DTRes *res = nullptr;
     ewUnaryMat<DTRes, DTArg>(opCode, res, arg, nullptr);
     DataObjectFactory::destroy(res);
@@ -78,7 +78,6 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq- Mat"), TAG_DATASTRUCTURES, (DenseMatri
     readCsv(m1, filename, numRows, numCols, delim);
     readCsv(m2, filename, numRows, numCols, delim);
 
-    DTRes *res = nullptr;
     StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::EQ, m1, m2);
 
     REQUIRE(m1->getNumRows() == numRows);
@@ -116,6 +115,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca"), TAG_DATASTRUCTURES, (DenseMatr
 TEMPLATE_PRODUCT_TEST_CASE("Convert Strings to Uppercase", TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
+    using DTRes = DenseMatrix<int64_t>;
     DT *m = nullptr;
 
     size_t numRows = 50000;
@@ -126,7 +126,7 @@ TEMPLATE_PRODUCT_TEST_CASE("Convert Strings to Uppercase", TAG_DATASTRUCTURES, (
 
     readCsv(m, filename, numRows, numCols, delim);
 
-    StringTestEwUnaryMat(UnaryOpCode::UPPER, m);
+    StringTestEwUnaryMat<DT, DTRes>(UnaryOpCode::UPPER, m);
 
     DataObjectFactory::destroy(m);
 }
