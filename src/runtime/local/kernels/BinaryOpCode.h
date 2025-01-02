@@ -143,7 +143,10 @@ static constexpr bool supportsBinaryOp = false;
     SUPPORT_RLR(EQ, VTRes, VTArg, VTArg)                                                                               \
     SUPPORT_RLR(NEQ, VTRes, VTArg, VTArg)
 #define SUPPORT_STRING_RLR(VTRes, VTLhs, VTRhs)                                                                        \
-    /* string concatenation operations. */                                                                             \ SUPPORT_RLR(CONCAT, VTRes, VTLhs, VTRhs)
+    /* string concatenation operations. */                                                                             \
+    /*  Since the result may not fit in FixedStr16,*/                                                                  \
+    /*  it always return std::string*/                                                                                 \
+    SUPPORT_RLR(CONCAT, VTRes, VTLhs, VTRhs)
 
 // Generates code specifying that all binary operations typically supported on a
 // certain category of value types should be supported on the given value type
@@ -175,10 +178,11 @@ SUPPORT_NUMERIC_INT(uint8_t)
 SUPPORT_EQUALITY_RA(int64_t, std::string)
 SUPPORT_EQUALITY_RA(int64_t, FixedStr16)
 SUPPORT_EQUALITY_RA(int64_t, Umbra_t)
+SUPPORT_EQUALITY_RA(int64_t, NewUmbra_t)
 SUPPORT_EQUALITY_RA(int64_t, const char *)
 SUPPORT_COMPARISONS_RA(int64_t, std::string)
 SUPPORT_COMPARISONS_RA(int64_t, FixedStr16)
-SUPPORT_COMPARISONS_RA(int64_t, Umbra_t)
+SUPPORT_COMPARISONS_RA(int64_t, NewUmbra_t)
 SUPPORT_STRING_RLR(std::string, std::string, std::string)
 SUPPORT_STRING_RLR(Umbra_t, Umbra_t, Umbra_t)
 SUPPORT_STRING_RLR(NewUmbra_t, NewUmbra_t, NewUmbra_t)
