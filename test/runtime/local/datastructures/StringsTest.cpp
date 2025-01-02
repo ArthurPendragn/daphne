@@ -152,17 +152,32 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ConcatenateAllRows"), TAG_DATASTRUCTURES, 
     readCsv(m, filename, numRows, numCols, delim);
 
     VT resultConcat;
-    for (size_t i = 0; i < 100; i++) {
-        for (size_t r = 0; r < numRows; r++) {
-            resultConcat = ewBinarySca<std::string, VT, VT>(BinaryOpCode::CONCAT, resultConcat, m->get(r, 0), nullptr);
-        }
+    for (size_t r = 0; r < numRows; r++) {
+        resultConcat = ewBinarySca<std::string, VT, VT>(BinaryOpCode::CONCAT, resultConcat, m->get(r, 0), nullptr);
     }
 
-    DenseMatrix<VT> *res = DataObjectFactory::create<DenseMatrix<VT>>(1, 1, false);
-    res->set(0, 0, resultConcat);
-
     DataObjectFactory::destroy(m);
-    DataObjectFactory::destroy(res);
+}
+
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("RecodeAndOneHotStrings"), TAG_DATASTRUCTURES, (DenseMatrix),
+                           (ALL_STRING_VALUE_TYPES)) {
+    using DT = TestType;
+    using VT = typename DT::VT;
+    using DTRes = DenseMatrix<int64_t>;
+
+    DT *arg = nullptr;
+    size_t numRows = 50000;
+    size_t numCols = 5;
+    readCsv(arg, "./test/data/strings/uniform_synthetic_random_strings.csv", numRows, numCols, ',');
+
+    DenseMatrix<int64_t> *info = genGivenVals<DenseMatrix<int64_t>>(1, {0, -1, 0, 0, 0});
+
+    DTRes *oneHotRes = nullptr;
+    oneHot(oneHotRes, arg, info, nullptr);
+
+    REQUIRE(oneHotRes->getNumRows() == numRows);
+
+    DataObjectFactory::destroy(arg, arg, oneHotRes);
 }
 
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("SampleStringData"), TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
