@@ -6,6 +6,7 @@
 #include <runtime/local/kernels/EwBinaryMat.h>
 #include <runtime/local/kernels/EwBinarySca.h>
 #include <runtime/local/kernels/EwUnaryMat.h>
+#include <runtime/local/kernels/OneHot.h>
 
 #include <tags.h>
 
