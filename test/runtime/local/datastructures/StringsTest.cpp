@@ -140,7 +140,7 @@ TEMPLATE_PRODUCT_TEST_CASE("Large Number of Fill Operations", TAG_DATASTRUCTURES
 
     DenseMatrix<DT> *m = DataObjectFactory::create<DenseMatrix<DT>>(numRows, numCols, false);
 
-    DT filler = "123456789012"; // Length 12
+    DT filler = DT("123456789012"); // Length 12
     for (size_t r = 0; r < numRows; ++r) {
         for (size_t c = 0; c < numCols; ++c) {
             m->set(r, c, filler);
