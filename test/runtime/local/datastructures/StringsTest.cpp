@@ -38,7 +38,7 @@ template <BinaryOpCode opCode> void StringTestEwBinarySca(Umbra_t lhs, Umbra_t r
     ewBinarySca<int64_t, Umbra_t, Umbra_t>(opCode, lhs, rhs, nullptr);
 }
 
-template <typename DTRes, typename DTArg> void checkEwUnaryMat(UnaryOpCode opCode, const DTArg *arg) {
+template <typename DTRes, typename DTArg> void StringTestEwUnaryMat(UnaryOpCode opCode, const DTArg *arg) {
     DTRes *res = nullptr;
     ewUnaryMat<DTRes, DTArg>(opCode, res, arg, nullptr);
     DataObjectFactory::destroy(res);
