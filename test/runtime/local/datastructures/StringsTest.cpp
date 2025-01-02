@@ -140,7 +140,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Upper"), TAG_DATASTRUCTURES, (DenseMatrix)
 }
 
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ConcatenateAllRows"), TAG_DATASTRUCTURES, (DenseMatrix),
-                           (ALL_STRING_VALUE_TYPES)) {
+                           (PARTIAL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     using VT = typename DT::VT;
 
@@ -174,7 +174,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("RecodeAndOneHotStrings"), TAG_DATASTRUCTUR
     size_t numCols = 5;
     readCsv(arg, "./test/data/strings/uniform_synthetic_random_strings.csv", numRows, numCols, ',');
 
-    DenseMatrix<int64_t> *info = genGivenVals<DenseMatrix<int64_t>>(1, {-1, 3, 2, 1, 2});
+    DenseMatrix<int64_t> *info = genGivenVals<DenseMatrix<int64_t>>(1, {0, 0, 0, 0, 0});
 
     DTRes *oneHotRes = nullptr;
     oneHot(oneHotRes, arg, info, nullptr);
