@@ -28,23 +28,24 @@ void StringTestEwBinaryMat(BinaryOpCode opCode, const DTArg *lhs, const DTArg *r
 
 template <BinaryOpCode opCode> void StringTestEwBinarySca(std::string lhs, std::string rhs, int64_t exp) {
     EwBinarySca<opCode, int64_t, std::string, std::string>::apply(lhs, rhs, nullptr);
-    ewBinarySca<int64_t, std::string, std::string>(opCode, lhs, rhs, nullptr);
 }
 
 template <BinaryOpCode opCode> void StringTestEwBinarySca(FixedStr16 lhs, FixedStr16 rhs, int64_t exp) {
     EwBinarySca<opCode, int64_t, FixedStr16, FixedStr16>::apply(lhs, rhs, nullptr);
-    ewBinarySca<int64_t, FixedStr16, FixedStr16>(opCode, lhs, rhs, nullptr);
 }
 
 template <BinaryOpCode opCode> void StringTestEwBinarySca(Umbra_t lhs, Umbra_t rhs, int64_t exp) {
     EwBinarySca<opCode, int64_t, Umbra_t, Umbra_t>::apply(lhs, rhs, nullptr);
-    ewBinarySca<int64_t, Umbra_t, Umbra_t>(opCode, lhs, rhs, nullptr);
 }
 
 template <class DTArg, class DTRes> void StringTestEwUnaryMat(UnaryOpCode opCode, const DTArg *arg) {
     DTRes *res = nullptr;
     ewUnaryMat<DTRes, DTArg>(opCode, res, arg, nullptr);
     DataObjectFactory::destroy(res);
+}
+
+template <typename VT> void StringTestConcat(VT lhs, VT rhs) {
+    EwBinarySca<BinaryOpCode::CONCAT, VT, VT, VT>::apply(lhs, rhs, nullptr);
 }
 
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv"), TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
@@ -162,7 +163,8 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ConcatenateAllRows"), TAG_DATASTRUCTURES, 
     DataObjectFactory::destroy(res);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("RecodeAndOneHotStrings", TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("RecodeAndOneHotStrings"), TAG_DATASTRUCTURES, (DenseMatrix),
+                           (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     using VT = typename DT::VT;
     using DTRes = DenseMatrix<int64_t>;
@@ -184,7 +186,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("RecodeAndOneHotStrings", TAG_DATASTRUCTURE
     DataObjectFactory::destroy(arg, recodeRes, oneHotRes);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE("SampleStringData", TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("SampleStringData"), TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     using VT = typename DT::VT;
 
