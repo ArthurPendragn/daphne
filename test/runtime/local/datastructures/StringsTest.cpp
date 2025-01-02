@@ -88,7 +88,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca"), TAG_IO, (DenseMatrix), (PARTIA
 
     readCsv(m, filename, numRows, numCols, delim);
 
-    for (size_t i = 0; i < 1000; ++i) {
+    for (size_t i = 0; i < 10000; ++i) {
         for (size_t r = 0; r < numRows - 1; ++r) {
             for (size_t r2 = 0; r < numRows - 1; ++r)
                 StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r2, 2), 0);
