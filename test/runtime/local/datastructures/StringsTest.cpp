@@ -172,32 +172,10 @@ TEMPLATE_PRODUCT_TEST_CASE("RecodeAndOneHotStrings", TAG_DATASTRUCTURES, (DenseM
 
     // We'll recode columns 0 and 1 into numeric IDs (arbitrary).
     auto *recodeRes = DataObjectFactory::create<DTRes>(numRows, 2, false);
-
-    // 1) Recode each string to an integer ID. For performance, we might store them in a map<VT, int64_t>.
-    std::unordered_map<VT, int64_t> dictCol0;
-    std::unordered_map<VT, int64_t> dictCol1;
-    int64_t nextId0 = 0, nextId1 = 0;
-
-    // Build dictionary for column 0 and column 1
-    for (size_t r = 0; r < numRows; r++) {
-        // col 0
-        auto val0 = arg->get(r, 0);
-        if (dictCol0.find(val0) == dictCol0.end())
-            dictCol0[val0] = nextId0++;
-        // col 1
-        auto val1 = arg->get(r, 1);
-        if (dictCol1.find(val1) == dictCol1.end())
-            dictCol1[val1] = nextId1++;
-    }
-
-    // Apply dictionary to create recoded matrix
-    for (size_t r = 0; r < numRows; r++) {
-        recodeRes->set(r, 0, dictCol0[arg->get(r, 0)]);
-        recodeRes->set(r, 1, dictCol1[arg->get(r, 1)]);
-    }
+    info = genGivenVals<DenseMatrix<int64_t>>(1, {-1, 3, 2, 1, 2});
 
     DTRes *oneHotRes = nullptr;
-    oneHot(oneHotRes, recodeRes, nullptr);
+    oneHot(oneHotRes, recodeRes, info, nullptr);
 
     REQUIRE(oneHotRes->getNumRows() == numRows);
 
