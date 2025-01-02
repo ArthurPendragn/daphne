@@ -138,9 +138,9 @@ TEMPLATE_PRODUCT_TEST_CASE("Large Number of Fill Operations", TAG_DATASTRUCTURES
     const size_t numRows = 10000;
     const size_t numCols = 100;
 
-    DenseMatrix<ValueType> *m = DataObjectFactory::create<DenseMatrix<ValueType>>(numRows, numCols, false);
+    DenseMatrix<DT> *m = DataObjectFactory::create<DenseMatrix<DT>>(numRows, numCols, false);
 
-    ValueType filler = "123456789012"; // Length 12
+    DT filler = "123456789012"; // Length 12
     for (size_t r = 0; r < numRows; ++r) {
         for (size_t c = 0; c < numCols; ++c) {
             m->set(r, c, filler);
