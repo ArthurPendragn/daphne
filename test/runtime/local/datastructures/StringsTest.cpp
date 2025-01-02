@@ -78,7 +78,8 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq- Mat"), TAG_DATASTRUCTURES, (DenseMatri
     readCsv(m1, filename, numRows, numCols, delim);
     readCsv(m2, filename, numRows, numCols, delim);
 
-    StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::EQ, m1, m2);
+    for (size_t i = 0; i < 1000; i++)
+        StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::EQ, m1, m2);
 
     REQUIRE(m1->getNumRows() == numRows);
     REQUIRE(m1->getNumCols() == numCols);
@@ -99,14 +100,18 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca"), TAG_DATASTRUCTURES, (DenseMatr
 
     readCsv(m, filename, numRows, numCols, delim);
 
-    for (size_t r = 0; r < numRows - 1; ++r) {
-        for (size_t r2 = 0; r < numRows - 1; ++r)
-            StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r2, 0), 0);
+    for (size_t i = 0; i < 1000; i++) {
+        for (size_t r = 0; r < numRows - 1; ++r) {
+            for (size_t r2 = 0; r < numRows - 1; ++r)
+                StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r2, 0), 0);
+        }
     }
 
-    for (size_t r = 0; r < numRows - 1; ++r) {
-        for (size_t r2 = 0; r < numRows - 1; ++r)
-            StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r2, 2), 0);
+    for (size_t i = 0; i < 1000; i++) {
+        for (size_t r = 0; r < numRows - 1; ++r) {
+            for (size_t r2 = 0; r < numRows - 1; ++r)
+                StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r2, 2), 0);
+        }
     }
 
     DataObjectFactory::destroy(m);
@@ -115,7 +120,6 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca"), TAG_DATASTRUCTURES, (DenseMatr
 TEMPLATE_PRODUCT_TEST_CASE("Convert Strings to Uppercase", TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
-    using DTRes = DenseMatrix<int64_t>;
     DT *m = nullptr;
 
     size_t numRows = 50000;
@@ -126,7 +130,8 @@ TEMPLATE_PRODUCT_TEST_CASE("Convert Strings to Uppercase", TAG_DATASTRUCTURES, (
 
     readCsv(m, filename, numRows, numCols, delim);
 
-    StringTestEwUnaryMat<DT, DT>(UnaryOpCode::UPPER, m);
+    for (size_t i = 0; i < 1000; i++)
+        StringTestEwUnaryMat<DT, DT>(UnaryOpCode::UPPER, m);
 
     DataObjectFactory::destroy(m);
 }
