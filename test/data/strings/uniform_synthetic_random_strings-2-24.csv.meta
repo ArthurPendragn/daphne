@@ -1,0 +1,26 @@
+{
+  "numRows": 5000,
+  "numCols": 5,
+  "schema": [
+    {
+      "label": "col1",
+      "valueType": "str"
+    },
+    {
+      "label": "col2",
+      "valueType": "str"
+    },
+    {
+      "label": "col3",
+      "valueType": "str"
+    },
+    {
+      "label": "col4",
+      "valueType": "str"
+    },
+    {
+      "label": "col5",
+      "valueType": "str"
+    }
+  ]
+}

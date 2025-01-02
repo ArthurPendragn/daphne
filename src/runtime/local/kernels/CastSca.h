@@ -127,13 +127,36 @@ template <typename VTRes> struct CastSca<VTRes, Umbra_t> {
     static VTRes apply(Umbra_t arg, DCTX(ctx)) {
         if constexpr (std::is_integral<VTRes>::value) {
             if constexpr (std::is_unsigned<VTRes>::value)
-                return static_cast<VTRes>(std::stoull(arg.to_string()));
+                return static_cast<VTRes>(std::stoull(arg.get()));
             else
-                return static_cast<VTRes>(std::stoll(arg.to_string()));
+                return static_cast<VTRes>(std::stoll(arg.get()));
         } else if constexpr (std::is_same<VTRes, double>::value)
-            return static_cast<VTRes>(std::stold(arg.to_string()));
+            return static_cast<VTRes>(std::stold(arg.get()));
         else if constexpr (std::is_same<VTRes, float>::value)
-            return static_cast<VTRes>(std::stof(arg.to_string()));
+            return static_cast<VTRes>(std::stof(arg.get()));
+        else {
+            // Trigger a compiler warning using deprecated attribute.
+            return throwUnsupportedType(arg);
+        }
+    }
+
+    [[deprecated("CastSca: Warning! Unsupported result type in casting string values.")]]
+    static VTRes throwUnsupportedType(std::string arg) {
+        throw std::runtime_error("CastSca: Unsupported result type in casting string values");
+    }
+};
+
+template <typename VTRes> struct CastSca<VTRes, NewUmbra_t> {
+    static VTRes apply(NewUmbra_t arg, DCTX(ctx)) {
+        if constexpr (std::is_integral<VTRes>::value) {
+            if constexpr (std::is_unsigned<VTRes>::value)
+                return static_cast<VTRes>(std::stoull(arg.get()));
+            else
+                return static_cast<VTRes>(std::stoll(arg.get()));
+        } else if constexpr (std::is_same<VTRes, double>::value)
+            return static_cast<VTRes>(std::stold(arg.get()));
+        else if constexpr (std::is_same<VTRes, float>::value)
+            return static_cast<VTRes>(std::stof(arg.get()));
         else {
             // Trigger a compiler warning using deprecated attribute.
             return throwUnsupportedType(arg);

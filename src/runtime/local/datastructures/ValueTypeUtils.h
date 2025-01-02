@@ -18,6 +18,7 @@
 
 #include <runtime/local/datastructures/FixedSizeStringValueType.h>
 #include <runtime/local/datastructures/Umbra.h>
+#include <runtime/local/datastructures/UmbraNew.h>
 #include <runtime/local/datastructures/ValueTypeCode.h>
 
 #include <iostream>
@@ -31,7 +32,7 @@
 // changes to the list of supported data types local.
 #define ALL_VALUE_TYPES int8_t, int32_t, int64_t, uint8_t, uint32_t, uint64_t, float, double
 
-#define ALL_STRING_VALUE_TYPES std::string, FixedStr16, Umbra_t
+#define ALL_STRING_VALUE_TYPES std::string, FixedStr16, Umbra_t, NewUmbra_t
 
 struct ValueTypeUtils {
 
@@ -63,6 +64,7 @@ template <> const ValueTypeCode ValueTypeUtils::codeFor<double>;
 template <> const ValueTypeCode ValueTypeUtils::codeFor<std::string>;
 template <> const ValueTypeCode ValueTypeUtils::codeFor<FixedStr16>;
 template <> const ValueTypeCode ValueTypeUtils::codeFor<Umbra_t>;
+template <> const ValueTypeCode ValueTypeUtils::codeFor<NewUmbra_t>;
 
 template <> const std::string ValueTypeUtils::cppNameFor<int8_t>;
 template <> const std::string ValueTypeUtils::cppNameFor<int32_t>;
@@ -96,3 +98,4 @@ template <> const std::string ValueTypeUtils::defaultValue<std::string>;
 template <> const FixedStr16 ValueTypeUtils::defaultValue<FixedStr16>;
 template <> const char *ValueTypeUtils::defaultValue<const char *>;
 template <> const Umbra_t ValueTypeUtils::defaultValue<Umbra_t>;
+template <> const NewUmbra_t ValueTypeUtils::defaultValue<NewUmbra_t>;

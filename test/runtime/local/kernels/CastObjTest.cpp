@@ -286,6 +286,42 @@ TEMPLATE_PRODUCT_TEST_CASE("castObj, DenseMatrix<string> to DenseMatrix<int64_t>
         DataObjectFactory::destroy(res_FixedStr16);
         DataObjectFactory::destroy(arg_FixedStr16);
     }
+
+    SECTION("Umbra_t") {
+        auto arg_Umbra_t = genGivenVals<DenseMatrix<Umbra_t>>(
+            numRows, {Umbra_t("123456789012345"), Umbra_t("123456789012344"), Umbra_t("123456789012343"),
+                      Umbra_t("123456789012342"), Umbra_t("123456789012341"), Umbra_t("123456789012340")});
+        DTRes *res_Umbra_t = nullptr;
+        auto check_Umbra_t =
+            genGivenVals<DenseMatrix<VTRes>>(numRows, {123456789012345, 123456789012344, 123456789012343,
+                                                       123456789012342, 123456789012341, 123456789012340});
+
+        castObj<DenseMatrix<VTRes>, DenseMatrix<Umbra_t>>(res_Umbra_t, arg_Umbra_t, nullptr);
+
+        CHECK(*res_Umbra_t == *check_Umbra_t);
+
+        DataObjectFactory::destroy(check_Umbra_t);
+        DataObjectFactory::destroy(res_Umbra_t);
+        DataObjectFactory::destroy(arg_Umbra_t);
+    }
+
+    SECTION("NewUmbra_t") {
+        auto arg_NewUmbra_t = genGivenVals<DenseMatrix<NewUmbra_t>>(
+            numRows, {NewUmbra_t("123456789012345"), NewUmbra_t("123456789012344"), NewUmbra_t("123456789012343"),
+                      NewUmbra_t("123456789012342"), NewUmbra_t("123456789012341"), NewUmbra_t("123456789012340")});
+        DTRes *res_NewUmbra_t = nullptr;
+        auto check_NewUmbra_t =
+            genGivenVals<DenseMatrix<VTRes>>(numRows, {123456789012345, 123456789012344, 123456789012343,
+                                                       123456789012342, 123456789012341, 123456789012340});
+
+        castObj<DenseMatrix<VTRes>, DenseMatrix<NewUmbra_t>>(res_NewUmbra_t, arg_NewUmbra_t, nullptr);
+
+        CHECK(*res_NewUmbra_t == *check_NewUmbra_t);
+
+        DataObjectFactory::destroy(check_NewUmbra_t);
+        DataObjectFactory::destroy(res_NewUmbra_t);
+        DataObjectFactory::destroy(arg_NewUmbra_t);
+    }
 }
 
 TEMPLATE_PRODUCT_TEST_CASE("castObj, matrix to matrix, single dim", TAG_KERNELS, (DenseMatrix),

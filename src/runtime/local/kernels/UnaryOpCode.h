@@ -21,6 +21,7 @@
 
 #include <runtime/local/datastructures/FixedSizeStringValueType.h>
 #include <runtime/local/datastructures/Umbra.h>
+#include <runtime/local/datastructures/UmbraNew.h>
 
 // ****************************************************************************
 // Enum for unary op codes and their names
@@ -142,6 +143,7 @@ SUPPORT_NUMERIC(uint8_t)
 SUPPORT_STRING(std::string)
 SUPPORT_STRING(FixedStr16)
 SUPPORT_STRING(Umbra_t)
+SUPPORT_STRING(NewUmbra_t)
 SUPPORT_STRING(const char *)
 
 // Undefine helper macros.
