@@ -138,7 +138,8 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Upper"), TAG_DATASTRUCTURES, (DenseMatrix)
     DataObjectFactory::destroy(m);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE("ConcatenateAllRows", TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ConcatenateAllRows"), TAG_DATASTRUCTURES, (DenseMatrix),
+                           (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     using VT = typename DT::VT;
 
@@ -151,7 +152,7 @@ TEMPLATE_PRODUCT_TEST_CASE("ConcatenateAllRows", TAG_DATASTRUCTURES, (DenseMatri
 
     VT resultConcat;
     for (size_t r = 0; r < numRows; r++) {
-        resultConcat = ewBinarySca<VT, VT, VT>(BinaryOpCode::CONCAT, resultConcat, m->get(r, 0), nullptr);
+        resultConcat = ewBinarySca<std::string, VT, VT>(BinaryOpCode::CONCAT, resultConcat, m->get(r, 0), nullptr);
     }
 
     DenseMatrix<VT> *res = DataObjectFactory::create<DenseMatrix<VT>>(1, 1, false);
@@ -161,7 +162,7 @@ TEMPLATE_PRODUCT_TEST_CASE("ConcatenateAllRows", TAG_DATASTRUCTURES, (DenseMatri
     DataObjectFactory::destroy(res);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE("RecodeAndOneHotStrings", TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("RecodeAndOneHotStrings", TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     using VT = typename DT::VT;
     using DTRes = DenseMatrix<int64_t>;
