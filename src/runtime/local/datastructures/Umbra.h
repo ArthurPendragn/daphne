@@ -206,17 +206,69 @@ class Umbra_t {
     // Greater-than comparison with other C-style strings
     bool operator>(const char *str) const { return !(*this < str) && *this != str; }
 
-    // TODO is this necessary?
     operator std::string() const { return this->to_string(); }
 
     // Concatenation Operation with other Umbra Strings.
     Umbra_t operator+(const Umbra_t &other) const {
-        // Is there anything from the Umbra Strings we can take advantage of?
-        std::string combined;
-        combined.reserve(length + other.length);
-        combined.append(this->to_string());
-        combined.append(other.to_string());
-        return Umbra_t(combined);
+        Umbra_t result;
+        result.length = this->length + other.length;
+
+        if (result.length <= 12) {
+            if (this->length <= 12) {
+                std::memcpy(result.short_str, this->short_str, this->length);
+            } else {
+                std::memcpy(result.short_str, this->long_str.prefix, 4);
+                std::memcpy(result.short_str + 4, this->long_str.ptr, this->length - 4);
+            }
+
+            if (other.length <= 12) {
+                std::memcpy(result.short_str + this->length, other.short_str, other.length);
+            } else {
+                std::memcpy(result.short_str + this->length, other.long_str.prefix, 4);
+                std::memcpy(result.short_str + this->length + 4, other.long_str.ptr, other.length - 4);
+            }
+
+            if (result.length < 12) {
+                result.short_str[result.length] = '\0';
+            }
+        } else {
+            char *new_str = new char[result.length + 1];
+            size_t pos = 0;
+
+            if (this->length <= 12) {
+                std::memcpy(new_str + pos, this->short_str, this->length);
+                pos += this->length;
+            } else {
+                std::memcpy(new_str + pos, this->long_str.prefix, 4);
+                pos += 4;
+                std::memcpy(new_str + pos, this->long_str.ptr, this->length - 4);
+                pos += (this->length - 4);
+            }
+
+            if (other.length <= 12) {
+                std::memcpy(new_str + pos, other.short_str, other.length);
+                pos += other.length;
+            } else {
+                std::memcpy(new_str + pos, other.long_str.prefix, 4);
+                pos += 4;
+                std::memcpy(new_str + pos, other.long_str.ptr, other.length - 4);
+                pos += (other.length - 4);
+            }
+
+            new_str[result.length] = '\0';
+
+            std::memcpy(result.long_str.prefix, new_str, 4);
+            result.long_str.ptr = new_str + 4;
+
+            char *full_str = new char[result.length + 1];
+            std::memcpy(full_str, new_str, result.length);
+            full_str[result.length] = '\0';
+            result.long_str.ptr = full_str + 4;
+
+            delete[] new_str;
+        }
+
+        return result;
     }
 
     // Concatenation Operation with other C-style strings.

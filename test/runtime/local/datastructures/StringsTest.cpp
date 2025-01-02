@@ -5,6 +5,7 @@
 #include <runtime/local/io/ReadCsv.h>
 #include <runtime/local/kernels/EwBinaryMat.h>
 #include <runtime/local/kernels/EwBinarySca.h>
+#include <runtime/local/kernels/EwUnaryMat.h>
 
 #include <tags.h>
 
@@ -27,16 +28,27 @@ template <BinaryOpCode opCode> void StringTestEwBinarySca(std::string lhs, std::
     ewBinarySca<int64_t, std::string, std::string>(opCode, lhs, rhs, nullptr);
 }
 
+template <BinaryOpCode opCode> void StringTestEwBinarySca(FixedStr16 lhs, FixedStr16 rhs, int64_t exp) {
+    EwBinarySca<opCode, int64_t, FixedStr16, FixedStr16>::apply(lhs, rhs, nullptr);
+    ewBinarySca<int64_t, FixedStr16, FixedStr16>(opCode, lhs, rhs, nullptr);
+}
+
 template <BinaryOpCode opCode> void StringTestEwBinarySca(Umbra_t lhs, Umbra_t rhs, int64_t exp) {
     EwBinarySca<opCode, int64_t, Umbra_t, Umbra_t>::apply(lhs, rhs, nullptr);
     ewBinarySca<int64_t, Umbra_t, Umbra_t>(opCode, lhs, rhs, nullptr);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv"), TAG_IO, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
+template <typename DTRes, typename DTArg> void checkEwUnaryMat(UnaryOpCode opCode, const DTArg *arg) {
+    DTRes *res = nullptr;
+    ewUnaryMat<DTRes, DTArg>(opCode, res, arg, nullptr);
+    DataObjectFactory::destroy(res);
+}
+
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv"), TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
 
-    size_t numRows = 5000;
+    size_t numRows = 50000;
     size_t numCols = 5;
 
     char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
@@ -50,14 +62,14 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv"), TAG_IO, (DenseMatrix), (PARTIAL
     DataObjectFactory::destroy(m);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq- Mat"), TAG_KERNELS, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq- Mat"), TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     using DTRes = DenseMatrix<int64_t>;
 
     DT *m1 = nullptr;
     DT *m2 = nullptr;
 
-    size_t numRows = 5000;
+    size_t numRows = 50000;
     size_t numCols = 5;
 
     char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
@@ -76,11 +88,11 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq- Mat"), TAG_KERNELS, (DenseMatrix), (PA
     DataObjectFactory::destroy(m2);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca"), TAG_IO, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca"), TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
 
-    size_t numRows = 5000;
+    size_t numRows = 50000;
     size_t numCols = 5;
 
     char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
@@ -88,10 +100,50 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca"), TAG_IO, (DenseMatrix), (PARTIA
 
     readCsv(m, filename, numRows, numCols, delim);
 
-    for (size_t i = 0; i < 10000; ++i) {
-        for (size_t r = 0; r < numRows - 1; ++r) {
-            for (size_t r2 = 0; r < numRows - 1; ++r)
-                StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r2, 2), 0);
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        for (size_t r2 = 0; r < numRows - 1; ++r)
+            StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r2, 0), 0);
+    }
+
+    for (size_t r = 0; r < numRows - 1; ++r) {
+        for (size_t r2 = 0; r < numRows - 1; ++r)
+            StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r2, 2), 0);
+    }
+
+    DataObjectFactory::destroy(m);
+}
+
+TEMPLATE_PRODUCT_TEST_CASE("Convert Strings to Uppercase", TAG_DATASTRUCTURES, (DenseMatrix),
+                           (ALL_STRING_VALUE_TYPES)) {
+    using DT = TestType;
+    DT *m = nullptr;
+
+    size_t numRows = 50000;
+    size_t numCols = 5;
+
+    char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
+    char delim = ',';
+
+    readCsv(m, filename, numRows, numCols, delim);
+
+    StringTestEwUnaryMat(m);
+
+    DataObjectFactory::destroy(m);
+}
+
+TEMPLATE_PRODUCT_TEST_CASE("Large Number of Fill Operations", TAG_DATASTRUCTURES, (DenseMatrix),
+                           (ALL_STRING_VALUE_TYPES)) {
+    using DT = TestType;
+    DT *m = nullptr;
+    const size_t numRows = 10000;
+    const size_t numCols = 100;
+
+    DenseMatrix<ValueType> *m = DataObjectFactory::create<DenseMatrix<ValueType>>(numRows, numCols, false);
+
+    ValueType filler = "123456789012"; // Length 12
+    for (size_t r = 0; r < numRows; ++r) {
+        for (size_t c = 0; c < numCols; ++c) {
+            m->set(r, c, filler);
         }
     }
 
