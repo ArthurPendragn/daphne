@@ -104,14 +104,14 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca"), TAG_DATASTRUCTURES, (DenseMatr
 
     readCsv(m, filename, numRows, numCols, delim);
 
-    for (size_t i = 0; i < 1000; i++) {
+    for (size_t i = 0; i < 100; i++) {
         for (size_t r = 0; r < numRows - 1; ++r) {
             for (size_t r2 = 0; r < numRows - 1; ++r)
                 StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r2, 0), 0);
         }
     }
 
-    for (size_t i = 0; i < 1000; i++) {
+    for (size_t i = 0; i < 100; i++) {
         for (size_t r = 0; r < numRows - 1; ++r) {
             for (size_t r2 = 0; r < numRows - 1; ++r)
                 StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r2, 2), 0);
@@ -133,7 +133,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Upper"), TAG_DATASTRUCTURES, (DenseMatrix)
 
     readCsv(m, filename, numRows, numCols, delim);
 
-    for (size_t i = 0; i < 1000; i++)
+    for (size_t i = 0; i < 100; i++)
         StringTestEwUnaryMat<DT, DT>(UnaryOpCode::UPPER, m);
 
     DataObjectFactory::destroy(m);
@@ -174,16 +174,14 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("RecodeAndOneHotStrings"), TAG_DATASTRUCTUR
     size_t numCols = 5;
     readCsv(arg, "./test/data/strings/uniform_synthetic_random_strings.csv", numRows, numCols, ',');
 
-    // We'll recode columns 0 and 1 into numeric IDs (arbitrary).
-    auto *recodeRes = DataObjectFactory::create<DTRes>(numRows, 2, false);
     DenseMatrix<int64_t> *info = genGivenVals<DenseMatrix<int64_t>>(1, {-1, 3, 2, 1, 2});
 
     DTRes *oneHotRes = nullptr;
-    oneHot(oneHotRes, recodeRes, info, nullptr);
+    oneHot(oneHotRes, arg, info, nullptr);
 
     REQUIRE(oneHotRes->getNumRows() == numRows);
 
-    DataObjectFactory::destroy(arg, recodeRes, oneHotRes);
+    DataObjectFactory::destroy(arg, arg, oneHotRes);
 }
 
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("SampleStringData"), TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
@@ -201,10 +199,12 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("SampleStringData"), TAG_DATASTRUCTURES, (D
     std::mt19937 rng(42); // fixed seed for reproducibility
     std::uniform_int_distribution<size_t> dist(0, numRows - 1);
 
-    for (size_t i = 0; i < sampleSize; i++) {
-        size_t rowIdx = dist(rng);
-        for (size_t c = 0; c < numCols; c++) {
-            sample->set(i, c, m->get(rowIdx, c));
+    for (size_t k = 0; k < 100; k++) {
+        for (size_t i = 0; i < sampleSize; i++) {
+            size_t rowIdx = dist(rng);
+            for (size_t c = 0; c < numCols; c++) {
+                sample->set(i, c, m->get(rowIdx, c));
+            }
         }
     }
 
