@@ -443,7 +443,7 @@ template <> struct ReadCsvFile<Frame> {
                     reinterpret_cast<Umbra_t *>(rawCols[col])[row] = Umbra_t(val_str);
                     break;
                 }
-                case ValueTypeCode::UMBRA: {
+                case ValueTypeCode::NEWUMBRA: {
                     std::string val_str = "";
                     pos = setCString(file, pos, &val_str, delim);
                     reinterpret_cast<NewUmbra_t *>(rawCols[col])[row] = NewUmbra_t(val_str);
