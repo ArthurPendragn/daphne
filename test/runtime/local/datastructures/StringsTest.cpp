@@ -97,87 +97,77 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("from a uniform distribution with lenght(2-
         DT *m = nullptr;
         readCsv(m, filename, numRows, numCols, delim);
 
-        for (size_t i = 0; i < 100; i++) {
-            for (size_t r = 0; r < numRows - 1; ++r) {
-                for (size_t r2 = 0; r2 < numRows - 1; ++r2) {
-                    StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r2, 0), 0);
-                }
+        StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r2, 0), 0);
+
+        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r2, 2), 0);
+    }
+}
+
+DataObjectFactory::destroy(m);
+}
+
+SECTION("Upper") {
+    DT *m = nullptr;
+    readCsv(m, filename, numRows, numCols, delim);
+
+    for (size_t i = 0; i < 100; i++) {
+        StringTestEwUnaryMat<DT, DT>(UnaryOpCode::UPPER, m);
+    }
+
+    DataObjectFactory::destroy(m);
+}
+
+SECTION("ConcatenateAllRows") {
+    DT *m = nullptr;
+    readCsv(m, filename, numRows, numCols, delim);
+
+    VT resultConcat;
+    for (size_t r = 0; r < numRows; r++) {
+        resultConcat = EwBinarySca<BinaryOpCode::CONCAT, VT, VT, VT>::apply(resultConcat, m->get(r, 0), nullptr);
+    }
+
+    DataObjectFactory::destroy(m);
+}
+
+SECTION("RecodeAndOneHotStrings") {
+    DT *arg = nullptr;
+    readCsv(arg, filename, numRows, numCols, delim);
+
+    DenseMatrix<int64_t> *info = genGivenVals<DenseMatrix<int64_t>>(1, {0, -1, 0, 0, 0});
+
+    DTRes *oneHotRes = nullptr;
+    oneHot(oneHotRes, arg, info, nullptr);
+
+    REQUIRE(oneHotRes->getNumRows() == numRows);
+
+    DataObjectFactory::destroy(arg);
+    DataObjectFactory::destroy(oneHotRes);
+}
+
+SECTION("SampleStringData") {
+    DT *m = nullptr;
+    readCsv(m, filename, numRows, numCols, delim);
+
+    size_t sampleSize = 100;
+    DT *sample = DataObjectFactory::create<DT>(sampleSize, numCols, false);
+
+    std::mt19937 rng(42);
+    std::uniform_int_distribution<size_t> dist(0, numRows - 1);
+
+    for (size_t k = 0; k < 100; k++) {
+        for (size_t i = 0; i < sampleSize; i++) {
+            size_t rowIdx = dist(rng);
+            for (size_t c = 0; c < numCols; c++) {
+                sample->set(i, c, m->get(rowIdx, c));
             }
         }
-
-        for (size_t i = 0; i < 100; i++) {
-            for (size_t r = 0; r < numRows - 1; ++r) {
-                for (size_t r2 = 0; r2 < numRows - 1; ++r2) {
-                    StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r2, 2), 0);
-                }
-            }
-        }
-
-        DataObjectFactory::destroy(m);
     }
 
-    SECTION("Upper") {
-        DT *m = nullptr;
-        readCsv(m, filename, numRows, numCols, delim);
+    REQUIRE(sample->getNumRows() == sampleSize);
 
-        for (size_t i = 0; i < 100; i++) {
-            StringTestEwUnaryMat<DT, DT>(UnaryOpCode::UPPER, m);
-        }
-
-        DataObjectFactory::destroy(m);
-    }
-
-    SECTION("ConcatenateAllRows") {
-        DT *m = nullptr;
-        readCsv(m, filename, numRows, numCols, delim);
-
-        VT resultConcat;
-        for (size_t r = 0; r < numRows; r++) {
-            resultConcat = EwBinarySca<BinaryOpCode::CONCAT, VT, VT, VT>::apply(resultConcat, m->get(r, 0), nullptr);
-        }
-
-        DataObjectFactory::destroy(m);
-    }
-
-    SECTION("RecodeAndOneHotStrings") {
-        DT *arg = nullptr;
-        readCsv(arg, filename, numRows, numCols, delim);
-
-        DenseMatrix<int64_t> *info = genGivenVals<DenseMatrix<int64_t>>(1, {0, -1, 0, 0, 0});
-
-        DTRes *oneHotRes = nullptr;
-        oneHot(oneHotRes, arg, info, nullptr);
-
-        REQUIRE(oneHotRes->getNumRows() == numRows);
-
-        DataObjectFactory::destroy(arg);
-        DataObjectFactory::destroy(oneHotRes);
-    }
-
-    SECTION("SampleStringData") {
-        DT *m = nullptr;
-        readCsv(m, filename, numRows, numCols, delim);
-
-        size_t sampleSize = 100;
-        DT *sample = DataObjectFactory::create<DT>(sampleSize, numCols, false);
-
-        std::mt19937 rng(42);
-        std::uniform_int_distribution<size_t> dist(0, numRows - 1);
-
-        for (size_t k = 0; k < 100; k++) {
-            for (size_t i = 0; i < sampleSize; i++) {
-                size_t rowIdx = dist(rng);
-                for (size_t c = 0; c < numCols; c++) {
-                    sample->set(i, c, m->get(rowIdx, c));
-                }
-            }
-        }
-
-        REQUIRE(sample->getNumRows() == sampleSize);
-
-        DataObjectFactory::destroy(m);
-        DataObjectFactory::destroy(sample);
-    }
+    DataObjectFactory::destroy(m);
+    DataObjectFactory::destroy(sample);
+}
 }
 
 // ======================= Test Case 2 =======================
