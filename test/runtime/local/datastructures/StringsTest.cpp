@@ -121,7 +121,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("from a uniform distribution with lenght(2-
         readCsv(m, filename, numRows, numCols, delim);
 
         for (size_t i = 0; i < 100; i++) {
-            StringTestEwUnaryMat<std::string, std::string>(UnaryOpCode::UPPER, m);
+            StringTestEwUnaryMat<DT, DT>(UnaryOpCode::UPPER, m);
         }
 
         DataObjectFactory::destroy(m);
@@ -247,7 +247,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("from a skewd distribution with lenght(2-10
         readCsv(m, filename, numRows, numCols, delim);
 
         for (size_t i = 0; i < 100; i++) {
-            StringTestEwUnaryMat<std::string, std::string>(UnaryOpCode::UPPER, m);
+            StringTestEwUnaryMat<DT, DT>(UnaryOpCode::UPPER, m);
         }
 
         DataObjectFactory::destroy(m);
@@ -373,7 +373,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("from a skewd distribution with lenght(200-
         readCsv(m, filename, numRows, numCols, delim);
 
         for (size_t i = 0; i < 100; i++) {
-            StringTestEwUnaryMat<std::string, std::string>(UnaryOpCode::UPPER, m);
+            StringTestEwUnaryMat<DT, DT>(UnaryOpCode::UPPER, m);
         }
 
         DataObjectFactory::destroy(m);
