@@ -109,6 +109,9 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("from a uniform distribution with lenght(2-
             }
         }
 
+        REQUIRE(m->getNumRows() == numRows);
+        REQUIRE(m->getNumCols() == numCols);
+
         DataObjectFactory::destroy(m);
     }
 
