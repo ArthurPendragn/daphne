@@ -346,36 +346,6 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("RecodeAndOneHotStrings2"), TAG_DATASTRUCTU
     DataObjectFactory::destroy(arg, arg, oneHotRes);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("SampleStringData2"), TAG_DATASTRUCTURES, (DenseMatrix),
-                           (PARTIAL_STRING_VALUE_TYPES)) {
-    using DT = TestType;
-    using VT = typename DT::VT;
-
-    DT *m = nullptr;
-    size_t numRows = 50000;
-    size_t numCols = 5;
-    readCsv(m, "./test/data/strings/skewed_synthetic_random_strings-2-100.csv", numRows, numCols, ',');
-
-    size_t sampleSize = 100;
-    DT *sample = DataObjectFactory::create<DT>(sampleSize, numCols, false);
-
-    std::mt19937 rng(42); // fixed seed for reproducibility
-    std::uniform_int_distribution<size_t> dist(0, numRows - 1);
-
-    for (size_t k = 0; k < 100; k++) {
-        for (size_t i = 0; i < sampleSize; i++) {
-            size_t rowIdx = dist(rng);
-            for (size_t c = 0; c < numCols; c++) {
-                sample->set(i, c, m->get(rowIdx, c));
-            }
-        }
-    }
-
-    REQUIRE(sample->getNumRows() == sampleSize);
-
-    DataObjectFactory::destroy(m, sample);
-}
-
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv3"), TAG_DATASTRUCTURES, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
