@@ -97,9 +97,17 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("from a uniform distribution with lenght(2-
         DT *m = nullptr;
         readCsv(m, filename, numRows, numCols, delim);
 
-        StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r2, 0), 0);
+        for (size_t r = 0; r < numRows - 1; ++r) {
+            for (size_t r2 = 0; r2 < numRows - 1; ++r2) {
+                StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r2, 0), 0);
+            }
+        }
 
-        StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r2, 2), 0);
+        for (size_t r = 0; r < numRows - 1; ++r) {
+            for (size_t r2 = 0; r2 < numRows - 1; ++r2) {
+                StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r2, 2), 0);
+            }
+        }
 
         DataObjectFactory::destroy(m);
     }
