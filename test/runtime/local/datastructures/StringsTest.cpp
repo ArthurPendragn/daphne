@@ -300,17 +300,17 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Data Generation"), TAG_DAT
         }
     }
     SECTION("Fill") {
-        DenseMatrix<VT> *res = nullptr;
         VT arg = VT("abc");
         for (size_t i = 0; i < LOOP_SIZE; i++) {
+            DenseMatrix<VT> *res = nullptr;
             fill(res, arg, numRows, numCols, nullptr);
         }
     }
 
     SECTION("Fill Long") {
-        DenseMatrix<VT> *res = nullptr;
         VT arg = VT("abcdefghijklmnopqrstuvwxyz");
         for (size_t i = 0; i < LOOP_SIZE; i++) {
+            DenseMatrix<VT> *res = nullptr;
             fill(res, arg, numRows, numCols, nullptr);
         }
     }
@@ -326,7 +326,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - ReadCsv"), TAG_DATASTRUCTU
     size_t numRows = 50000;
     size_t numCols = 5;
 
-    char filename[] = " ./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
+    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
     char delim = ',';
 
     readCsv(m, filename, numRows, numCols, delim);
@@ -348,7 +348,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - EwBinaryMat"), TAG_DATASTR
     size_t numRows = 50000;
     size_t numCols = 5;
 
-    char filename[] = " ./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
+    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
     char delim = ',';
 
     readCsv(m1, filename, numRows, numCols, delim);
@@ -389,7 +389,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - EwBinarySca"), TAG_DATASTR
     size_t numRows = 50000;
     size_t numCols = 5;
 
-    char filename[] = " ./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
+    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
     char delim = ',';
 
     readCsv(m, filename, numRows, numCols, delim);
@@ -442,7 +442,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - Operations"), TAG_DATASTRU
     size_t numRows = 50000;
     size_t numCols = 5;
 
-    char filename[] = " ./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
+    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
     char delim = ',';
 
     readCsv(m, filename, numRows, numCols, delim);
@@ -468,7 +468,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - Operations2"), TAG_DATASTR
     DT *m = nullptr;
     size_t numRows = 50000;
     size_t numCols = 5;
-    char filename[] = " ./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
+    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
     char delim = ',';
 
     readCsv(m, filename, numRows, numCols, delim);
@@ -496,7 +496,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - RecodeAndOneHotStrings"), 
     DT *arg = nullptr;
     size_t numRows = 50000;
     size_t numCols = 5;
-    char filename[] = " ./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
+    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
     char delim = ',';
     readCsv(arg, filename, numRows, numCols, delim);
 
