@@ -8,7 +8,11 @@
 #include <runtime/local/kernels/EwBinaryMat.h>
 #include <runtime/local/kernels/EwBinarySca.h>
 #include <runtime/local/kernels/EwUnaryMat.h>
+#include <runtime/local/kernels/Fill.h>
 #include <runtime/local/kernels/OneHot.h>
+#include <runtime/local/kernels/Reshape.h>
+#include <runtime/local/kernels/Reverse.h>
+#include <runtime/local/kernels/Transpose.h>
 
 #include <tags.h>
 
@@ -78,6 +82,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
     using DTRes = DenseMatrix<int64_t>;
 
     DT *m1 = nullptr;
+    DT *m2 = nullptr;
 
     size_t numRows = 50000;
     size_t numCols = 5;
@@ -230,7 +235,9 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - RecodeAndOneHotStrings"), 
     DT *arg = nullptr;
     size_t numRows = 50000;
     size_t numCols = 5;
-    readCsv(arg, "./test/data/strings/uniform_synthetic_random_strings.csv", numRows, numCols, ',');
+    char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
+    char delim = ',';
+    readCsv(arg, filename, numRows, numCols, delim);
 
     DenseMatrix<int64_t> *info = genGivenVals<DenseMatrix<int64_t>>(1, {0, -1, 0, 0, 0});
 
@@ -268,6 +275,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Data Generation"), TAG_DAT
             }
         }
         REQUIRE(sample->getNumRows() == sampleSize);
+        DataObjectFactory::destroy(sample);
     }
 
     SECTION("Transpose") {
