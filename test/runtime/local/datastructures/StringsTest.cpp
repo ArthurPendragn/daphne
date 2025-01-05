@@ -257,6 +257,9 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Data Generation"), TAG_DAT
     DT *m = nullptr;
     size_t numRows = 50000;
     size_t numCols = 5;
+    char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
+    char delim = ',';
+
     SECTION("ReadCsv") { readCsv(m, filename, numRows, numCols, delim); }
 
     SECTION("Set") {
@@ -302,5 +305,5 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Data Generation"), TAG_DAT
         fill(res, arg, numRows, numCols, nullptr);
     }
 
-    DataObjectFactory::destroy(m, sample);
+    DataObjectFactory::destroy(m);
 }
