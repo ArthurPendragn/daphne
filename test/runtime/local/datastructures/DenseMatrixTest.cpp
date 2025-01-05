@@ -271,10 +271,9 @@ TEMPLATE_TEST_CASE("DenseMatrix with string value type", TAG_DATASTRUCTURES, ALL
             ValueType("abcdefghijklm"), ValueType("11"), ValueType("abcdefghijklm"), ValueType("13"),
             ValueType("abcdefghijklm"), ValueType("21"), ValueType("abcdefghijklm"), ValueType("23")};
 
-        expectedStrings exp2 = {ValueType("abcdefghijklm"), ValueType("abcdefghijkl"),  ValueType("abcdefghijklm"),
-                                ValueType("abcdefghijkl"),  ValueType("abcdefghijklm"), ValueType("abcdefghijkl"),
-                                ValueType("abcdefghijklm"), ValueType("abcdefghijkl"),  ValueType("abcdefghijklm"),
-                                ValueType("abcdefghijkl"),  ValueType("abcdefghijklm"), ValueType("abcdefghijkl")};
+        expectedStrings exp2 = {ValueType("0"),  ValueType("abcdefghijkl"), ValueType("2"),  ValueType("abcdefghijkl"),
+                                ValueType("10"), ValueType("abcdefghijkl"), ValueType("12"), ValueType("abcdefghijkl"),
+                                ValueType("20"), ValueType("abcdefghijkl"), ValueType("22"), ValueType("abcdefghijkl")};
         DenseMatrix<ValueType> *m = DataObjectFactory::create<DenseMatrix<ValueType>>(numRows, numCols, false);
 
         for (size_t r = 0; r < numRows; r++)
