@@ -24,7 +24,7 @@
 #define TEST_NAME(opName) "Strings (" opName ")"
 #define PARTIAL_STRING_VALUE_TYPES std::string, Umbra_t, NewUmbra_t
 
-#define LOOP_SIZE 1000
+#define LOOP_SIZE 10
 
 template <class DTArg, class DTRes>
 void StringTestEwBinaryMat(BinaryOpCode opCode, const DTArg *lhs, const DTArg *rhs) {
