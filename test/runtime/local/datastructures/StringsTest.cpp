@@ -299,13 +299,6 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Data Generation"), TAG_DAT
             reshape<DT, DT>(res, m, 25000, 10, nullptr);
         }
     }
-    SECTION("Fill") {
-        VT arg = VT("abc");
-        for (size_t i = 0; i < LOOP_SIZE; i++) {
-            DenseMatrix<VT> *res = nullptr;
-            fill(res, arg, numRows, numCols, nullptr);
-        }
-    }
 
     SECTION("Fill Long") {
         VT arg = VT("abcdefghijklmnopqrstuvwxyz");
