@@ -24,7 +24,7 @@
 #define TEST_NAME(opName) "Strings (" opName ")"
 #define PARTIAL_STRING_VALUE_TYPES std::string, Umbra_t, NewUmbra_t
 
-#define LOOP_SIZE 10
+#define LOOP_SIZE 100
 
 template <class DTArg, class DTRes>
 void StringTestEwBinaryMat(BinaryOpCode opCode, const DTArg *lhs, const DTArg *rhs) {
@@ -508,7 +508,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - Data Generation"), TAG_DAT
     DT *m = nullptr;
     size_t numRows = 50000;
     size_t numCols = 5;
-    char filename[] = " ./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
+    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
     char delim = ',';
 
     readCsv(m, filename, numRows, numCols, delim);
