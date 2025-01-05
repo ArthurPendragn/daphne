@@ -90,10 +90,8 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
     char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
     char delim = ',';
 
-    SECTION("ReadCsv") {
-        readCsv(m1, filename, numRows, numCols, delim);
-        readCsv(m2, filename, numRows, numCols, delim);
-    }
+    readCsv(m1, filename, numRows, numCols, delim);
+    readCsv(m2, filename, numRows, numCols, delim);
 
     SECTION("EQ") {
         for (size_t i = 0; i < 100; i++)
@@ -133,7 +131,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinarySca"), TAG_DATASTR
     char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
     char delim = ',';
 
-    SECTION("ReadCsv") { readCsv(m, filename, numRows, numCols, delim); }
+    readCsv(m, filename, numRows, numCols, delim);
 
     SECTION("EQ") {
         for (size_t i = 0; i < 100; i++) {
