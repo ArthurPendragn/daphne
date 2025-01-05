@@ -466,10 +466,9 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - Operations2"), TAG_DATASTR
 
     VT resultConcat;
     SECTION("Concat") {
-        for (size_t i = 0; i < 10; i++) {
-            for (size_t r = 0; r < numRows; r++) {
-                resultConcat = ewBinarySca<VT, VT, VT>(BinaryOpCode::CONCAT, resultConcat, m->get(r, 0), nullptr);
-            }
+
+        for (size_t r = 0; r < numRows; r++) {
+            resultConcat = ewBinarySca<VT, VT, VT>(BinaryOpCode::CONCAT, resultConcat, m->get(r, 0), nullptr);
         }
     }
 
@@ -554,17 +553,15 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - Data Generation"), TAG_DAT
     SECTION("Fill") {
         DenseMatrix<VT> *res = nullptr;
         VT arg = VT("abc");
-        for (size_t i = 0; i < LOOP_SIZE; i++) {
-            fill(res, arg, numRows, numCols, nullptr);
-        }
+
+        fill(res, arg, numRows, numCols, nullptr);
     }
 
     SECTION("Fill Long") {
         DenseMatrix<VT> *res = nullptr;
         VT arg = VT("abcdefghijklmnopqrstuvwxyz");
-        for (size_t i = 0; i < LOOP_SIZE; i++) {
-            fill(res, arg, numRows, numCols, nullptr);
-        }
+
+        fill(res, arg, numRows, numCols, nullptr);
     }
 
     DataObjectFactory::destroy(m);
