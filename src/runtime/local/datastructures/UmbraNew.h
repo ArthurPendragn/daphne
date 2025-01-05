@@ -12,7 +12,7 @@
 
 class NewUmbra_t {
   private:
-    static constexpr std::size_t SHORT_CAPACITY = 12;
+    static constexpr std::size_t SHORT_CAPACITY = 16;
 
     uint32_t length = 0;
 

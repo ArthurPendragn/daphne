@@ -148,10 +148,11 @@ class Umbra_t {
             return false;
         }
         if (length <= 12) {
-            return std::memcmp(short_str, other.short_str, length) == 0;
+            return std::equal(short_str, short_str + length, other.short_str);
+
         } else {
-            return (std::memcmp(long_str.prefix, other.long_str.prefix, 4) == 0) &&
-                   (std::memcmp(long_str.ptr, other.long_str.ptr, length) == 0);
+            return std::equal(long_str.prefix, long_str.prefix + 4, other.long_str.prefix) &&
+                   std::equal(long_str.ptr, long_str.ptr + length, other.long_str.ptr);
         }
     }
 
@@ -412,4 +413,4 @@ template <> struct hash<Umbra_t> {
         return std::hash<std::string_view>()(std::string_view(key.get(), key.size()));
     }
 };
-} 
+} // namespace std

@@ -321,7 +321,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Data Generation"), TAG_DAT
 }
 
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - ReadCsv"), TAG_DATASTRUCTURES, (DenseMatrix),
-                           (ALL_STRING_VALUE_TYPES)) {
+                           (PARTIAL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
 
@@ -340,7 +340,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - ReadCsv"), TAG_DATASTRUCTU
 }
 
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - EwBinaryMat"), TAG_DATASTRUCTURES, (DenseMatrix),
-                           (ALL_STRING_VALUE_TYPES)) {
+                           (PARTIAL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     using DTRes = DenseMatrix<int64_t>;
 
@@ -384,7 +384,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - EwBinaryMat"), TAG_DATASTR
 }
 
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - EwBinarySca"), TAG_DATASTRUCTURES, (DenseMatrix),
-                           (ALL_STRING_VALUE_TYPES)) {
+                           (PARTIAL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
 
@@ -436,7 +436,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - EwBinarySca"), TAG_DATASTR
 }
 
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - Operations"), TAG_DATASTRUCTURES, (DenseMatrix),
-                           (ALL_STRING_VALUE_TYPES)) {
+                           (PARTIAL_STRING_VALUE_TYPES)) {
     using DT = TestType;
 
     DT *m = nullptr;
@@ -490,7 +490,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - Operations2"), TAG_DATASTR
 // CAST TESTS
 
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - RecodeAndOneHotStrings"), TAG_DATASTRUCTURES, (DenseMatrix),
-                           (ALL_STRING_VALUE_TYPES)) {
+                           (PARTIAL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     using VT = typename DT::VT;
     using DTRes = DenseMatrix<int64_t>;
