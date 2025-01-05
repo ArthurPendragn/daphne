@@ -184,7 +184,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Operations"), TAG_DATASTRU
     char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
     char delim = ',';
 
-    SECTION("ReadCsv") { readCsv(m, filename, numRows, numCols, delim); }
+    readCsv(m, filename, numRows, numCols, delim);
 
     SECTION("Upper") {
         for (size_t i = 0; i < 100; i++)
@@ -210,7 +210,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Operations2"), TAG_DATASTR
     char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
     char delim = ',';
 
-    SECTION("ReadCsv") { readCsv(m, filename, numRows, numCols, delim); }
+    readCsv(m, filename, numRows, numCols, delim);
 
     VT resultConcat;
     SECTION("Concat") {
@@ -258,7 +258,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Data Generation"), TAG_DAT
     char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
     char delim = ',';
 
-    SECTION("ReadCsv") { readCsv(m, filename, numRows, numCols, delim); }
+    readCsv(m, filename, numRows, numCols, delim);
 
     SECTION("Set") {
         size_t sampleSize = 100;
