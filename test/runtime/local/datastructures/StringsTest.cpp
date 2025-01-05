@@ -53,7 +53,8 @@ template <typename VT> void StringTestConcat(VT lhs, VT rhs) {
     EwBinarySca<BinaryOpCode::CONCAT, VT, VT, VT>::apply(lhs, rhs, nullptr);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv"), TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv"), TAG_DATASTRUCTURES, (DenseMatrix),
+                           (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
 
@@ -71,12 +72,12 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv"), TAG_DATASTRUCTURES, (DenseMatri
     DataObjectFactory::destroy(m);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq- Mat"), TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTRUCTURES, (DenseMatrix),
+                           (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     using DTRes = DenseMatrix<int64_t>;
 
     DT *m1 = nullptr;
-    DT *m2 = nullptr;
 
     size_t numRows = 50000;
     size_t numCols = 5;
@@ -84,11 +85,30 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq- Mat"), TAG_DATASTRUCTURES, (DenseMatri
     char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
     char delim = ',';
 
-    readCsv(m1, filename, numRows, numCols, delim);
-    readCsv(m2, filename, numRows, numCols, delim);
+    SECTION("ReadCsv") {
+        readCsv(m1, filename, numRows, numCols, delim);
+        readCsv(m2, filename, numRows, numCols, delim);
+    }
 
-    for (size_t i = 0; i < 1000; i++)
-        StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::EQ, m1, m2);
+    SECTION("EQ") {
+        for (size_t i = 0; i < 100; i++)
+            StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::EQ, m1, m2);
+    }
+
+    SECTION("NEQ") {
+        for (size_t i = 0; i < 100; i++)
+            StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::NEQ, m1, m2);
+    }
+
+    SECTION("LT") {
+        for (size_t i = 0; i < 100; i++)
+            StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::LT, m1, m2);
+    }
+
+    SECTION("GT") {
+        for (size_t i = 0; i < 100; i++)
+            StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::GT, m1, m2);
+    }
 
     REQUIRE(m1->getNumRows() == numRows);
     REQUIRE(m1->getNumCols() == numCols);
@@ -97,7 +117,8 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq- Mat"), TAG_DATASTRUCTURES, (DenseMatri
     DataObjectFactory::destroy(m2);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca"), TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinarySca"), TAG_DATASTRUCTURES, (DenseMatrix),
+                           (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
 
@@ -107,27 +128,51 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca"), TAG_DATASTRUCTURES, (DenseMatr
     char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
     char delim = ',';
 
-    readCsv(m, filename, numRows, numCols, delim);
+    SECTION("ReadCsv") { readCsv(m, filename, numRows, numCols, delim); }
 
-    for (size_t i = 0; i < 100; i++) {
-        for (size_t r = 0; r < numRows - 1; ++r) {
-            for (size_t r2 = 0; r < numRows - 1; ++r)
-                StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r2, 0), 0);
+    SECTION("EQ") {
+        for (size_t i = 0; i < 100; i++) {
+            for (size_t r = 0; r < numRows - 1; ++r) {
+                for (size_t r2 = 0; r < numRows - 1; ++r)
+                    StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r2, 0), 0);
+            }
         }
     }
 
-    for (size_t i = 0; i < 100; i++) {
-        for (size_t r = 0; r < numRows - 1; ++r) {
-            for (size_t r2 = 0; r < numRows - 1; ++r)
-                StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r2, 2), 0);
+    SECTION("NEQ") {
+        for (size_t i = 0; i < 100; i++) {
+            for (size_t r = 0; r < numRows - 1; ++r) {
+                for (size_t r2 = 0; r < numRows - 1; ++r)
+                    StringTestEwBinarySca<BinaryOpCode::NEQ>(m->get(r, 0), m->get(r2, 0), 0);
+            }
+        }
+    }
+
+    SECTION("LT") {
+        for (size_t i = 0; i < 100; i++) {
+            for (size_t r = 0; r < numRows - 1; ++r) {
+                for (size_t r2 = 0; r < numRows - 1; ++r)
+                    StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 0), m->get(r2, 0), 0);
+            }
+        }
+    }
+
+    SECTION("GT") {
+        for (size_t i = 0; i < 100; i++) {
+            for (size_t r = 0; r < numRows - 1; ++r) {
+                for (size_t r2 = 0; r < numRows - 1; ++r)
+                    StringTestEwBinarySca<BinaryOpCode::GT>(m->get(r, 0), m->get(r2, 0), 0);
+            }
         }
     }
 
     DataObjectFactory::destroy(m);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Upper"), TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Operations"), TAG_DATASTRUCTURES, (DenseMatrix),
+                           (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
+
     DT *m = nullptr;
 
     size_t numRows = 50000;
@@ -136,15 +181,22 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Upper"), TAG_DATASTRUCTURES, (DenseMatrix)
     char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
     char delim = ',';
 
-    readCsv(m, filename, numRows, numCols, delim);
+    SECTION("ReadCsv") { readCsv(m, filename, numRows, numCols, delim); }
 
-    for (size_t i = 0; i < 100; i++)
-        StringTestEwUnaryMat<DT, DT>(UnaryOpCode::UPPER, m);
+    SECTION("Upper") {
+        for (size_t i = 0; i < 100; i++)
+            StringTestEwUnaryMat<DT, DT>(UnaryOpCode::UPPER, m);
+    }
+
+    SECTION("Lower") {
+        for (size_t i = 0; i < 100; i++)
+            StringTestEwUnaryMat<DT, DT>(UnaryOpCode::LOWER, m);
+    }
 
     DataObjectFactory::destroy(m);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ConcatenateAllRows"), TAG_DATASTRUCTURES, (DenseMatrix),
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Operations2"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (PARTIAL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     using VT = typename DT::VT;
@@ -154,17 +206,22 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ConcatenateAllRows"), TAG_DATASTRUCTURES, 
     size_t numCols = 5;
     char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
     char delim = ',';
-    readCsv(m, filename, numRows, numCols, delim);
+
+    SECTION("ReadCsv") { readCsv(m, filename, numRows, numCols, delim); }
 
     VT resultConcat;
-    for (size_t r = 0; r < numRows; r++) {
-        resultConcat = ewBinarySca<VT, VT, VT>(BinaryOpCode::CONCAT, resultConcat, m->get(r, 0), nullptr);
+    SECTION("Concat") {
+        for (size_t r = 0; r < numRows; r++) {
+            resultConcat = ewBinarySca<VT, VT, VT>(BinaryOpCode::CONCAT, resultConcat, m->get(r, 0), nullptr);
+        }
     }
 
     DataObjectFactory::destroy(m);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("RecodeAndOneHotStrings"), TAG_DATASTRUCTURES, (DenseMatrix),
+// CAST TESTS
+
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - RecodeAndOneHotStrings"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     using VT = typename DT::VT;
@@ -185,325 +242,57 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("RecodeAndOneHotStrings"), TAG_DATASTRUCTUR
     DataObjectFactory::destroy(arg, arg, oneHotRes);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("SampleStringData"), TAG_DATASTRUCTURES, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Data Generation"), TAG_DATASTRUCTURES, (DenseMatrix),
+                           (PARTIAL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     using VT = typename DT::VT;
 
     DT *m = nullptr;
     size_t numRows = 50000;
     size_t numCols = 5;
-    readCsv(m, "./test/data/strings/uniform_synthetic_random_strings.csv", numRows, numCols, ',');
+    SECTION("ReadCsv") { readCsv(m, filename, numRows, numCols, delim); }
 
-    size_t sampleSize = 100;
-    DT *sample = DataObjectFactory::create<DT>(sampleSize, numCols, false);
+    SECTION("Set") {
+        size_t sampleSize = 100;
+        DT *sample = DataObjectFactory::create<DT>(sampleSize, numCols, false);
 
-    std::mt19937 rng(42); // fixed seed for reproducibility
-    std::uniform_int_distribution<size_t> dist(0, numRows - 1);
+        std::mt19937 rng(42); // fixed seed for reproducibility
+        std::uniform_int_distribution<size_t> dist(0, numRows - 1);
 
-    for (size_t k = 0; k < 100; k++) {
-        for (size_t i = 0; i < sampleSize; i++) {
-            size_t rowIdx = dist(rng);
-            for (size_t c = 0; c < numCols; c++) {
-                sample->set(i, c, m->get(rowIdx, c));
+        for (size_t k = 0; k < 100; k++) {
+            for (size_t i = 0; i < sampleSize; i++) {
+                size_t rowIdx = dist(rng);
+                for (size_t c = 0; c < numCols; c++) {
+                    sample->set(i, c, m->get(rowIdx, c));
+                }
             }
         }
+        REQUIRE(sample->getNumRows() == sampleSize);
     }
 
-    REQUIRE(sample->getNumRows() == sampleSize);
-
-    DataObjectFactory::destroy(m, sample);
-}
-
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv2"), TAG_DATASTRUCTURES, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
-    using DT = TestType;
-    DT *m = nullptr;
-
-    size_t numRows = 50000;
-    size_t numCols = 5;
-
-    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
-    char delim = ',';
-
-    readCsv(m, filename, numRows, numCols, delim);
-
-    REQUIRE(m->getNumRows() == numRows);
-    REQUIRE(m->getNumCols() == numCols);
-
-    DataObjectFactory::destroy(m);
-}
-
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq- Mat2"), TAG_DATASTRUCTURES, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
-    using DT = TestType;
-    using DTRes = DenseMatrix<int64_t>;
-
-    DT *m1 = nullptr;
-    DT *m2 = nullptr;
-
-    size_t numRows = 50000;
-    size_t numCols = 5;
-
-    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
-    char delim = ',';
-
-    readCsv(m1, filename, numRows, numCols, delim);
-    readCsv(m2, filename, numRows, numCols, delim);
-
-    for (size_t i = 0; i < 1000; i++)
-        StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::EQ, m1, m2);
-
-    REQUIRE(m1->getNumRows() == numRows);
-    REQUIRE(m1->getNumCols() == numCols);
-
-    DataObjectFactory::destroy(m1);
-    DataObjectFactory::destroy(m2);
-}
-
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca2"), TAG_DATASTRUCTURES, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
-    using DT = TestType;
-    DT *m = nullptr;
-
-    size_t numRows = 50000;
-    size_t numCols = 5;
-
-    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
-    char delim = ',';
-
-    readCsv(m, filename, numRows, numCols, delim);
-
-    for (size_t i = 0; i < 100; i++) {
-        for (size_t r = 0; r < numRows - 1; ++r) {
-            for (size_t r2 = 0; r < numRows - 1; ++r)
-                StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r2, 0), 0);
-        }
+    SECTION("Transpose") {
+        DT *res = nullptr;
+        transpose<DT, DT>(res, m, nullptr);
+    }
+    SECTION("Reverse") {
+        DT *res = nullptr;
+        reverse<DT, DT>(res, m, nullptr);
+    }
+    SECTION("Reshape") {
+        DT *res = nullptr;
+        reshape<DT, DT>(res, m, 25000, 10, nullptr);
+    }
+    SECTION("Fill") {
+        DenseMatrix<VT> *res = nullptr;
+        VT arg = VT("abc");
+        fill(res, arg, numRows, numCols, nullptr);
     }
 
-    for (size_t i = 0; i < 100; i++) {
-        for (size_t r = 0; r < numRows - 1; ++r) {
-            for (size_t r2 = 0; r < numRows - 1; ++r)
-                StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r2, 2), 0);
-        }
+    SECTION("Fill Long") {
+        DenseMatrix<VT> *res = nullptr;
+        VT arg = VT("abcdefghijklmnopqrstuvwxyz");
+        fill(res, arg, numRows, numCols, nullptr);
     }
-
-    DataObjectFactory::destroy(m);
-}
-
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Upper2"), TAG_DATASTRUCTURES, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
-    using DT = TestType;
-    DT *m = nullptr;
-
-    size_t numRows = 50000;
-    size_t numCols = 5;
-
-    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
-    char delim = ',';
-
-    readCsv(m, filename, numRows, numCols, delim);
-
-    for (size_t i = 0; i < 100; i++)
-        StringTestEwUnaryMat<DT, DT>(UnaryOpCode::UPPER, m);
-
-    DataObjectFactory::destroy(m);
-}
-
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ConcatenateAllRows2"), TAG_DATASTRUCTURES, (DenseMatrix),
-                           (PARTIAL_STRING_VALUE_TYPES)) {
-    using DT = TestType;
-    using VT = typename DT::VT;
-
-    DT *m = nullptr;
-    size_t numRows = 50000;
-    size_t numCols = 5;
-    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-2-100.csv";
-    char delim = ',';
-    readCsv(m, filename, numRows, numCols, delim);
-
-    VT resultConcat;
-    for (size_t r = 0; r < numRows; r++) {
-        resultConcat = ewBinarySca<VT, VT, VT>(BinaryOpCode::CONCAT, resultConcat, m->get(r, 0), nullptr);
-    }
-
-    DataObjectFactory::destroy(m);
-}
-
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("RecodeAndOneHotStrings2"), TAG_DATASTRUCTURES, (DenseMatrix),
-                           (PARTIAL_STRING_VALUE_TYPES)) {
-    using DT = TestType;
-    using VT = typename DT::VT;
-    using DTRes = DenseMatrix<int64_t>;
-
-    DT *arg = nullptr;
-    size_t numRows = 50000;
-    size_t numCols = 5;
-    readCsv(arg, "./test/data/strings/skewed_synthetic_random_strings-2-100.csv", numRows, numCols, ',');
-
-    DenseMatrix<int64_t> *info = genGivenVals<DenseMatrix<int64_t>>(1, {0, -1, 0, 0, 0});
-
-    DTRes *oneHotRes = nullptr;
-    oneHot(oneHotRes, arg, info, nullptr);
-
-    REQUIRE(oneHotRes->getNumRows() == numRows);
-
-    DataObjectFactory::destroy(arg, arg, oneHotRes);
-}
-
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ReadCsv3"), TAG_DATASTRUCTURES, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
-    using DT = TestType;
-    DT *m = nullptr;
-
-    size_t numRows = 50000;
-    size_t numCols = 5;
-
-    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-200-1000.csv";
-    char delim = ',';
-
-    readCsv(m, filename, numRows, numCols, delim);
-
-    REQUIRE(m->getNumRows() == numRows);
-    REQUIRE(m->getNumCols() == numCols);
-
-    DataObjectFactory::destroy(m);
-}
-
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq- Mat3"), TAG_DATASTRUCTURES, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
-    using DT = TestType;
-    using DTRes = DenseMatrix<int64_t>;
-
-    DT *m1 = nullptr;
-    DT *m2 = nullptr;
-
-    size_t numRows = 50000;
-    size_t numCols = 5;
-
-    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-200-1000.csv";
-    char delim = ',';
-
-    readCsv(m1, filename, numRows, numCols, delim);
-    readCsv(m2, filename, numRows, numCols, delim);
-
-    for (size_t i = 0; i < 1000; i++)
-        StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::EQ, m1, m2);
-
-    REQUIRE(m1->getNumRows() == numRows);
-    REQUIRE(m1->getNumCols() == numCols);
-
-    DataObjectFactory::destroy(m1);
-    DataObjectFactory::destroy(m2);
-}
-
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq - Sca3"), TAG_DATASTRUCTURES, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
-    using DT = TestType;
-    DT *m = nullptr;
-
-    size_t numRows = 50000;
-    size_t numCols = 5;
-
-    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-200-1000.csv";
-    char delim = ',';
-
-    readCsv(m, filename, numRows, numCols, delim);
-
-    for (size_t i = 0; i < 100; i++) {
-        for (size_t r = 0; r < numRows - 1; ++r) {
-            for (size_t r2 = 0; r < numRows - 1; ++r)
-                StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r2, 0), 0);
-        }
-    }
-
-    for (size_t i = 0; i < 100; i++) {
-        for (size_t r = 0; r < numRows - 1; ++r) {
-            for (size_t r2 = 0; r < numRows - 1; ++r)
-                StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 2), m->get(r2, 2), 0);
-        }
-    }
-
-    DataObjectFactory::destroy(m);
-}
-
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Upper3"), TAG_DATASTRUCTURES, (DenseMatrix), (PARTIAL_STRING_VALUE_TYPES)) {
-    using DT = TestType;
-    DT *m = nullptr;
-
-    size_t numRows = 50000;
-    size_t numCols = 5;
-
-    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-200-1000.csv";
-    char delim = ',';
-
-    readCsv(m, filename, numRows, numCols, delim);
-
-    for (size_t i = 0; i < 100; i++)
-        StringTestEwUnaryMat<DT, DT>(UnaryOpCode::UPPER, m);
-
-    DataObjectFactory::destroy(m);
-}
-
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("ConcatenateAllRows3"), TAG_DATASTRUCTURES, (DenseMatrix),
-                           (PARTIAL_STRING_VALUE_TYPES)) {
-    using DT = TestType;
-    using VT = typename DT::VT;
-
-    DT *m = nullptr;
-    size_t numRows = 50000;
-    size_t numCols = 5;
-    char filename[] = "./test/data/strings/skewed_synthetic_random_strings-200-1000.csv";
-    char delim = ',';
-    readCsv(m, filename, numRows, numCols, delim);
-
-    VT resultConcat;
-    for (size_t r = 0; r < numRows; r++) {
-        resultConcat = ewBinarySca<VT, VT, VT>(BinaryOpCode::CONCAT, resultConcat, m->get(r, 0), nullptr);
-    }
-
-    DataObjectFactory::destroy(m);
-}
-
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("RecodeAndOneHotStrings3"), TAG_DATASTRUCTURES, (DenseMatrix),
-                           (PARTIAL_STRING_VALUE_TYPES)) {
-    using DT = TestType;
-    using VT = typename DT::VT;
-    using DTRes = DenseMatrix<int64_t>;
-
-    DT *arg = nullptr;
-    size_t numRows = 50000;
-    size_t numCols = 5;
-    readCsv(arg, "./test/data/strings/skewed_synthetic_random_strings-200-1000.csv", numRows, numCols, ',');
-
-    DenseMatrix<int64_t> *info = genGivenVals<DenseMatrix<int64_t>>(1, {0, -1, 0, 0, 0});
-
-    DTRes *oneHotRes = nullptr;
-    oneHot(oneHotRes, arg, info, nullptr);
-
-    REQUIRE(oneHotRes->getNumRows() == numRows);
-
-    DataObjectFactory::destroy(arg, arg, oneHotRes);
-}
-
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("SampleStringData3"), TAG_DATASTRUCTURES, (DenseMatrix),
-                           (PARTIAL_STRING_VALUE_TYPES)) {
-    using DT = TestType;
-    using VT = typename DT::VT;
-
-    DT *m = nullptr;
-    size_t numRows = 50000;
-    size_t numCols = 5;
-    readCsv(m, "./test/data/strings/skewed_synthetic_random_strings-200-1000.csv", numRows, numCols, ',');
-
-    size_t sampleSize = 100;
-    DT *sample = DataObjectFactory::create<DT>(sampleSize, numCols, false);
-
-    std::mt19937 rng(42); // fixed seed for reproducibility
-    std::uniform_int_distribution<size_t> dist(0, numRows - 1);
-
-    for (size_t k = 0; k < 100; k++) {
-        for (size_t i = 0; i < sampleSize; i++) {
-            size_t rowIdx = dist(rng);
-            for (size_t c = 0; c < numCols; c++) {
-                sample->set(i, c, m->get(rowIdx, c));
-            }
-        }
-    }
-
-    REQUIRE(sample->getNumRows() == sampleSize);
 
     DataObjectFactory::destroy(m, sample);
 }
