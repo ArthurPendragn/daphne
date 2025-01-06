@@ -81,6 +81,8 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - get"), TAG_DATASTRUCTURES,
     using VT = typename DT::VT;
     DT *m = nullptr;
 
+    readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
+
     SECTION("getNumRows()") {
         for (size_t i = 0; i < LOOP_SIZE; i++)
             const size_t numRowsLhs = m->getNumRows();
