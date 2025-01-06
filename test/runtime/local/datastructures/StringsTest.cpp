@@ -91,49 +91,47 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
 
     BENCHMARK("LT") { StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::LT, m1, m2); }
 
-    SECTION("GT") { StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::GT, m1, m2); }
+    BENCHMARK("GT") { StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::GT, m1, m2); }
 
     DataObjectFactory::destroy(m1);
     DataObjectFactory::destroy(m2);
 }
-/*
+
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinarySca"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
     readCsv(m, filename, numRows, numCols, delim);
 
-    SECTION("EQ") { StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r2, 0), 0); }
-}
-}
+    BENCHMARK("EQ") {
+        or (size_t r = 0; r < numRows - 1; ++r) {
+            for (size_t r2 = 0; r < numRows - 1; ++r)
+                EwBinarySca<BinaryOpCode::EQ, int64_t, DT, DT>::apply(lhs, rhs, nullptr);
+        }
+    }
 
-SECTION("NEQ") {
+    BENCHMARK("NEQ") {
         for (size_t r = 0; r < numRows - 1; ++r) {
             for (size_t r2 = 0; r < numRows - 1; ++r)
                 EwBinarySca<BinaryOpCode::NEQ, int64_t, DT, DT>::apply(lhs, rhs, nullptr);
         }
     }
-}
 
-SECTION("LT") {
-    for (size_t i = 0; i < LOOP_SIZE; i++) {
+    BENCHMARK("LT") {
         for (size_t r = 0; r < numRows - 1; ++r) {
             for (size_t r2 = 0; r < numRows - 1; ++r)
-                StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 0), m->get(r2, 0), 0);
+                EwBinarySca<BinaryOpCode::LT, int64_t, DT, DT>::apply(lhs, rhs, nullptr);
         }
     }
-}
 
-SECTION("GT") {
-    for (size_t i = 0; i < LOOP_SIZE; i++) {
+    BENCHMARK("GT") {
         for (size_t r = 0; r < numRows - 1; ++r) {
             for (size_t r2 = 0; r < numRows - 1; ++r)
-                StringTestEwBinarySca<BinaryOpCode::GT>(m->get(r, 0), m->get(r2, 0), 0);
+                EwBinarySca<BinaryOpCode::GT, int64_t, DT, DT>::apply(lhs, rhs, nullptr);
         }
     }
-}
 
-DataObjectFactory::destroy(m);
+    DataObjectFactory::destroy(m);
 }
 
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Operations"), TAG_DATASTRUCTURES, (DenseMatrix),
