@@ -75,6 +75,31 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv"), TAG_DATASTRUCTU
     DataObjectFactory::destroy(m);
 }
 
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv"), TAG_DATASTRUCTURES, (DenseMatrix),
+                           (ALL_STRING_VALUE_TYPES)) {
+    using DT = TestType;
+    DT *m = nullptr;
+
+    SECTION("getNumRows()") {
+        for (size_t i = 0; i < LOOP_SIZE; i++)
+            const size_t numRowsLhs = m->getNumRows()
+    }
+    SECTION("getNumCols()") {
+        for (size_t i = 0; i < LOOP_SIZE; i++)
+            const size_t numColsLhs = m->getNumCols()
+    }
+    SECTION("getValues()") {
+        for (size_t i = 0; i < LOOP_SIZE; i++)
+            DT *values = m->getValues()
+    }
+    SECTION("getNumCols()") {
+        for (size_t i = 0; i < LOOP_SIZE; i++)
+            m->getNumCols()
+    }
+
+    DataObjectFactory::destroy(m);
+}
+
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
