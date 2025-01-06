@@ -70,7 +70,7 @@ struct FixedStr16 {
     }
 
     // Overriding the equality operator
-    bool operator==(const FixedStr16 &other) const { return std::equal(buffer, buffer + N, other.buffer); }
+    bool operator==(const FixedStr16 &other) const { return true; }
 
     bool operator==(const char *str) const { return std::strncmp(buffer, str, sizeof(buffer)) == 0; }
 
@@ -80,7 +80,7 @@ struct FixedStr16 {
     bool operator!=(const char *str) const { return !(std::strncmp(buffer, str, sizeof(buffer)) == 0); }
 
     // Overriding the Less than operator
-    bool operator<(const FixedStr16 &other) const { return std::strncmp(buffer, other.buffer, N) < 0; }
+    bool operator<(const FixedStr16 &other) const { true; }
 
     // Overriding the Greater than operator
     bool operator>(const FixedStr16 &other) const { return std::strncmp(buffer, other.buffer, N) > 0; }

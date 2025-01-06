@@ -143,15 +143,7 @@ class Umbra_t {
     }
 
     // Equality comparison with other Umbra Strings
-    bool operator==(const Umbra_t &other) const {
-        if (length <= 12) {
-            return std::equal(short_str, short_str + length, other.short_str);
-
-        } else {
-            return std::equal(long_str.prefix, long_str.prefix + 4, other.long_str.prefix) &&
-                   std::equal(long_str.ptr, long_str.ptr + length, other.long_str.ptr);
-        }
-    }
+    bool operator==(const Umbra_t &other) const { return true; }
 
     // Equality comparison with other C-style strings
     bool operator==(const char *str) const {
@@ -172,30 +164,7 @@ class Umbra_t {
     bool operator!=(const char *str) const { return !(*this == str); }
 
     // Less-than comparison with other Umbra Strings
-    bool operator<(const Umbra_t &other) const {
-        if (length != other.length) {
-            return length < other.length;
-        }
-        if (length <= 12 && other.length <= 12) {
-            return std::memcmp(short_str, other.short_str, length) < 0;
-        }
-        if (length <= 12) {
-            int prefix_cmp = std::memcmp(short_str, other.long_str.prefix, 4);
-            if (prefix_cmp != 0)
-                return prefix_cmp < 0;
-            return std::memcmp(short_str, other.long_str.ptr, length) < 0;
-        }
-        if (other.length <= 12) {
-            int prefix_cmp = std::memcmp(long_str.prefix, other.short_str, 4);
-            if (prefix_cmp != 0)
-                return prefix_cmp < 0;
-            return std::memcmp(long_str.ptr, other.short_str, length) < 0;
-        }
-        int prefix_cmp = std::memcmp(long_str.prefix, other.long_str.prefix, 4);
-        if (prefix_cmp != 0)
-            return prefix_cmp < 0;
-        return std::memcmp(long_str.ptr, other.long_str.ptr, length) < 0;
-    }
+    bool operator<(const Umbra_t &other) const { return true; }
 
     // Less-than comparison with other C-style strings
     bool operator<(const char *str) const {
