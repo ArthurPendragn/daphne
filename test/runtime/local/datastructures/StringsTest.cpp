@@ -123,9 +123,10 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
 
     SECTION("Test") {
         EwBinaryScaFuncPtr<int64_t, VT, VT> func = getEwBinaryScaFuncPtr<int64_t, VT, VT>(BinaryOpCode::EQ);
-        /*DTRes *res = nullptr;
+        DTRes *res = nullptr;
         const VT *valuesLhs = m1->getValues();
         const VT *valuesRhs = m2->getValues();
+        /*
         int64_t *valuesRes = res->getValues();
         for (size_t r = 0; r < NUM_ROWS; r++) {
             for (size_t c = 0; c < NUM_COLS; c++) {
