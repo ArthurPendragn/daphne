@@ -78,6 +78,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv"), TAG_DATASTRUCTU
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
+    using VT = typename DT::VT;
     DT *m = nullptr;
 
     SECTION("getNumRows()") {
@@ -90,7 +91,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv"), TAG_DATASTRUCTU
     }
     SECTION("getValues()") {
         for (size_t i = 0; i < LOOP_SIZE; i++)
-            DT *values = m->getValues()
+            VT *values = m->getValues()
     }
     SECTION("getNumCols()") {
         for (size_t i = 0; i < LOOP_SIZE; i++)
