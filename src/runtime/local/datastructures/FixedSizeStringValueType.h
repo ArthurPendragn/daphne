@@ -32,7 +32,7 @@
  * character. The null-termination is required for some operations to work correctly (e.g., casting to a number).
  */
 struct FixedStr16 {
-    static const std::size_t N = 16;
+    static const std::size_t N = 17;
     char buffer[N];
 
     // Default constructor
