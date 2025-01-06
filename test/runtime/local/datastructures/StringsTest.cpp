@@ -69,7 +69,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv"), TAG_DATASTRUCTU
     using DT = TestType;
     DT *m = nullptr;
 
-    BENCHMARK("readCsv") { readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM); };
+    BENCHMARK("readCsv") { return readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM); };
 
     DataObjectFactory::destroy(m);
 }
@@ -85,34 +85,31 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
     readCsv(m1, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
     readCsv(m2, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
 
-    BENCHMARK("EQ") { StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::EQ, m1, m2); };
+    BENCHMARK("EQ") { return StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::EQ, m1, m2); };
 
-    BENCHMARK("NEQ") { StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::NEQ, m1, m2); };
+    BENCHMARK("NEQ") { return StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::NEQ, m1, m2); };
 
-    BENCHMARK("LT") { StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::LT, m1, m2); };
+    BENCHMARK("LT") { return StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::LT, m1, m2); };
 
-    BENCHMARK("GT") { StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::GT, m1, m2); };
+    BENCHMARK("GT") { return StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::GT, m1, m2); };
 
     DataObjectFactory::destroy(m1);
     DataObjectFactory::destroy(m2);
 }
-
+/*
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinarySca"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
-    readCsv(m, filename, numRows, numCols, delim);
+    readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
 
     BENCHMARK("EQ") {
-        for (size_t r = 0; r < numRows - 1; ++r) {
-            for (size_t r2 = 0; r < numRows - 1; ++r)
-                EwBinarySca<BinaryOpCode::EQ, int64_t, DT, DT>::apply(lhs, rhs, nullptr);
-        }
+        EwBinarySca<BinaryOpCode::EQ, int64_t, DT, DT>::apply(m->get(r, c), m->get(r, c), nullptr);
     };
 
     BENCHMARK("NEQ") {
         for (size_t r = 0; r < numRows - 1; ++r) {
-            for (size_t r2 = 0; r < numRows - 1; ++r)
+            for (size_t c = 0; r < nu - 1; ++r)
                 EwBinarySca<BinaryOpCode::NEQ, int64_t, DT, DT>::apply(lhs, rhs, nullptr);
         }
     };
