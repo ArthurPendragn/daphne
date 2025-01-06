@@ -75,7 +75,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv"), TAG_DATASTRUCTU
     DataObjectFactory::destroy(m);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv"), TAG_DATASTRUCTURES, (DenseMatrix),
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - get"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     using VT = typename DT::VT;
