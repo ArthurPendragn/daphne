@@ -69,11 +69,9 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv Benchmark"), TAG_D
     using DT = TestType;
     DT *m = nullptr;
 
-    BENCHMARK("ReadCsv Execution Time") {
-        readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
-        REQUIRE(m->getNumRows() == NUM_ROWS);
-        REQUIRE(m->getNumCols() == NUM_COLS);
-        DataObjectFactory::destroy(m);
+    BENCHMARK_ADVANCED("advanced")(Catch::Benchmark::Chronometer meter) {
+        set_up();
+        meter.measure([] { return readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM); });
     };
 }
 /*
