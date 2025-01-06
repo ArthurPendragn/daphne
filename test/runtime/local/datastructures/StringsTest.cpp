@@ -26,7 +26,7 @@
 
 #define LOOP_SIZE 100
 #define NUM_COLS 5
-#define NUM_ROWS 500
+#define NUM_ROWS 50000
 #define TEST_FILE_1 "./test/data/strings/uniform_synthetic_random_strings.csv"
 
 #define DELIM ','
@@ -64,17 +64,19 @@ template <typename VT> void StringTestConcat(VT lhs, VT rhs) {
     EwBinarySca<BinaryOpCode::CONCAT, VT, VT, VT>::apply(lhs, rhs, nullptr);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv Benchmark"), TAG_DATASTRUCTURES, (DenseMatrix),
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
 
-    BENCHMARK_ADVANCED("advanced")(Catch::Benchmark::Chronometer meter) {
-        set_up();
-        meter.measure([] { return readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM); });
-    };
+    readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
+
+    REQUIRE(m->getNumRows() == numRows);
+    REQUIRE(m->getNumCols() == numCols);
+
+    DataObjectFactory::destroy(m);
 }
-/*
+
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
@@ -86,52 +88,83 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
     readCsv(m1, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
     readCsv(m2, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
 
-    BENCHMARK("EQ") { return StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::EQ, m1, m2); };
+    SECTION("EQ") {
+        for (size_t i = 0; i < LOOP_SIZE; i++)
+            StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::EQ, m1, m2);
+    }
 
-    BENCHMARK("NEQ") { return StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::NEQ, m1, m2); };
+    SECTION("NEQ") {
+        for (size_t i = 0; i < LOOP_SIZE; i++)
+            StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::NEQ, m1, m2);
+    }
 
-    BENCHMARK("LT") { return StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::LT, m1, m2); };
+    SECTION("LT") {
+        for (size_t i = 0; i < LOOP_SIZE; i++)
+            StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::LT, m1, m2);
+    }
 
-    BENCHMARK("GT") { return StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::GT, m1, m2); };
+    SECTION("GT") {
+        for (size_t i = 0; i < LOOP_SIZE; i++)
+            StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::GT, m1, m2);
+    }
 
     DataObjectFactory::destroy(m1);
     DataObjectFactory::destroy(m2);
-}*/
+}
+
 /*
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinarySca"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
-    readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
 
-    BENCHMARK("EQ") {
-        EwBinarySca<BinaryOpCode::EQ, int64_t, DT, DT>::apply(m->get(r, c), m->get(r, c), nullptr);
-    };
+    size_t numRows = 50000;
+    size_t numCols = 5;
 
-    BENCHMARK("NEQ") {
-        for (size_t r = 0; r < numRows - 1; ++r) {
-            for (size_t c = 0; r < nu - 1; ++r)
-                EwBinarySca<BinaryOpCode::NEQ, int64_t, DT, DT>::apply(lhs, rhs, nullptr);
+    char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
+    char delim = ',';
+
+    readCsv(m, filename, numRows, numCols, delim);
+
+    SECTION("EQ") {
+        for (size_t i = 0; i < LOOP_SIZE; i++) {
+            for (size_t r = 0; r < numRows - 1; ++r) {
+                for (size_t r2 = 0; r < numRows - 1; ++r)
+                    StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r2, 0), 0);
+            }
         }
-    };
+    }
 
-    BENCHMARK("LT") {
-        for (size_t r = 0; r < numRows - 1; ++r) {
-            for (size_t r2 = 0; r < numRows - 1; ++r)
-                EwBinarySca<BinaryOpCode::LT, int64_t, DT, DT>::apply(lhs, rhs, nullptr);
+    SECTION("NEQ") {
+        for (size_t i = 0; i < LOOP_SIZE; i++) {
+            for (size_t r = 0; r < numRows - 1; ++r) {
+                for (size_t r2 = 0; r < numRows - 1; ++r)
+                    StringTestEwBinarySca<BinaryOpCode::NEQ>(m->get(r, 0), m->get(r2, 0), 0);
+            }
         }
-    };
+    }
 
-    BENCHMARK("GT") {
-        for (size_t r = 0; r < numRows - 1; ++r) {
-            for (size_t r2 = 0; r < numRows - 1; ++r)
-                EwBinarySca<BinaryOpCode::GT, int64_t, DT, DT>::apply(lhs, rhs, nullptr);
+    SECTION("LT") {
+        for (size_t i = 0; i < LOOP_SIZE; i++) {
+            for (size_t r = 0; r < numRows - 1; ++r) {
+                for (size_t r2 = 0; r < numRows - 1; ++r)
+                    StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 0), m->get(r2, 0), 0);
+            }
         }
-    };
+    }
+
+    SECTION("GT") {
+        for (size_t i = 0; i < LOOP_SIZE; i++) {
+            for (size_t r = 0; r < numRows - 1; ++r) {
+                for (size_t r2 = 0; r < numRows - 1; ++r)
+                    StringTestEwBinarySca<BinaryOpCode::GT>(m->get(r, 0), m->get(r2, 0), 0);
+            }
+        }
+    }
 
     DataObjectFactory::destroy(m);
 }
-/*
+
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Operations"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
@@ -523,5 +556,4 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - Data Generation"), TAG_DAT
     }
 
     DataObjectFactory::destroy(m);
-}
-*/
+}*/
