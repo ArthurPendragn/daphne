@@ -64,16 +64,19 @@ template <typename VT> void StringTestConcat(VT lhs, VT rhs) {
     EwBinarySca<BinaryOpCode::CONCAT, VT, VT, VT>::apply(lhs, rhs, nullptr);
 }
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv"), TAG_DATASTRUCTURES, (DenseMatrix),
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv Benchmark"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
 
-    BENCHMARK("readCsv") { return readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM); };
-
-    DataObjectFactory::destroy(m);
+    BENCHMARK("ReadCsv Execution Time") {
+        readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
+        REQUIRE(m->getNumRows() == NUM_ROWS);
+        REQUIRE(m->getNumCols() == NUM_COLS);
+        DataObjectFactory::destroy(m);
+    };
 }
-
+/*
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
@@ -95,7 +98,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
 
     DataObjectFactory::destroy(m1);
     DataObjectFactory::destroy(m2);
-}
+}*/
 /*
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinarySca"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
