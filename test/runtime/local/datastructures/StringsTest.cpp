@@ -127,7 +127,6 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
         const VT *valuesLhs = m1->getValues();
         const VT *valuesRhs = m2->getValues();
         int64_t *valuesRes = res->getValues();
-        /*
         for (size_t r = 0; r < NUM_ROWS; r++) {
             for (size_t c = 0; c < NUM_COLS; c++) {
                 valuesRes[c] = func(valuesLhs[c], valuesRhs[c], nullptr);
@@ -135,7 +134,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
             valuesLhs += m1->getRowSkip();
             valuesRhs += m2->getRowSkip();
             valuesRes += res->getRowSkip();
-        }*/
+        }
     }
 
     SECTION("EQ") {
