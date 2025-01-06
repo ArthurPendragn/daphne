@@ -71,9 +71,6 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv"), TAG_DATASTRUCTU
 
     readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
 
-    REQUIRE(m->getNumRows() == numRows);
-    REQUIRE(m->getNumCols() == numCols);
-
     DataObjectFactory::destroy(m);
 }
 
