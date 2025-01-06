@@ -123,7 +123,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
 
     SECTION("Test") {
         EwBinaryScaFuncPtr<int64_t, VT, VT> func = getEwBinaryScaFuncPtr<int64_t, VT, VT>(BinaryOpCode::EQ);
-        NUM_COLS *res = DataObjectFactory::create<DenseMatrix<int64_t>>(NUM_ROWS, NUM_COLS, false);
+        DTRes *res = DataObjectFactory::create<DenseMatrix<int64_t>>(NUM_ROWS, NUM_COLS, false);
         const VT *valuesLhs = m1->getValues();
         const VT *valuesRhs = m2->getValues();
         int64_t *valuesRes = res->getValues();
