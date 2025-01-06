@@ -23,6 +23,7 @@
 
 #define TEST_NAME(opName) "Strings (" opName ")"
 #define PARTIAL_STRING_VALUE_TYPES std::string, Umbra_t, NewUmbra_t
+#define CATCH_CONFIG_ENABLE_BENCHMARKING
 
 #define LOOP_SIZE 100
 #define NUM_COLS 5
@@ -69,7 +70,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv"), TAG_DATASTRUCTU
     using DT = TestType;
     DT *m = nullptr;
 
-    readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
+    BENCHMARK("readCsv") { return readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM); };
 
     DataObjectFactory::destroy(m);
 }
