@@ -104,7 +104,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinarySca"), TAG_DATASTR
     readCsv(m, filename, numRows, numCols, delim);
 
     BENCHMARK("EQ") {
-        or (size_t r = 0; r < numRows - 1; ++r) {
+        for (size_t r = 0; r < numRows - 1; ++r) {
             for (size_t r2 = 0; r < numRows - 1; ++r)
                 EwBinarySca<BinaryOpCode::EQ, int64_t, DT, DT>::apply(lhs, rhs, nullptr);
         }
