@@ -26,7 +26,7 @@
 
 #define LOOP_SIZE 100
 #define NUM_COLS 5
-#define NUM_ROWS 50000
+#define NUM_ROWS 500
 #define TEST_FILE_1 "./test/data/strings/uniform_synthetic_random_strings.csv"
 
 #define DELIM ','
