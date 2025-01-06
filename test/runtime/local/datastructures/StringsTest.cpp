@@ -70,7 +70,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv"), TAG_DATASTRUCTU
     using DT = TestType;
     DT *m = nullptr;
 
-    BENCHMARK("readCsv") { return readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM); };
+    readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
 
     DataObjectFactory::destroy(m);
 }
@@ -110,24 +110,17 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
     DataObjectFactory::destroy(m2);
 }
 
-/*
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinarySca"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
     DT *m = nullptr;
 
-    size_t numRows = 50000;
-    size_t numCols = 5;
-
-    char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
-    char delim = ',';
-
-    readCsv(m, filename, numRows, numCols, delim);
+    readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
 
     SECTION("EQ") {
         for (size_t i = 0; i < LOOP_SIZE; i++) {
-            for (size_t r = 0; r < numRows - 1; ++r) {
-                for (size_t r2 = 0; r < numRows - 1; ++r)
+            for (size_t r = 0; r < NUM_ROWS - 1; ++r) {
+                for (size_t r2 = 0; r < NUM_ROWS - 1; ++r)
                     StringTestEwBinarySca<BinaryOpCode::EQ>(m->get(r, 0), m->get(r2, 0), 0);
             }
         }
@@ -135,8 +128,8 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinarySca"), TAG_DATASTR
 
     SECTION("NEQ") {
         for (size_t i = 0; i < LOOP_SIZE; i++) {
-            for (size_t r = 0; r < numRows - 1; ++r) {
-                for (size_t r2 = 0; r < numRows - 1; ++r)
+            for (size_t r = 0; r < NUM_ROWS - 1; ++r) {
+                for (size_t r2 = 0; r < NUM_ROWS - 1; ++r)
                     StringTestEwBinarySca<BinaryOpCode::NEQ>(m->get(r, 0), m->get(r2, 0), 0);
             }
         }
@@ -144,8 +137,8 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinarySca"), TAG_DATASTR
 
     SECTION("LT") {
         for (size_t i = 0; i < LOOP_SIZE; i++) {
-            for (size_t r = 0; r < numRows - 1; ++r) {
-                for (size_t r2 = 0; r < numRows - 1; ++r)
+            for (size_t r = 0; r < NUM_ROWS - 1; ++r) {
+                for (size_t r2 = 0; r < NUM_ROWS - 1; ++r)
                     StringTestEwBinarySca<BinaryOpCode::LT>(m->get(r, 0), m->get(r2, 0), 0);
             }
         }
@@ -153,8 +146,8 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinarySca"), TAG_DATASTR
 
     SECTION("GT") {
         for (size_t i = 0; i < LOOP_SIZE; i++) {
-            for (size_t r = 0; r < numRows - 1; ++r) {
-                for (size_t r2 = 0; r < numRows - 1; ++r)
+            for (size_t r = 0; r < NUM_ROWS - 1; ++r) {
+                for (size_t r2 = 0; r < NUM_ROWS - 1; ++r)
                     StringTestEwBinarySca<BinaryOpCode::GT>(m->get(r, 0), m->get(r2, 0), 0);
             }
         }
@@ -169,13 +162,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Operations"), TAG_DATASTRU
 
     DT *m = nullptr;
 
-    size_t numRows = 50000;
-    size_t numCols = 5;
-
-    char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
-    char delim = ',';
-
-    readCsv(m, filename, numRows, numCols, delim);
+    readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
 
     SECTION("Upper") {
         for (size_t i = 0; i < LOOP_SIZE; i++)
@@ -196,16 +183,12 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Operations2"), TAG_DATASTR
     using VT = typename DT::VT;
 
     DT *m = nullptr;
-    size_t numRows = 50000;
-    size_t numCols = 5;
-    char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
-    char delim = ',';
 
-    readCsv(m, filename, numRows, numCols, delim);
+    readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
 
     VT resultConcat;
     SECTION("Concat") {
-        for (size_t r = 0; r < numRows; r++) {
+        for (size_t r = 0; r < NUM_ROWS; r++) {
             resultConcat = ewBinarySca<VT, VT, VT>(BinaryOpCode::CONCAT, resultConcat, m->get(r, 0), nullptr);
         }
     }
@@ -214,7 +197,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - Operations2"), TAG_DATASTR
 }
 
 // CAST TESTS
-
+/*
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - RecodeAndOneHotStrings"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
@@ -554,4 +537,5 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - Data Generation"), TAG_DAT
     }
 
     DataObjectFactory::destroy(m);
-}*/
+}
+* /
