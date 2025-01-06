@@ -83,19 +83,19 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv"), TAG_DATASTRUCTU
 
     SECTION("getNumRows()") {
         for (size_t i = 0; i < LOOP_SIZE; i++)
-            const size_t numRowsLhs = m->getNumRows()
+            const size_t numRowsLhs = m->getNumRows();
     }
     SECTION("getNumCols()") {
         for (size_t i = 0; i < LOOP_SIZE; i++)
-            const size_t numColsLhs = m->getNumCols()
+            const size_t numColsLhs = m->getNumCols();
     }
     SECTION("getValues()") {
         for (size_t i = 0; i < LOOP_SIZE; i++)
-            VT *values = m->getValues()
+            VT *values = m->getValues();
     }
     SECTION("getNumCols()") {
         for (size_t i = 0; i < LOOP_SIZE; i++)
-            m->getNumCols()
+            m->getNumCols();
     }
 
     DataObjectFactory::destroy(m);
