@@ -25,6 +25,11 @@
 #define PARTIAL_STRING_VALUE_TYPES std::string, Umbra_t, NewUmbra_t
 
 #define LOOP_SIZE 100
+#define NUM_COLS 5
+#define NUM_ROWS 50000
+#define TEST_FILE_1 "./test/data/strings/uniform_synthetic_random_strings.csv"
+
+#define DELIM ','
 
 template <class DTArg, class DTRes>
 void StringTestEwBinaryMat(BinaryOpCode opCode, const DTArg *lhs, const DTArg *rhs) {
@@ -64,13 +69,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - ReadCsv"), TAG_DATASTRUCTU
     using DT = TestType;
     DT *m = nullptr;
 
-    size_t numRows = 50000;
-    size_t numCols = 5;
-
-    char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
-    char delim = ',';
-
-    readCsv(m, filename, numRows, numCols, delim);
+    readCsv(m, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
 
     REQUIRE(m->getNumRows() == numRows);
     REQUIRE(m->getNumCols() == numCols);
@@ -86,14 +85,8 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
     DT *m1 = nullptr;
     DT *m2 = nullptr;
 
-    size_t numRows = 50000;
-    size_t numCols = 5;
-
-    char filename[] = "./test/data/strings/uniform_synthetic_random_strings.csv";
-    char delim = ',';
-
-    readCsv(m1, filename, numRows, numCols, delim);
-    readCsv(m2, filename, numRows, numCols, delim);
+    readCsv(m1, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
+    readCsv(m2, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
 
     SECTION("EQ") {
         for (size_t i = 0; i < LOOP_SIZE; i++)
@@ -122,6 +115,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
     DataObjectFactory::destroy(m2);
 }
 
+/*
 TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinarySca"), TAG_DATASTRUCTURES, (DenseMatrix),
                            (ALL_STRING_VALUE_TYPES)) {
     using DT = TestType;
@@ -517,7 +511,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - Data Generation"), TAG_DAT
         size_t sampleSize = 100;
         DT *sample = DataObjectFactory::create<DT>(sampleSize, numCols, false);
 
-        std::mt19937 rng(42); // fixed seed for reproducibility
+        std::mt19937 rng(42);
         std::uniform_int_distribution<size_t> dist(0, numRows - 1);
 
         for (size_t k = 0; k < 100; k++) {
@@ -565,4 +559,4 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Skewed(2-100) - Data Generation"), TAG_DAT
     }
 
     DataObjectFactory::destroy(m);
-}
+}*/

@@ -144,9 +144,6 @@ class Umbra_t {
 
     // Equality comparison with other Umbra Strings
     bool operator==(const Umbra_t &other) const {
-        if (length != other.length) {
-            return false;
-        }
         if (length <= 12) {
             return std::equal(short_str, short_str + length, other.short_str);
 
@@ -157,11 +154,7 @@ class Umbra_t {
     }
 
     // Equality comparison with other C-style strings
-    /*
     bool operator==(const char *str) const {
-        if (length != std::strlen(str)) {
-            return false;
-        }
         if (length <= 12) {
             return std::memcmp(short_str, str, length) == 0;
         } else {
@@ -170,7 +163,7 @@ class Umbra_t {
             }
             return std::memcmp(long_str.ptr, str, length) == 0;
         }
-    }*/
+    }
 
     // Inequality comparison with other Umbra Strings
     bool operator!=(const Umbra_t &other) const { return !(*this == other); }
@@ -205,7 +198,6 @@ class Umbra_t {
     }
 
     // Less-than comparison with other C-style strings
-    /*
     bool operator<(const char *str) const {
         uint32_t str_len = std::strlen(str);
         uint32_t min_length = std::min(length, str_len);
@@ -222,7 +214,7 @@ class Umbra_t {
             return length < str_len;
         }
         return cmp < 0;
-    }*/
+    }
 
     // Greater-than comparison with other Umbra Strings
     bool operator>(const Umbra_t &other) const { return *this != other && !(*this < other); }
