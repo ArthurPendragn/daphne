@@ -110,23 +110,23 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
     using DTRes = DenseMatrix<int64_t>;
 
     DT *m1 = nullptr;
-    DT *m1 = nullptr;
+    DT *m2 = nullptr;
 
     readCsv(m1, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
     readCsv(m2, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
 
-    REQUIRE(m1->getNumRows() == numRows);
-    REQUIRE(m1->getNumCols() == numCols);
+    REQUIRE(m1->getNumRows() == NUM_ROWS);
+    REQUIRE(m1->getNumCols() == NUM_COLS);
 
-    REQUIRE(m2->getNumRows() == numRows);
-    REQUIRE(m2->getNumCols() == numCols);
+    REQUIRE(m2->getNumRows() == NUM_ROWS);
+    REQUIRE(m2->getNumCols() == NUM_COLS);
 
     SECTION("Test") {
         EwBinaryScaFuncPtr<int64_t, VT, VT> func = getEwBinaryScaFuncPtr<int64_t, VT, VT>(BinaryOpCode::EQ);
         DTRes *res = nullptr;
-        const VTlhs *valuesLhs = lhs->getValues();
-        const VTrhs *valuesRhs = rhs->getValues();
-        VTres *valuesRes = res->getValues();
+        const VT *valuesLhs = lhs->getValues();
+        const VT *valuesRhs = rhs->getValues();
+        int64_t *valuesRes = res->getValues();
         for (size_t r = 0; r < NUM_ROWS; r++) {
             for (size_t c = 0; c < NUM_COLS; c++) {
                 valuesRes[c] = func(valuesLhs[c], valuesRhs[c], ctx);
