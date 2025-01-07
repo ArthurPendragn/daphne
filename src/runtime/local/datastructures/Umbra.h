@@ -20,7 +20,7 @@
 
 // Solution for it to have no padding, and thus occupy 16 bytes. Im not well aware of it might
 // have some negative side effects
-class Umbra_t {
+struct Umbra_t {
     union {
         char short_str[12]; // For small strings
         struct {
@@ -30,7 +30,6 @@ class Umbra_t {
     };
     uint32_t length; // Length of the string
 
-  public:
     // Default constructor
     Umbra_t() : length(0) { std::fill(short_str, short_str + 12, '\0'); }
 
