@@ -21,15 +21,14 @@
 // Solution for it to have no padding, and thus occupy 16 bytes. Im not well aware of it might
 // have some negative side effects
 class Umbra_t {
-    union // Remaining 12 Bytes. Also not aware of possible memory issues.
-    {
-        char short_str[12];
+    union {
+        char short_str[12]; // For small strings
         struct {
-            char prefix[4];
-            char *ptr;
+            char prefix[4]; // Prefix for long strings
+            char *ptr;      // Pointer to the long string
         } long_str;
     };
-    uint32_t length; // 4 bytes
+    uint32_t length; // Length of the string
 
   public:
     // Default constructor
@@ -366,7 +365,7 @@ class Umbra_t {
         }
         return result;
     }
-};
+} __attribute__((packed, aligned(4)));
 
 namespace std {
 template <> struct hash<Umbra_t> {
