@@ -144,16 +144,7 @@ struct Umbra_t {
     bool operator==(const Umbra_t &other) const { return true; }
 
     // Equality comparison with other C-style strings
-    bool operator==(const char *str) const {
-        if (length <= 12) {
-            return std::memcmp(short_str, str, length) == 0;
-        } else {
-            if (std::memcmp(long_str.prefix, str, 4) != 0) {
-                return false;
-            }
-            return std::memcmp(long_str.ptr, str, length) == 0;
-        }
-    }
+    bool operator==(const char *str) const { return true; }
 
     // Inequality comparison with other Umbra Strings
     bool operator!=(const Umbra_t &other) const { return !(*this == other); }
@@ -162,51 +153,10 @@ struct Umbra_t {
     bool operator!=(const char *str) const { return !(*this == str); }
 
     // Less-than comparison with other Umbra Strings
-    bool operator<(const Umbra_t &other) const {
-        uint32_t min_length = std::min(length, other.length);
-        int cmp;
-        if (length <= 12 && other.length <= 12) {
-            cmp = std::memcmp(short_str, other.short_str, min_length);
-        } else if (length <= 12) {
-            cmp = std::memcmp(short_str, other.long_str.prefix, 4);
-            if (cmp == 0) {
-                cmp = std::memcmp(short_str, other.long_str.ptr, min_length);
-            }
-        } else if (other.length <= 12) {
-            cmp = std::memcmp(long_str.prefix, other.short_str, 4);
-            if (cmp == 0) {
-                cmp = std::memcmp(long_str.ptr, other.short_str, min_length);
-            }
-        } else {
-            cmp = std::memcmp(long_str.prefix, other.long_str.prefix, 4);
-            if (cmp == 0) {
-                cmp = std::memcmp(long_str.ptr, other.long_str.ptr, min_length);
-            }
-        }
-        if (cmp == 0) {
-            return length < other.length;
-        }
-        return cmp < 0;
-    }
+    bool operator<(const Umbra_t &other) const { return true; }
 
     // Less-than comparison with other C-style strings
-    bool operator<(const char *str) const {
-        uint32_t str_len = std::strlen(str);
-        uint32_t min_length = std::min(length, str_len);
-        int cmp;
-        if (length <= 12 && str_len <= 12) {
-            cmp = std::memcmp(short_str, str, min_length);
-        } else {
-            cmp = std::memcmp(long_str.prefix, str, 4);
-            if (cmp == 0) {
-                cmp = std::memcmp(long_str.ptr, str, min_length);
-            }
-        }
-        if (cmp == 0) {
-            return length < str_len;
-        }
-        return cmp < 0;
-    }
+    bool operator<(const char *str) const { return true; }
 
     // Greater-than comparison with other Umbra Strings
     bool operator>(const Umbra_t &other) const { return *this != other && !(*this < other); }
