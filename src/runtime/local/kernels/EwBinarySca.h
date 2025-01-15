@@ -154,11 +154,7 @@ MAKE_EW_BINARY_SCA(BinaryOpCode::LT, lhs < rhs)
 MAKE_EW_BINARY_SCA(BinaryOpCode::LE, lhs <= rhs)
 MAKE_EW_BINARY_SCA(BinaryOpCode::GT, lhs > rhs)
 MAKE_EW_BINARY_SCA(BinaryOpCode::GE, lhs >= rhs)
-template <typename TRes> struct EwBinarySca<BinaryOpCode::EQ, TRes, const char *, const char *> {
-    inline static TRes apply(const char *lhs, const char *rhs, DCTX(ctx)) {
-        return std::string_view(lhs) == std::string_view(rhs);
-    }
-};
+
 // Min/max.
 MAKE_EW_BINARY_SCA(BinaryOpCode::MIN, std::min(lhs, rhs))
 MAKE_EW_BINARY_SCA(BinaryOpCode::MAX, std::max(lhs, rhs))
