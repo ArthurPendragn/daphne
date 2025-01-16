@@ -124,7 +124,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
     SECTION("Test") {
         EwBinaryScaFuncPtr<int64_t, VT, VT> func = getEwBinaryScaFuncPtr<int64_t, VT, VT>(BinaryOpCode::EQ);
         DTRes *res = DataObjectFactory::create<DenseMatrix<int64_t>>(NUM_ROWS, NUM_COLS, false);
-        for (size_t i = 0; i < 1000000; i++) {
+        for (size_t i = 0; i < LOOP_SIZE; i++) {
             const VT *valuesLhs = m1->getValues();
             const VT *valuesRhs = m2->getValues();
             int64_t *valuesRes = res->getValues();
@@ -141,22 +141,22 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
     }
 
     SECTION("EQ") {
-        for (size_t i = 0; i < 100000; i++)
+        for (size_t i = 0; i < LOOP_SIZE; i++)
             StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::EQ, m1, m2);
     }
 
     SECTION("NEQ") {
-        for (size_t i = 0; i < 100000; i++)
+        for (size_t i = 0; i < LOOP_SIZE; i++)
             StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::NEQ, m1, m2);
     }
 
     SECTION("LT") {
-        for (size_t i = 0; i < 100000; i++)
+        for (size_t i = 0; i < LOOP_SIZE; i++)
             StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::LT, m1, m2);
     }
 
     SECTION("GT") {
-        for (size_t i = 0; i < 100000; i++)
+        for (size_t i = 0; i < LOOP_SIZE; i++)
             StringTestEwBinaryMat<DT, DTRes>(BinaryOpCode::GT, m1, m2);
     }
 
