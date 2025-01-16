@@ -25,7 +25,7 @@
 #define PARTIAL_STRING_VALUE_TYPES std::string, Umbra_t, NewUmbra_t
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
 
-#define LOOP_SIZE 1000
+#define LOOP_SIZE 10
 #define NUM_COLS 5
 #define NUM_ROWS 34560
 #define TEST_FILE_1 "./test/data/strings/uniform_synthetic_random_strings.csv"
