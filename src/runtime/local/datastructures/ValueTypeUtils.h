@@ -32,7 +32,7 @@
 // changes to the list of supported data types local.
 #define ALL_VALUE_TYPES int8_t, int32_t, int64_t, uint8_t, uint32_t, uint64_t, float, double
 
-#define ALL_STRING_VALUE_TYPES std::string, FixedStr16, Umbra_t, NewUmbra_t
+#define ALL_STRING_VALUE_TYPES std::string, FixedStr16, Umbra_t
 
 struct ValueTypeUtils {
 
