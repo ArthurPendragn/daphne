@@ -237,11 +237,11 @@ TEMPLATE_TEST_CASE(TEST_NAME("or"), TAG_KERNELS, VALUE_TYPES) {
 
 TEMPLATE_TEST_CASE(TEST_NAME("concat"), TAG_KERNELS, ALL_STRING_VALUE_TYPES) {
     using VT = TestType;
-    checkEwBinarySca<VT>(VT("Pachakutiy"), VT(" Inka Yupanki"), std::string("Pachakutiy Inka Yupanki"));
-    checkEwBinarySca<VT>(VT("Tawantinsuyu:"), VT(" Chinchay Suyu"), std::string("Tawantinsuyu: Chinchay Suyu"));
-    checkEwBinarySca<VT>(VT("Túpac Inca"), VT(" Yupanqui"), std::string("Túpac Inca Yupanqui"));
-    checkEwBinarySca<VT>(VT(""), VT("abc"), std::string("abc"));
-    checkEwBinarySca<VT>(VT(""), VT(""), std::string(""));
+    checkEwBinarySca<VT>(VT("Pachakutiy"), VT(" Inka Yupanki"), VT("Pachakutiy Inka Yupanki"));
+    checkEwBinarySca<VT>(VT("Tawantinsuyu:"), VT(" Chinchay Suyu"), VT("Tawantinsuyu: Chinchay Suyu"));
+    checkEwBinarySca<VT>(VT("Túpac Inca"), VT(" Yupanqui"), VT("Túpac Inca Yupanqui"));
+    checkEwBinarySca<VT>(VT(""), VT("abc"), VT("abc"));
+    checkEwBinarySca<VT>(VT(""), VT(""), VT(""));
 }
 
 // ****************************************************************************

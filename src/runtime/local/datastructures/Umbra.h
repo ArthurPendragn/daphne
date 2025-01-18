@@ -270,6 +270,7 @@ struct Umbra_t {
     operator std::string() const { return this->to_string(); }
 
     // Concatenation Operation with other Umbra Strings.
+
     Umbra_t operator+(const Umbra_t &other) const {
         Umbra_t result;
         result.length = this->length + other.length;
