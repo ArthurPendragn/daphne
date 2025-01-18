@@ -50,9 +50,9 @@ template <BinaryOpCode opCode> void checkEwBinarySca(NewUmbra_t lhs, NewUmbra_t 
     CHECK(ewBinarySca<int64_t, NewUmbra_t, NewUmbra_t>(opCode, lhs, rhs, nullptr) == exp);
 }
 
-template <typename VT> void checkEwBinarySca(VT lhs, VT rhs, std::string exp) {
-    CHECK(EwBinarySca<BinaryOpCode::CONCAT, std::string, VT, VT>::apply(lhs, rhs, nullptr) == exp);
-    CHECK(ewBinarySca<std::string, VT, VT>(BinaryOpCode::CONCAT, lhs, rhs, nullptr) == exp);
+template <typename VT> void checkEwBinarySca(VT lhs, VT rhs, VT exp) {
+    CHECK(EwBinarySca<BinaryOpCode::CONCAT, VT, VT, VT>::apply(lhs, rhs, nullptr) == exp);
+    CHECK(ewBinarySca<VT, VT, VT>(BinaryOpCode::CONCAT, lhs, rhs, nullptr) == exp);
 }
 
 // ****************************************************************************
