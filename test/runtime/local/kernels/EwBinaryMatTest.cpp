@@ -221,7 +221,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("neq"), TAG_KERNELS, (DenseMatrix), (ALL_ST
         genGivenVals<DT>(2, {VT("Ur"), VT("Uruk"), VT("Lugal"), VT("Ur"), VT("Lugaluschumgal"), VT("Lugaluschumgal")});
     auto m2 =
         genGivenVals<DT>(2, {VT("Uruk"), VT("Ur"), VT("Lugaluschumgal"), VT("Ur"), VT("Lugal"), VT("Lugaluschumgal")});
-    auto m3 = genGivenVals<DenseMatrix<int64_t>>(2, {0, 0, 0, 1, 0, 1});
+    auto m3 = genGivenVals<DenseMatrix<int64_t>>(2, {1, 1, 1, 0, 1, 0});
 
     SECTION("matrix") { checkEwBinaryMat(BinaryOpCode::NEQ, m1, m2, m3); }
 
@@ -422,7 +422,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("gt"), TAG_KERNELS, (DenseMatrix), (ALL_STR
     auto m2 =
         genGivenVals<DT>(3, {VT("Men-nefer"), VT("Alexandria"), VT("Iushenshen"), VT("Crocodilopolis"), VT("Weprehwy"),
                              VT("HermopolisParva"), VT("Nefertiti"), VT("Neferneferuaten"), VT("Neferneferuaten")});
-    auto m3 = genGivenVals<DenseMatrix<int64_t>>(3, {0, 1, 1, 1, 0, 1, 0, 0, 1});
+    auto m3 = genGivenVals<DenseMatrix<int64_t>>(3, {0, 1, 0, 1, 0, 0, 0, 0, 1});
 
     SECTION("matrix") { checkEwBinaryMat(BinaryOpCode::GT, m1, m2, m3); }
 

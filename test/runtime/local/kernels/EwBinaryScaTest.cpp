@@ -133,14 +133,14 @@ TEMPLATE_TEST_CASE(TEST_NAME("lt"), TAG_KERNELS, VALUE_TYPES) {
 TEMPLATE_TEST_CASE(TEST_NAME("lt"), TAG_KERNELS, ALL_STRING_VALUE_TYPES) {
     using VT = TestType;
     checkEwBinarySca<BinaryOpCode::LT>(VT("Tenochtitlan"), VT("Coixtlahuaca"), 0);
-    checkEwBinarySca<BinaryOpCode::LT>(VT("Tlacozauhtitlan"), VT("Quiauhteopan"), 1);
+    checkEwBinarySca<BinaryOpCode::LT>(VT("Tlacozauhtitlan"), VT("Quiauhteopan"), 0);
     checkEwBinarySca<BinaryOpCode::LT>(VT("Texcoco"), VT("Temazcaltepec"), 0);
     checkEwBinarySca<BinaryOpCode::LT>(VT("Cuauhchinanco"), VT("Tepecoacuilco"), 1);
-    checkEwBinarySca<BinaryOpCode::LT>(VT("Tlacopan"), VT("Tlacozauhtitlan"), 0);
+    checkEwBinarySca<BinaryOpCode::LT>(VT("Tlacopan"), VT("Tlacozauhtitlan"), 1);
     checkEwBinarySca<BinaryOpCode::LT>(VT("Tochtepec"), VT("Tochpan"), 0);
     checkEwBinarySca<BinaryOpCode::LT>(VT("Quetzaltecolotl"), VT("Quetzaltecolotl"), 0);
-    checkEwBinarySca<BinaryOpCode::LT>(VT("Chimalpopoca"), VT("Chimalpopoc"), 1);
-    checkEwBinarySca<BinaryOpCode::LT>(VT("Huitzilopochtl"), VT("Huitzilopochtli"), 0);
+    checkEwBinarySca<BinaryOpCode::LT>(VT("Chimalpopoca"), VT("Chimalpopoc"), 0);
+    checkEwBinarySca<BinaryOpCode::LT>(VT("Huitzilopochtl"), VT("Huitzilopochtli"), 1);
     checkEwBinarySca<BinaryOpCode::LT>(VT(""), VT("abc"), 1);
     checkEwBinarySca<BinaryOpCode::LT>(VT(""), VT(""), 0);
 }
@@ -161,12 +161,12 @@ TEMPLATE_TEST_CASE(TEST_NAME("gt"), TAG_KERNELS, VALUE_TYPES) {
 
 TEMPLATE_TEST_CASE(TEST_NAME("gt"), TAG_KERNELS, ALL_STRING_VALUE_TYPES) {
     using VT = TestType;
-    checkEwBinarySca<BinaryOpCode::GT>(VT("Tenochtitlan"), VT("Coixtlahuaca"), 0);
+    checkEwBinarySca<BinaryOpCode::GT>(VT("Tenochtitlan"), VT("Coixtlahuaca"), 1);
     checkEwBinarySca<BinaryOpCode::GT>(VT("Tlacozauhtitlan"), VT("Quiauhteopan"), 1);
-    checkEwBinarySca<BinaryOpCode::GT>(VT("Texcoco"), VT("Temazcaltepec"), 0);
-    checkEwBinarySca<BinaryOpCode::GT>(VT("Cuauhchinanco"), VT("Tepecoacuilco"), 1);
+    checkEwBinarySca<BinaryOpCode::GT>(VT("Texcoco"), VT("Temazcaltepec"), 1);
+    checkEwBinarySca<BinaryOpCode::GT>(VT("Cuauhchinanco"), VT("Tepecoacuilco"), 0);
     checkEwBinarySca<BinaryOpCode::GT>(VT("Tlacopan"), VT("Tlacozauhtitlan"), 0);
-    checkEwBinarySca<BinaryOpCode::GT>(VT("Tochtepec"), VT("Tochpan"), 0);
+    checkEwBinarySca<BinaryOpCode::GT>(VT("Tochtepec"), VT("Tochpan"), 1);
     checkEwBinarySca<BinaryOpCode::GT>(VT("Quetzaltecolotl"), VT("Quetzaltecolotl"), 0);
     checkEwBinarySca<BinaryOpCode::GT>(VT("Chimalpopoca"), VT("Chimalpopoc"), 1);
     checkEwBinarySca<BinaryOpCode::GT>(VT("Huitzilopochtl"), VT("Huitzilopochtli"), 0);

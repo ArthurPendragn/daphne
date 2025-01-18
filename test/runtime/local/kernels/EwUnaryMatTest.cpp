@@ -611,7 +611,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Upper, string data"), TAG_KERNELS, (DenseM
     using VT = typename DT::VT;
 
     auto arg = genGivenVals<DT>(
-        2, {VT(""), VT("mmxxv"), VT("mmxxv = 2025"), VT("MmXxV"), VT("mmmdccclxxxciii"), VT("iii/x/mcmlxxxix")});
+        2, {VT(""), VT("mmxxv"), VT("mmxxv = 2025"), VT("MmXxV"), VT("mmmdccclxxxviii"), VT("iii/x/mcmlxxxix")});
 
     auto exp = genGivenVals<DenseMatrix<VT>>(
         2, {VT(""), VT("MMXXV"), VT("MMXXV = 2025"), VT("MMXXV"), VT("MMMDCCCLXXXVIII"), VT("III/X/MCMLXXXIX")});
@@ -629,7 +629,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Lower, string data"), TAG_KERNELS, (DenseM
         2, {VT(""), VT("MMXXV"), VT("MMXXV = 2025"), VT("MMXXV"), VT("MMMDCCCLXXXVIII"), VT("III/X/MCMLXXXIX")});
 
     auto exp = genGivenVals<DT>(
-        2, {VT(""), VT("mmxxv"), VT("mmxxv = 2025"), VT("MmXxV"), VT("mmmdccclxxxciii"), VT("iii/x/mcmlxxxix")});
+        2, {VT(""), VT("mmxxv"), VT("mmxxv = 2025"), VT("mmxxv"), VT("mmmdccclxxxviii"), VT("iii/x/mcmlxxxix")});
 
     checkEwUnaryMat(UnaryOpCode::LOWER, arg, exp);
 

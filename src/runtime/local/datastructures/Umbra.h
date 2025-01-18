@@ -290,7 +290,7 @@ struct Umbra_t {
             if (other.length <= SHORT_STR_LEN) {
                 std::memcpy(new_str + this->length, other.short_str, other.length);
             } else {
-                std::memcpy(new_str, other.long_str.ptr, other.length);
+                std::memcpy(new_str + this->length, other.long_str.ptr, other.length);
             }
 
             new_str[result.length] = '\0';
