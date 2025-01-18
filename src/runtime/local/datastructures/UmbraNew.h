@@ -115,45 +115,6 @@ struct NewUmbra_t {
         return *this;
     }
 
-    // Move constructor
-    NewUmbra_t(NewUmbra_t &&other) noexcept {
-        set_length(other.get_length());
-        if (get_length() <= SHORT_STR_LEN) {
-            std::memcpy(short_str(), other.short_str(), SHORT_STR_LEN);
-        } else {
-            char prefix[PREFIX_SIZE];
-            other.get_prefix(prefix);
-            set_prefix(prefix);
-            set_long_ptr(other.get_long_ptr());
-            other.set_long_ptr(nullptr);
-            other.set_length(0);
-        }
-        other.clear_buffer();
-    }
-
-    // Move assignment operator
-    NewUmbra_t &operator=(NewUmbra_t &&other) noexcept {
-        if (this != &other) {
-            // Clean up existing data
-            if (is_long() && get_long_ptr()) {
-                delete[] get_long_ptr();
-            }
-
-            set_length(other.get_length());
-            if (get_length() <= SHORT_STR_LEN) {
-                std::memcpy(short_str(), other.short_str(), SHORT_STR_LEN);
-            } else {
-                char prefix[PREFIX_SIZE];
-                other.get_prefix(prefix);
-                set_prefix(prefix);
-                set_long_ptr(other.get_long_ptr());
-                other.set_long_ptr(nullptr);
-            }
-            other.clear_buffer();
-        }
-        return *this;
-    }
-
     // Swap function for copy-and-swap
     friend void swap(NewUmbra_t &first, NewUmbra_t &second) noexcept { std::swap(first.buffer, second.buffer); }
 
