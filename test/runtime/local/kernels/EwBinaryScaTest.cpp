@@ -40,6 +40,16 @@ template <BinaryOpCode opCode> void checkEwBinarySca(FixedStr16 lhs, FixedStr16 
     CHECK(ewBinarySca<int64_t, FixedStr16, FixedStr16>(opCode, lhs, rhs, nullptr) == exp);
 }
 
+template <BinaryOpCode opCode> void checkEwBinarySca(Umbra_t lhs, Umbra_t rhs, int64_t exp) {
+    CHECK(EwBinarySca<opCode, int64_t, Umbra_t, Umbra_t>::apply(lhs, rhs, nullptr) == exp);
+    CHECK(ewBinarySca<int64_t, Umbra_t, Umbra_t>(opCode, lhs, rhs, nullptr) == exp);
+}
+
+template <BinaryOpCode opCode> void checkEwBinarySca(NewUmbra_t lhs, NewUmbra_t rhs, int64_t exp) {
+    CHECK(EwBinarySca<opCode, int64_t, NewUmbra_t, NewUmbra_t>::apply(lhs, rhs, nullptr) == exp);
+    CHECK(ewBinarySca<int64_t, NewUmbra_t, NewUmbra_t>(opCode, lhs, rhs, nullptr) == exp);
+}
+
 template <typename VT> void checkEwBinarySca(VT lhs, VT rhs, std::string exp) {
     CHECK(EwBinarySca<BinaryOpCode::CONCAT, std::string, VT, VT>::apply(lhs, rhs, nullptr) == exp);
     CHECK(ewBinarySca<std::string, VT, VT>(BinaryOpCode::CONCAT, lhs, rhs, nullptr) == exp);
