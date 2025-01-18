@@ -27,8 +27,9 @@
 
 #define LOOP_SIZE 10
 #define NUM_COLS 5
-#define NUM_ROWS 34560
-#define TEST_FILE_1 "./test/data/strings/uniform_synthetic_random_strings.csv"
+#define NUM_ROWS 50000
+#define TEST_FILE_1 "./test/data/strings/uniform_unsorted_synthetic_random_strings-2-11.csv"
+#define TEST_FILE_2 "./test/data/strings/skewed_unsorted_synthetic_random_strings-2-11.csv"
 
 #define DELIM ','
 
@@ -113,7 +114,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("Uniform(2-11) - EwBinaryMat"), TAG_DATASTR
     DT *m2 = nullptr;
 
     readCsv(m1, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
-    readCsv(m2, TEST_FILE_1, NUM_ROWS, NUM_COLS, DELIM);
+    readCsv(m2, TEST_FILE_2, NUM_ROWS, NUM_COLS, DELIM);
 
     REQUIRE(m1->getNumRows() == NUM_ROWS);
     REQUIRE(m1->getNumCols() == NUM_COLS);

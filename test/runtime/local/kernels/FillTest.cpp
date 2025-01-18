@@ -89,13 +89,28 @@ TEMPLATE_PRODUCT_TEST_CASE("FillString", TAG_KERNELS, (DenseMatrix), (ALL_STRING
         DataObjectFactory::destroy(res, exp);
     }
 
-    SECTION("not_empty_string") {
+    SECTION("not_empty_short_string") {
         DenseMatrix<VT> *res = nullptr;
-        VT arg = VT("abc");
+        VT arg = VT("Berlin");
 
-        auto *exp =
-            genGivenVals<DenseMatrix<VT>>(3, {VT("abc"), VT("abc"), VT("abc"), VT("abc"), VT("abc"), VT("abc"),
-                                              VT("abc"), VT("abc"), VT("abc"), VT("abc"), VT("abc"), VT("abc")});
+        auto *exp = genGivenVals<DenseMatrix<VT>>(3, {VT("Berlin"), VT("Berlin"), VT("Berlin"), VT("Berlin"),
+                                                      VT("Berlin"), VT("Berlin"), VT("Berlin"), VT("Berlin"),
+                                                      VT("Berlin"), VT("Berlin"), VT("Berlin"), VT("Berlin")});
+
+        fill(res, arg, numRows, numCols, nullptr);
+        CHECK(*exp == *res);
+
+        DataObjectFactory::destroy(res, exp);
+    }
+
+    SECTION("not_empty_long_string") {
+        DenseMatrix<VT> *res = nullptr;
+        VT arg = VT("Sachsen-Anhalt");
+
+        auto *exp = genGivenVals<DenseMatrix<VT>>(
+            3, {VT("Sachsen-Anhalt"), VT("Sachsen-Anhalt"), VT("Sachsen-Anhalt"), VT("Sachsen-Anhalt"),
+                VT("Sachsen-Anhalt"), VT("Sachsen-Anhalt"), VT("Sachsen-Anhalt"), VT("Sachsen-Anhalt"),
+                VT("Sachsen-Anhalt"), VT("Sachsen-Anhalt"), VT("Sachsen-Anhalt"), VT("Sachsen-Anhalt")});
 
         fill(res, arg, numRows, numCols, nullptr);
         CHECK(*exp == *res);

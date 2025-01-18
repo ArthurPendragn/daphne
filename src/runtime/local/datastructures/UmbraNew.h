@@ -12,6 +12,16 @@
 #include <string>
 #include <vector>
 
+// Define constants for buffer layout
+#define BUFFER_SIZE 16
+#define LENGTH_OFFSET 0
+#define LENGTH_SIZE 4
+#define PREFIX_OFFSET 4
+#define PREFIX_SIZE 4
+#define LONG_PTR_OFFSET 8
+#define LONG_PTR_SIZE 8
+#define SHORT_STR_LEN 12
+
 /**
  * @brief A string value type with a fixed memory size of 16 bytes.
  *
@@ -25,27 +35,35 @@
  */
 struct NewUmbra_t {
   private:
-    std::array<uint8_t, 16> buffer;
+    std::array<uint8_t, BUFFER_SIZE> buffer;
 
-    // Helper to get a pointer to the length field
-    uint32_t &get_length() { return *reinterpret_cast<uint32_t *>(buffer.data()); }
+    // Helper to get the length
+    uint32_t get_length() const {
+        uint32_t length;
+        std::memcpy(&length, buffer.data() + LENGTH_OFFSET, LENGTH_SIZE);
+        return length;
+    }
 
-    const uint32_t &get_length() const { return *reinterpret_cast<const uint32_t *>(buffer.data()); }
+    void set_length(uint32_t length) { std::memcpy(buffer.data() + LENGTH_OFFSET, &length, LENGTH_SIZE); }
+
+    // Helper to get the prefix
+    void get_prefix(char *dest) const { std::memcpy(dest, buffer.data() + PREFIX_OFFSET, PREFIX_SIZE); }
+
+    void set_prefix(const char *src) { std::memcpy(buffer.data() + PREFIX_OFFSET, src, PREFIX_SIZE); }
+
+    // Helper to get the long string pointer
+    char *get_long_ptr() const {
+        char *ptr = nullptr;
+        std::memcpy(&ptr, buffer.data() + LONG_PTR_OFFSET, LONG_PTR_SIZE);
+        return ptr;
+    }
+
+    void set_long_ptr(char *ptr) { std::memcpy(buffer.data() + LONG_PTR_OFFSET, &ptr, LONG_PTR_SIZE); }
 
     // Helper to access short string
-    char *short_str() { return reinterpret_cast<char *>(buffer.data() + 4); }
+    char *short_str() { return reinterpret_cast<char *>(buffer.data() + PREFIX_OFFSET); }
 
-    const char *short_str() const { return reinterpret_cast<const char *>(buffer.data() + 4); }
-
-    // Helper to access prefix
-    char *prefix() { return reinterpret_cast<char *>(buffer.data() + 4); }
-
-    const char *prefix() const { return reinterpret_cast<const char *>(buffer.data() + 4); }
-
-    // Helper to access pointer to long string
-    char *&long_ptr() { return *reinterpret_cast<char **>(buffer.data() + 8); }
-
-    char *long_ptr() const { return *reinterpret_cast<char *const *>(buffer.data() + 8); }
+    const char *short_str() const { return reinterpret_cast<const char *>(buffer.data() + PREFIX_OFFSET); }
 
     // Clear the buffer
     void clear_buffer() { buffer.fill(0); }
@@ -54,7 +72,7 @@ struct NewUmbra_t {
     // Default constructor
     NewUmbra_t() {
         clear_buffer();
-        get_length() = 0;
+        set_length(0);
     }
 
     // Constructor from a C-style string
@@ -65,64 +83,50 @@ struct NewUmbra_t {
 
     // Copy constructor
     NewUmbra_t(const NewUmbra_t &other) {
-        get_length() = other.get_length();
-        if (get_length() <= 12) {
-            std::memcpy(short_str(), other.short_str(), 12);
+        set_length(other.get_length());
+        if (get_length() <= SHORT_STR_LEN) {
+            std::memcpy(short_str(), other.short_str(), SHORT_STR_LEN);
         } else {
-            std::memcpy(prefix(), other.prefix(), 4);
-            if (other.long_ptr()) {
-                long_ptr() = new char[get_length() + 1];
-                std::memcpy(long_ptr(), other.long_ptr(), get_length());
-                long_ptr()[get_length()] = '\0';
+            char prefix[PREFIX_SIZE];
+            other.get_prefix(prefix);
+            set_prefix(prefix);
+            if (other.get_long_ptr()) {
+                char *new_long_ptr = new char[get_length() + 1];
+                std::memcpy(new_long_ptr, other.get_long_ptr(), get_length());
+                new_long_ptr[get_length()] = '\0';
+                set_long_ptr(new_long_ptr);
             } else {
-                long_ptr() = nullptr;
+                set_long_ptr(nullptr);
             }
         }
     }
 
     // Destructor
     ~NewUmbra_t() {
-        if (is_long() && long_ptr()) {
-            delete[] long_ptr();
-            long_ptr() = nullptr;
+        if (is_long() && get_long_ptr()) {
+            delete[] get_long_ptr();
+            set_long_ptr(nullptr);
         }
     }
 
-    // Copy assignment operator
-    NewUmbra_t &operator=(const NewUmbra_t &other) {
-        if (this != &other) {
-            // Clean up existing data
-            if (is_long() && long_ptr()) {
-                delete[] long_ptr();
-            }
-
-            get_length() = other.get_length();
-            if (get_length() <= 12) {
-                std::memcpy(short_str(), other.short_str(), 12);
-            } else {
-                std::memcpy(prefix(), other.prefix(), 4);
-                if (other.long_ptr()) {
-                    long_ptr() = new char[get_length() + 1];
-                    std::memcpy(long_ptr(), other.long_ptr(), get_length());
-                    long_ptr()[get_length()] = '\0';
-                } else {
-                    long_ptr() = nullptr;
-                }
-            }
-        }
+    // Copy assignment operator using copy-and-swap idiom
+    NewUmbra_t &operator=(NewUmbra_t other) {
+        swap(*this, other);
         return *this;
     }
 
     // Move constructor
     NewUmbra_t(NewUmbra_t &&other) noexcept {
-        get_length() = other.get_length();
-        if (get_length() <= 12) {
-            std::memcpy(short_str(), other.short_str(), 12);
+        set_length(other.get_length());
+        if (get_length() <= SHORT_STR_LEN) {
+            std::memcpy(short_str(), other.short_str(), SHORT_STR_LEN);
         } else {
-            std::memcpy(prefix(), other.prefix(), 4);
-            long_ptr() = other.long_ptr();
-            other.long_ptr() = nullptr;
-            other.get_length() = 0;
+            char prefix[PREFIX_SIZE];
+            other.get_prefix(prefix);
+            set_prefix(prefix);
+            set_long_ptr(other.get_long_ptr());
+            other.set_long_ptr(nullptr);
+            other.set_length(0);
         }
         other.clear_buffer();
     }
@@ -131,43 +135,52 @@ struct NewUmbra_t {
     NewUmbra_t &operator=(NewUmbra_t &&other) noexcept {
         if (this != &other) {
             // Clean up existing data
-            if (is_long() && long_ptr()) {
-                delete[] long_ptr();
+            if (is_long() && get_long_ptr()) {
+                delete[] get_long_ptr();
             }
 
-            get_length() = other.get_length();
-            if (get_length() <= 12) {
-                std::memcpy(short_str(), other.short_str(), 12);
+            set_length(other.get_length());
+            if (get_length() <= SHORT_STR_LEN) {
+                std::memcpy(short_str(), other.short_str(), SHORT_STR_LEN);
             } else {
-                std::memcpy(prefix(), other.prefix(), 4);
-                long_ptr() = other.long_ptr();
-                other.long_ptr() = nullptr;
-                other.get_length() = 0;
+                char prefix[PREFIX_SIZE];
+                other.get_prefix(prefix);
+                set_prefix(prefix);
+                set_long_ptr(other.get_long_ptr());
+                other.set_long_ptr(nullptr);
             }
             other.clear_buffer();
         }
         return *this;
     }
 
+    // Swap function for copy-and-swap
+    friend void swap(NewUmbra_t &first, NewUmbra_t &second) noexcept { std::swap(first.buffer, second.buffer); }
+
     // Equality comparison with other Umbra Strings
     bool operator==(const NewUmbra_t &other) const {
         if (get_length() != other.get_length())
             return false;
-        if (get_length() <= 12) {
+        if (get_length() <= SHORT_STR_LEN) {
             return std::memcmp(short_str(), other.short_str(), get_length()) == 0;
         } else {
-            return std::memcmp(long_ptr(), other.long_ptr(), get_length()) == 0;
+            if (get_long_ptr() == nullptr || other.get_long_ptr() == nullptr)
+                return false;
+            return std::memcmp(get_long_ptr(), other.get_long_ptr(), get_length()) == 0;
         }
     }
 
     // Equality comparison with C-style strings
     bool operator==(const char *str) const {
-        if (std::strlen(str) != get_length())
+        uint32_t str_len = static_cast<uint32_t>(std::strlen(str));
+        if (str_len != get_length())
             return false;
-        if (get_length() <= 12) {
+        if (get_length() <= SHORT_STR_LEN) {
             return std::memcmp(short_str(), str, get_length()) == 0;
         } else {
-            return std::memcmp(long_ptr(), str, get_length()) == 0;
+            if (get_long_ptr() == nullptr)
+                return false;
+            return std::memcmp(get_long_ptr(), str, get_length()) == 0;
         }
     }
 
@@ -177,88 +190,52 @@ struct NewUmbra_t {
 
     // Less-than comparison with other Umbra Strings
     bool operator<(const NewUmbra_t &other) const {
-        uint32_t min_length = std::min(get_length(), other.get_length());
-        int cmp;
-        if (get_length() <= 12 && other.get_length() <= 12) {
-            cmp = std::memcmp(short_str(), other.short_str(), min_length);
-        } else if (get_length() <= 12) {
-            cmp = std::memcmp(short_str(), other.prefix(), 4);
-            if (cmp == 0) {
-                cmp = std::memcmp(short_str(), other.long_ptr(), min_length);
-            }
-        } else if (other.get_length() <= 12) {
-            cmp = std::memcmp(prefix(), other.short_str(), 4);
-            if (cmp == 0) {
-                cmp = std::memcmp(long_ptr(), other.short_str(), min_length);
-            }
-        } else {
-            cmp = std::memcmp(prefix(), other.prefix(), 4);
-            if (cmp == 0) {
-                cmp = std::memcmp(long_ptr(), other.long_ptr(), min_length);
-            }
-        }
-        if (cmp == 0) {
-            return get_length() < other.get_length();
-        }
-        return cmp < 0;
+        return std::lexicographical_compare(get(), get() + size(), other.get(), other.get() + other.size());
     }
 
     // Less-than comparison with C-style strings
     bool operator<(const char *str) const {
-        uint32_t str_len = static_cast<uint32_t>(std::strlen(str));
-        uint32_t min_length = std::min(get_length(), str_len);
-        int cmp;
-        if (get_length() <= 12 && str_len <= 12) {
-            cmp = std::memcmp(short_str(), str, min_length);
-        } else if (get_length() <= 12) {
-            cmp = std::memcmp(short_str(), str, 4);
-            if (cmp == 0) {
-                cmp = std::memcmp(short_str(), str, min_length);
-            }
-        } else {
-            cmp = std::memcmp(prefix(), str, 4);
-            if (cmp == 0) {
-                cmp = std::memcmp(long_ptr(), str, min_length);
-            }
-        }
-        if (cmp == 0) {
-            return get_length() < str_len;
-        }
-        return cmp < 0;
+        return std::lexicographical_compare(get(), get() + size(), str, str + std::strlen(str));
     }
 
     // Greater-than comparisons
-    bool operator>(const NewUmbra_t &other) const { return !(*this < other) && !(*this == other); }
-    bool operator>(const char *str) const { return !(*this < str) && !(*this == str); }
+    bool operator>(const NewUmbra_t &other) const { return other < *this; }
+    bool operator>(const char *str) const {
+        return std::lexicographical_compare(str, str + std::strlen(str), get(), get() + size());
+    }
 
-    // Conversion to std::string
-    operator std::string() const { return to_string(); }
+    // Convert to std::string
+    std::string to_string() const {
+        if (get_length() <= SHORT_STR_LEN) {
+            return std::string(short_str(), get_length());
+        }
+        if (get_long_ptr() == nullptr)
+            return std::string();
+        return std::string(get_long_ptr(), get_length());
+    }
 
     // Concatenation with other Umbra Strings
-    NewUmbra_t operator+(const NewUmbra_t &other) const {
-        std::string concatenated = this->to_string() + other.to_string();
-        return NewUmbra_t(concatenated);
-    }
+    NewUmbra_t operator+(const NewUmbra_t &other) const { return NewUmbra_t(this->to_string() + other.to_string()); }
 
     // Concatenation with C-style strings
-    NewUmbra_t operator+(const char *str) const {
-        std::string concatenated = this->to_string() + std::string(str);
-        return NewUmbra_t(concatenated);
-    }
+    NewUmbra_t operator+(const char *str) const { return NewUmbra_t(this->to_string() + std::string(str)); }
 
     // Serialize to a byte buffer
     void serialize(std::vector<char> &outBuffer) const {
-        outBuffer.reserve(outBuffer.size() + 4 + get_length());
+        outBuffer.reserve(outBuffer.size() + LENGTH_SIZE + get_length());
 
         uint32_t len = get_length();
+        // Serialize length in little-endian format
         for (int i = 0; i < 4; ++i) {
             outBuffer.push_back(static_cast<char>((len >> (i * 8)) & 0xFF));
         }
 
-        if (get_length() <= 12) {
+        if (get_length() <= SHORT_STR_LEN) {
             outBuffer.insert(outBuffer.end(), short_str(), short_str() + get_length());
         } else {
-            outBuffer.insert(outBuffer.end(), long_ptr(), long_ptr() + get_length());
+            if (get_long_ptr()) {
+                outBuffer.insert(outBuffer.end(), get_long_ptr(), get_long_ptr() + get_length());
+            }
         }
     }
 
@@ -266,10 +243,10 @@ struct NewUmbra_t {
     inline size_t size() const { return get_length(); }
 
     // Check if the string is stored in long format
-    inline bool is_long() const { return get_length() > 12; }
+    inline bool is_long() const { return get_length() > SHORT_STR_LEN; }
 
     // Get C-style string
-    inline const char *get() const { return is_long() ? long_ptr() : short_str(); }
+    inline const char *get() const { return is_long() ? (get_long_ptr() ? get_long_ptr() : "") : short_str(); }
 
     // Set the string value
     void set(const char *str) {
@@ -278,42 +255,31 @@ struct NewUmbra_t {
             throw std::length_error("String length exceeds maximum allowed");
         }
 
-        // Clean up if currently long
-        if (is_long() && long_ptr()) {
-            delete[] long_ptr();
-            long_ptr() = nullptr;
+        // If currently storing a long string, clean it up
+        if (is_long() && get_long_ptr()) {
+            delete[] get_long_ptr();
+            set_long_ptr(nullptr);
         }
 
-        get_length() = static_cast<uint32_t>(len);
+        set_length(static_cast<uint32_t>(len));
 
-        if (get_length() <= 12) {
+        if (get_length() <= SHORT_STR_LEN) {
             std::memcpy(short_str(), str, get_length());
-            std::fill(short_str() + get_length(), short_str() + 12, '\0');
+            std::fill(short_str() + get_length(), short_str() + PREFIX_SIZE + (SHORT_STR_LEN - PREFIX_SIZE), '\0');
         } else {
-            std::memcpy(prefix(), str, 4);
-            long_ptr() = new char[get_length() + 1];
-            std::memcpy(long_ptr(), str, get_length());
-            long_ptr()[get_length()] = '\0';
+            // Store prefix
+            set_prefix(str);
+            // Allocate and store long string
+            char *new_long_ptr = new char[get_length() + 1];
+            std::memcpy(new_long_ptr, str, get_length());
+            new_long_ptr[get_length()] = '\0';
+            set_long_ptr(new_long_ptr);
         }
-    }
-
-    // Convert to std::string
-    std::string to_string() const {
-        if (get_length() <= 12) {
-            return std::string(short_str(), get_length());
-        }
-        return std::string(long_ptr(), get_length());
     }
 
     // Output stream operator
     friend std::ostream &operator<<(std::ostream &os, const NewUmbra_t &str) {
-        if (str.is_long()) {
-            if (str.long_ptr()) {
-                os.write(str.long_ptr(), str.size());
-            }
-        } else {
-            os.write(str.short_str(), str.size());
-        }
+        os.write(str.get(), str.size());
         return os;
     }
 
@@ -321,12 +287,7 @@ struct NewUmbra_t {
     int compare(const char *str) const {
         uint32_t str_len = static_cast<uint32_t>(std::strlen(str));
         uint32_t min_length = std::min(get_length(), str_len);
-        int cmp;
-        if (get_length() <= 12) {
-            cmp = std::memcmp(short_str(), str, min_length);
-        } else {
-            cmp = std::memcmp(long_ptr(), str, min_length);
-        }
+        int cmp = std::memcmp(get(), str, min_length);
         if (cmp == 0) {
             if (get_length() < str_len)
                 return -1;
@@ -340,14 +301,9 @@ struct NewUmbra_t {
     // Convert to lowercase
     NewUmbra_t lower() const {
         NewUmbra_t result(*this);
-        if (result.is_long()) {
-            for (uint32_t i = 0; i < result.size(); ++i) {
-                result.long_ptr()[i] = static_cast<char>(std::tolower(result.long_ptr()[i]));
-            }
-        } else {
-            for (uint32_t i = 0; i < result.size(); ++i) {
-                result.short_str()[i] = static_cast<char>(std::tolower(result.short_str()[i]));
-            }
+        char *target = result.is_long() ? result.get_long_ptr() : result.short_str();
+        for (uint32_t i = 0; i < result.size(); ++i) {
+            target[i] = static_cast<char>(std::tolower(static_cast<unsigned char>(target[i])));
         }
         return result;
     }
@@ -355,21 +311,15 @@ struct NewUmbra_t {
     // Convert to uppercase
     NewUmbra_t upper() const {
         NewUmbra_t result(*this);
-        if (result.is_long()) {
-            for (uint32_t i = 0; i < result.size(); ++i) {
-                result.long_ptr()[i] = static_cast<char>(std::toupper(result.long_ptr()[i]));
-            }
-        } else {
-            for (uint32_t i = 0; i < result.size(); ++i) {
-                result.short_str()[i] = static_cast<char>(std::toupper(result.short_str()[i]));
-            }
+        char *target = result.is_long() ? result.get_long_ptr() : result.short_str();
+        for (uint32_t i = 0; i < result.size(); ++i) {
+            target[i] = static_cast<char>(std::toupper(static_cast<unsigned char>(target[i])));
         }
         return result;
     }
 
-    // Access the underlying buffer (for advanced byte manipulation)
-    std::array<uint8_t, 16> &get_buffer() { return buffer; }
-    const std::array<uint8_t, 16> &get_buffer() const { return buffer; }
+    // Access the underlying buffer (read-only)
+    const std::array<uint8_t, BUFFER_SIZE> &get_buffer() const { return buffer; }
 };
 
 // Hash specialization for NewUmbra_t

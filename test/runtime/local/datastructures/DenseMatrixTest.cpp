@@ -230,7 +230,7 @@ TEMPLATE_TEST_CASE("DenseMatrix with string value type", TAG_DATASTRUCTURES, ALL
         DenseMatrix<ValueType> *m = DataObjectFactory::create<DenseMatrix<ValueType>>(numRows, numCols, false);
         expectedStrings exp = {ValueType("0"),
                                ValueType("abcdefghijklm"),
-                               ValueType("abcdefghijklmnopqrstuvwxyz"),
+                               ValueType("abcdefghijklmno"),
                                ValueType("3"),
                                ValueType("10"),
                                ValueType("abcdefghijkl"),
@@ -249,7 +249,7 @@ TEMPLATE_TEST_CASE("DenseMatrix with string value type", TAG_DATASTRUCTURES, ALL
                 } else if (c == 1 && r == 0) {
                     m->append(r, c, ValueType("abcdefghijklm"));
                 } else if (c == 2 && r == 0) {
-                    m->append(r, c, ValueType("abcdefghijklmnopqrstuvwxyz"));
+                    m->append(r, c, ValueType("abcdefghijklmno"));
                 } else if (c == 1 && r == 1) {
                     m->append(r, c, ValueType("abcdefghijkl"));
                 }

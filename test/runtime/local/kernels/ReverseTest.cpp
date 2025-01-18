@@ -141,8 +141,8 @@ TEMPLATE_PRODUCT_TEST_CASE("Reverse - string specific", TAG_KERNELS, (DATA_TYPES
     DT *exp = nullptr;
 
     SECTION("general matrix 1") {
-        arg = genGivenVals<DT>(3, {"", "abcd", "a", "abc", "ab", "ab"});
-        exp = genGivenVals<DT>(3, {"ab", "ab", "a", "abc", "", "abcd"});
+        arg = genGivenVals<DT>(3, {"", "abcd", "a", "abc", "abcdefghijklm", "ab"});
+        exp = genGivenVals<DT>(3, {"abcdefghijklm", "ab", "a", "abc", "", "abcd"});
         DT *res = nullptr;
         reverse<DT, DT>(res, arg, nullptr);
         CHECK(*res == *exp);
@@ -150,8 +150,8 @@ TEMPLATE_PRODUCT_TEST_CASE("Reverse - string specific", TAG_KERNELS, (DATA_TYPES
         DataObjectFactory::destroy(arg, exp, res);
     }
     SECTION("general matrix 2") {
-        arg = genGivenVals<DT>(3, {"", "abcd", "red", "a", "abc", "blue", "ab", "ab", "green"});
-        exp = genGivenVals<DT>(3, {"ab", "ab", "green", "a", "abc", "blue", "", "abcd", "red"});
+        arg = genGivenVals<DT>(3, {"", "abcd", "abcdefghijklm", "a", "abc", "blue", "ab", "ab", "green"});
+        exp = genGivenVals<DT>(3, {"ab", "ab", "green", "a", "abc", "blue", "", "abcd", "abcdefghijklm"});
         DT *res = nullptr;
         reverse<DT, DT>(res, arg, nullptr);
         CHECK(*res == *exp);
@@ -159,8 +159,10 @@ TEMPLATE_PRODUCT_TEST_CASE("Reverse - string specific", TAG_KERNELS, (DATA_TYPES
         DataObjectFactory::destroy(arg, exp, res);
     }
     SECTION("column matrix") {
-        arg = genGivenVals<DT>(9, {"ab", "abcd", "", "a", "abcde", "abcdef", "abcdefg", "abcdefgh", "abcdefghi"});
-        exp = genGivenVals<DT>(9, {"abcdefghi", "abcdefgh", "abcdefg", "abcdef", "abcde", "a", "", "abcd", "ab"});
+        arg = genGivenVals<DT>(
+            9, {"ab", "abcd", "", "a", "abcde", "abcdefghijklm", "abcdefg", "abcdefgh", "abcdefghijklm"});
+        exp = genGivenVals<DT>(
+            9, {"abcdefghijklm", "abcdefgh", "abcdefg", "abcdefghijklm", "abcde", "a", "", "abcd", "ab"});
         DT *res = nullptr;
         reverse<DT, DT>(res, arg, nullptr);
         CHECK(*res == *exp);
@@ -169,8 +171,10 @@ TEMPLATE_PRODUCT_TEST_CASE("Reverse - string specific", TAG_KERNELS, (DATA_TYPES
     }
 
     SECTION("row matrix") {
-        arg = genGivenVals<DT>(1, {"ab", "abcd", "", "a", "abcde", "abcdef", "abcdefg", "abcdefgh", "abcdefghi"});
-        exp = genGivenVals<DT>(1, {"ab", "abcd", "", "a", "abcde", "abcdef", "abcdefg", "abcdefgh", "abcdefghi"});
+        arg = genGivenVals<DT>(
+            1, {"ab", "abcd", "", "abcdefghijklm", "abcde", "abcdef", "abcdefg", "abcdefgh", "abcdefghi"});
+        exp = genGivenVals<DT>(
+            1, {"ab", "abcd", "", "abcdefghijklm", "abcde", "abcdef", "abcdefg", "abcdefgh", "abcdefghi"});
         DT *res = nullptr;
         reverse<DT, DT>(res, arg, nullptr);
         CHECK(*res == *exp);
