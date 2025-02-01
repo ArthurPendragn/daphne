@@ -56,7 +56,7 @@ class NewUmbra_t {
         if (length > UINT32_MAX) {
             throw std::length_error("String exceeds fixed buffer size");
         }
-        if (length <= 12) {
+        if (length <= SHORT_STR_LEN) {
             std::copy(str, str + length, buffer);
             std::fill(buffer + length, buffer + SHORT_STR_LEN, static_cast<uint8_t>('\0'));
         } else {
@@ -335,13 +335,34 @@ class NewUmbra_t {
 
     // Setter for the string
     void set(const char *str) {
-        // Clean up existing pointer if any
+        // Determine the new string's length.
+        uint32_t new_length = static_cast<uint32_t>(std::strlen(str));
+
+        // If the current object already holds a "long" string, delete the allocated pointer.
         if (is_long()) {
             delete get_pointer();
             clear_pointer();
         }
 
-        set_string(str);
+        // Update our length to reflect the new string.
+        length = new_length;
+
+        // If the string fits in the buffer (i.e. it is "short")
+        if (new_length <= SHORT_STR_LEN) {
+            // Copy the string into the entire buffer.
+            std::copy(str, str + new_length, buffer);
+            // Pad the rest of the buffer with zeroes.
+            std::fill(buffer + new_length, buffer + SHORT_STR_LEN, static_cast<uint8_t>('\0'));
+        } else {
+            // For a long string, we store a prefix and then a pointer to the full string.
+            // Copy the first PREFIX_LEN characters into the buffer.
+            std::copy(str, str + PREFIX_LEN, buffer);
+            // Allocate a new std::string with the full string.
+            std::string *ptr = new std::string(str);
+            // Store the pointer into the remainder of the buffer.
+            uintptr_t address = reinterpret_cast<uintptr_t>(ptr);
+            std::memcpy(buffer + PREFIX_LEN, &address, sizeof(uintptr_t));
+        }
     }
 
     // Getter for length
