@@ -33,6 +33,7 @@
 #define ALL_VALUE_TYPES int8_t, int32_t, int64_t, uint8_t, uint32_t, uint64_t, float, double
 
 #define ALL_STRING_VALUE_TYPES std::string, FixedStr16, Umbra_t, NewUmbra_t
+#define FLEXIBLE_SIZE_STRING_VALUE_TYPES std::string, Umbra_t, NewUmbra_t
 
 struct ValueTypeUtils {
 

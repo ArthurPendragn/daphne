@@ -568,7 +568,26 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("or"), TAG_KERNELS, (DATA_TYPES_NO_CSR), (V
 // string.
 // ****************************************************************************
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("concat"), TAG_KERNELS, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("concat"), TAG_KERNELS, (DenseMatrix), FixedStr16) {
+    using DT = TestType;
+    using VT = typename DT::VT;
+    using VTr = std::string;
+
+    auto m1 = genGivenVals<DT>(
+        2, {VT("Hong "), VT("Buenos "), VT(""), VT("Saint "), VT("Alexandria in"), VT("Alexandria Prop")});
+    auto m2 =
+        genGivenVals<DT>(2, {VT("Kong"), VT("Aires"), VT(""), VT("Petersburg"), VT(" the Caucasus"), VT("hthasia")});
+    auto m3 = genGivenVals < DenseMatrix<VTr>(2, {VT("Hong Kong"), VT("Buenos Aires"), VT(""), VT("Saint Petersburg"),
+                                                  VT("Alexandria in the Caucasus"), VT("Alexandria Prophthasia")});
+
+    SECTION("matrix") { checkEwBinaryMat(BinaryOpCode::CONCAT, m1, m2, m3); }
+
+    DataObjectFactory::destroy(m1);
+    DataObjectFactory::destroy(m2);
+    DataObjectFactory::destroy(m3);
+}
+
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("concat"), TAG_KERNELS, (DenseMatrix), (FLEXIBLE_SIZE_STRING_VALUE_TYPES)) {
     using DT = TestType;
     using VT = typename DT::VT;
 

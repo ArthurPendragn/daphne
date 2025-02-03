@@ -93,14 +93,14 @@ TEMPLATE_TEST_CASE(TEST_NAME("eq"), TAG_KERNELS, VALUE_TYPES) {
 TEMPLATE_TEST_CASE(TEST_NAME("eq"), TAG_KERNELS, ALL_STRING_VALUE_TYPES) {
     using VT = TestType;
     checkEwBinarySca<BinaryOpCode::EQ>(VT(" "), VT(""), 0);
-    checkEwBinarySca<BinaryOpCode::EQ>(VT("Valentia Edetanorum"), VT("Valencia"), 0);
-    checkEwBinarySca<BinaryOpCode::EQ>(VT("Lutetia Parisiorum"), VT("Paris"), 0);
+    checkEwBinarySca<BinaryOpCode::EQ>(VT("Valentia"), VT("Valencia"), 0);
+    checkEwBinarySca<BinaryOpCode::EQ>(VT("Parisiorum Lute"), VT("Paris"), 0);
     checkEwBinarySca<BinaryOpCode::EQ>(VT("Roma"), VT("Roma"), 1);
-    checkEwBinarySca<BinaryOpCode::EQ>(VT("Palma"), VT("Palma de Mallorca"), 0);
+    checkEwBinarySca<BinaryOpCode::EQ>(VT("Palma"), VT("PalmadeMallorca"), 0);
     checkEwBinarySca<BinaryOpCode::EQ>(VT("Pompeii"), VT("Pompei"), 0);
     checkEwBinarySca<BinaryOpCode::EQ>(VT("Thessalonica"), VT("Thessaloniki"), 0);
     checkEwBinarySca<BinaryOpCode::EQ>(VT("Regium Lepidi"), VT("Reggio Emilia"), 0);
-    checkEwBinarySca<BinaryOpCode::EQ>(VT("Augusta Treverorum"), VT("Augusta Treverorum"), 1);
+    checkEwBinarySca<BinaryOpCode::EQ>(VT("Augusta Trevero"), VT("Augusta Trevero"), 1);
 }
 
 TEMPLATE_TEST_CASE(TEST_NAME("neq"), TAG_KERNELS, VALUE_TYPES) {
@@ -113,14 +113,14 @@ TEMPLATE_TEST_CASE(TEST_NAME("neq"), TAG_KERNELS, VALUE_TYPES) {
 TEMPLATE_TEST_CASE(TEST_NAME("neq"), TAG_KERNELS, ALL_STRING_VALUE_TYPES) {
     using VT = TestType;
     checkEwBinarySca<BinaryOpCode::NEQ>(VT(" "), VT(""), 1);
-    checkEwBinarySca<BinaryOpCode::NEQ>(VT("Valentia Edetanorum"), VT("Valencia"), 1);
-    checkEwBinarySca<BinaryOpCode::NEQ>(VT("Lutetia Parisiorum"), VT("Paris"), 1);
+    checkEwBinarySca<BinaryOpCode::NEQ>(VT("Valentia"), VT("Valencia"), 1);
+    checkEwBinarySca<BinaryOpCode::NEQ>(VT("Parisiorum Lute"), VT("Paris"), 1);
     checkEwBinarySca<BinaryOpCode::NEQ>(VT("Roma"), VT("Roma"), 0);
-    checkEwBinarySca<BinaryOpCode::NEQ>(VT("Palma"), VT("Palma de Mallorca"), 1);
+    checkEwBinarySca<BinaryOpCode::NEQ>(VT("Palma"), VT("PalmadeMallorca"), 1);
     checkEwBinarySca<BinaryOpCode::NEQ>(VT("Pompeii"), VT("Pompei"), 1);
     checkEwBinarySca<BinaryOpCode::NEQ>(VT("Thessalonica"), VT("Thessaloniki"), 1);
     checkEwBinarySca<BinaryOpCode::NEQ>(VT("Regium Lepidi"), VT("Reggio Emilia"), 1);
-    checkEwBinarySca<BinaryOpCode::NEQ>(VT("Augusta Treverorum"), VT("Augusta Treverorum"), 0);
+    checkEwBinarySca<BinaryOpCode::NEQ>(VT("Augusta Trevero"), VT("Augusta Trevero"), 0);
 }
 
 TEMPLATE_TEST_CASE(TEST_NAME("lt"), TAG_KERNELS, VALUE_TYPES) {
@@ -234,8 +234,17 @@ TEMPLATE_TEST_CASE(TEST_NAME("or"), TAG_KERNELS, VALUE_TYPES) {
 // ****************************************************************************
 // String ops
 // ****************************************************************************
+TEMPLATE_TEST_CASE(TEST_NAME("concat"), TAG_KERNELS, FixedStr16) {
+    using VT = TestType;
+    using VTRes = std::string;
+    checkEwBinarySca<VT>(VT("Pachakutiy"), VT(" Inka Yupanki"), VTRes("Pachakutiy Inka Yupanki"));
+    checkEwBinarySca<VT>(VT("Tawantinsuyu:"), VT(" Chinchay Suyu"), VTRes("Tawantinsuyu: Chinchay Suyu"));
+    checkEwBinarySca<VT>(VT("Túpac Inca"), VT(" Yupanqui"), VTRes("Túpac Inca Yupanqui"));
+    checkEwBinarySca<VT>(VT(""), VT("abc"), VTRes("abc"));
+    checkEwBinarySca<VT>(VT(""), VT(""), VTRes(""));
+}
 
-TEMPLATE_TEST_CASE(TEST_NAME("concat"), TAG_KERNELS, ALL_STRING_VALUE_TYPES) {
+TEMPLATE_TEST_CASE(TEST_NAME("concat"), TAG_KERNELS, FLEXIBLE_SIZE_STRING_VALUE_TYPES) {
     using VT = TestType;
     checkEwBinarySca<VT>(VT("Pachakutiy"), VT(" Inka Yupanki"), VT("Pachakutiy Inka Yupanki"));
     checkEwBinarySca<VT>(VT("Tawantinsuyu:"), VT(" Chinchay Suyu"), VT("Tawantinsuyu: Chinchay Suyu"));
