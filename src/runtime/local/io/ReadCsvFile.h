@@ -185,6 +185,68 @@ template <> struct ReadCsvFile<DenseMatrix<FixedStr16>> {
     }
 };
 
+template <> struct ReadCsvFile<DenseMatrix<Umbra_t>> {
+    static void apply(DenseMatrix<Umbra_t> *&res, struct File *file, size_t numRows, size_t numCols, char delim) {
+        if (file == nullptr)
+            throw std::runtime_error("ReadCsvFile: requires a file to be specified (must not be nullptr)");
+        if (numRows <= 0)
+            throw std::runtime_error("ReadCsvFile: numRows must be > 0");
+        if (numCols <= 0)
+            throw std::runtime_error("ReadCsvFile: numCols must be > 0");
+
+        if (res == nullptr) {
+            res = DataObjectFactory::create<DenseMatrix<Umbra_t>>(numRows, numCols, false);
+        }
+
+        size_t cell = 0;
+        Umbra_t *valuesRes = res->getValues();
+
+        for (size_t r = 0; r < numRows; r++) {
+            if (getFileLine(file) == -1)
+                throw std::runtime_error("ReadCsvFile::apply: getFileLine failed");
+
+            size_t pos = 0;
+            for (size_t c = 0; c < numCols; c++) {
+                std::string val("");
+                pos = setCString(file, pos, &val, delim) + 1;
+                // TODO This assumes that rowSkip == numCols.
+                valuesRes[cell++].set(val.c_str());
+            }
+        }
+    }
+};
+
+template <> struct ReadCsvFile<DenseMatrix<NewUmbra_t>> {
+    static void apply(DenseMatrix<NewUmbra_t> *&res, struct File *file, size_t numRows, size_t numCols, char delim) {
+        if (file == nullptr)
+            throw std::runtime_error("ReadCsvFile: requires a file to be specified (must not be nullptr)");
+        if (numRows <= 0)
+            throw std::runtime_error("ReadCsvFile: numRows must be > 0");
+        if (numCols <= 0)
+            throw std::runtime_error("ReadCsvFile: numCols must be > 0");
+
+        if (res == nullptr) {
+            res = DataObjectFactory::create<DenseMatrix<NewUmbra_t>>(numRows, numCols, false);
+        }
+
+        size_t cell = 0;
+        NewUmbra_t *valuesRes = res->getValues();
+
+        for (size_t r = 0; r < numRows; r++) {
+            if (getFileLine(file) == -1)
+                throw std::runtime_error("ReadCsvFile::apply: getFileLine failed");
+
+            size_t pos = 0;
+            for (size_t c = 0; c < numCols; c++) {
+                std::string val("");
+                pos = setCString(file, pos, &val, delim) + 1;
+                // TODO This assumes that rowSkip == numCols.
+                valuesRes[cell++].set(val.c_str());
+            }
+        }
+    }
+};
+
 // ----------------------------------------------------------------------------
 // CSRMatrix
 // ----------------------------------------------------------------------------
@@ -373,6 +435,18 @@ template <> struct ReadCsvFile<Frame> {
                     std::string val_str = "";
                     pos = setCString(file, pos, &val_str, delim);
                     reinterpret_cast<FixedStr16 *>(rawCols[col])[row] = FixedStr16(val_str);
+                    break;
+                }
+                case ValueTypeCode::UMBRA: {
+                    std::string val_str = "";
+                    pos = setCString(file, pos, &val_str, delim);
+                    reinterpret_cast<Umbra_t *>(rawCols[col])[row] = Umbra_t(val_str);
+                    break;
+                }
+                case ValueTypeCode::NEWUMBRA: {
+                    std::string val_str = "";
+                    pos = setCString(file, pos, &val_str, delim);
+                    reinterpret_cast<NewUmbra_t *>(rawCols[col])[row] = NewUmbra_t(val_str);
                     break;
                 }
                 default:

@@ -177,13 +177,21 @@ SUPPORT_NUMERIC_INT(uint8_t)
 // Strings binary operations.
 SUPPORT_EQUALITY_RA(int64_t, std::string)
 SUPPORT_EQUALITY_RA(int64_t, FixedStr16)
+SUPPORT_EQUALITY_RA(int64_t, Umbra_t)
+SUPPORT_EQUALITY_RA(int64_t, NewUmbra_t)
 SUPPORT_EQUALITY_RA(int64_t, const char *)
 SUPPORT_COMPARISONS_RA(int64_t, std::string)
 SUPPORT_COMPARISONS_RA(int64_t, FixedStr16)
+SUPPORT_COMPARISONS_RA(int64_t, Umbra_t)
+SUPPORT_COMPARISONS_RA(int64_t, NewUmbra_t)
 SUPPORT_STRING_RLR(std::string, std::string, std::string)
+SUPPORT_STRING_RLR(Umbra_t, Umbra_t, Umbra_t)
+SUPPORT_STRING_RLR(NewUmbra_t, NewUmbra_t, NewUmbra_t)
 SUPPORT_STRING_RLR(std::string, FixedStr16, FixedStr16)
 SUPPORT_STRING_RLR(const char *, const char *, const char *)
 SUPPORT_STRING_RLR(std::string, std::string, const char *)
+SUPPORT_STRING_RLR(Umbra_t, Umbra_t, const char *)
+SUPPORT_STRING_RLR(NewUmbra_t, NewUmbra_t, const char *)
 
 // Undefine helper macros.
 #undef SUPPORT
