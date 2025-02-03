@@ -200,9 +200,11 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("eq"), TAG_KERNELS, (DenseMatrix), (ALL_STR
     using DT = TestType;
     using VT = typename DT::VT;
 
-    auto m1 = genGivenVals<DT>(2, {VT("1"), VT("2"), VT("abc"), VT("abcd"), VT("ABCD"), VT("34ab")});
-    auto m2 = genGivenVals<DT>(2, {VT("1"), VT("0"), VT("3"), VT("abcd"), VT("abcd"), VT("34ab")});
-    auto m3 = genGivenVals<DenseMatrix<int64_t>>(2, {1, 0, 0, 1, 0, 1});
+    auto m1 =
+        genGivenVals<DT>(2, {VT("Ur"), VT("Uruk"), VT("Lugal"), VT("Ur"), VT("Lugaluschumgal"), VT("Lugaluschumgal")});
+    auto m2 =
+        genGivenVals<DT>(2, {VT("Uruk"), VT("Ur"), VT("Lugaluschumgal"), VT("Ur"), VT("Lugal"), VT("Lugaluschumgal")});
+    auto m3 = genGivenVals<DenseMatrix<int64_t>>(2, {0, 0, 0, 1, 0, 1});
 
     SECTION("matrix") { checkEwBinaryMat(BinaryOpCode::EQ, m1, m2, m3); }
 
@@ -215,9 +217,11 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("neq"), TAG_KERNELS, (DenseMatrix), (ALL_ST
     using DT = TestType;
     using VT = typename DT::VT;
 
-    auto m1 = genGivenVals<DT>(2, {VT("1"), VT("2"), VT("abc"), VT("abcd"), VT("ABCD"), VT("34ab")});
-    auto m2 = genGivenVals<DT>(2, {VT("1"), VT("0"), VT("3"), VT("abcd"), VT("abcd"), VT("34ab")});
-    auto m3 = genGivenVals<DenseMatrix<int64_t>>(2, {0, 1, 1, 0, 1, 0});
+    auto m1 =
+        genGivenVals<DT>(2, {VT("Ur"), VT("Uruk"), VT("Lugal"), VT("Ur"), VT("Lugaluschumgal"), VT("Lugaluschumgal")});
+    auto m2 =
+        genGivenVals<DT>(2, {VT("Uruk"), VT("Ur"), VT("Lugaluschumgal"), VT("Ur"), VT("Lugal"), VT("Lugaluschumgal")});
+    auto m3 = genGivenVals<DenseMatrix<int64_t>>(2, {1, 1, 1, 0, 1, 0});
 
     SECTION("matrix") { checkEwBinaryMat(BinaryOpCode::NEQ, m1, m2, m3); }
 
@@ -329,11 +333,12 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("lt"), TAG_KERNELS, (DenseMatrix), (ALL_STR
     using DT = TestType;
     using VT = typename DT::VT;
 
-    auto m1 = genGivenVals<DT>(
-        3, {VT("1"), VT("2"), VT("1"), VT("abc"), VT("abcd"), VT("abcd"), VT("abcd"), VT("ABC"), VT("35abcd")});
-    auto m2 = genGivenVals<DT>(
-        3, {VT("1"), VT("0"), VT("3"), VT("abcd"), VT("abce"), VT("abcd"), VT("abc"), VT("abc"), VT("30abcd")});
-    auto m3 = genGivenVals<DenseMatrix<int64_t>>(3, {0, 0, 1, 1, 1, 0, 0, 1, 0});
+    auto m1 = genGivenVals<DT>(3, {VT("Memphis"), VT("Raqote"), VT("Iushenshen"), VT("Sumenu"), VT("HermopolisParva"),
+                                   VT("HermopolisParva"), VT("Neferneferuaten"), VT("Hotepsekhemwy"), VT("Nefertiti")});
+    auto m2 =
+        genGivenVals<DT>(3, {VT("Men-nefer"), VT("Alexandria"), VT("Iushenshen"), VT("Crocodilopolis"), VT("Weprehwy"),
+                             VT("HermopolisParva"), VT("Nefertiti"), VT("Neferneferuaten"), VT("Neferneferuaten")});
+    auto m3 = genGivenVals<DenseMatrix<int64_t>>(3, {1, 0, 0, 0, 1, 0, 1, 1, 0});
 
     SECTION("matrix") { checkEwBinaryMat(BinaryOpCode::LT, m1, m2, m3); }
 
@@ -412,11 +417,12 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("gt"), TAG_KERNELS, (DenseMatrix), (ALL_STR
     using DT = TestType;
     using VT = typename DT::VT;
 
-    auto m1 = genGivenVals<DT>(
-        3, {VT("1"), VT("2"), VT("1"), VT("abc"), VT("abcd"), VT("abcd"), VT("abcd"), VT("ABC"), VT("35abcd")});
-    auto m2 = genGivenVals<DT>(
-        3, {VT("1"), VT("0"), VT("3"), VT("abcd"), VT("abce"), VT("abcd"), VT("abc"), VT("abc"), VT("30abcd")});
-    auto m3 = genGivenVals<DenseMatrix<int64_t>>(3, {0, 1, 0, 0, 0, 0, 1, 0, 1});
+    auto m1 = genGivenVals<DT>(3, {VT("Memphis"), VT("Raqote"), VT("Iushenshen"), VT("Sumenu"), VT("HermopolisParva"),
+                                   VT("HermopolisParva"), VT("Neferneferuaten"), VT("Hotepsekhemwy"), VT("Nefertiti")});
+    auto m2 =
+        genGivenVals<DT>(3, {VT("Men-nefer"), VT("Alexandria"), VT("Iushenshen"), VT("Crocodilopolis"), VT("Weprehwy"),
+                             VT("HermopolisParva"), VT("Nefertiti"), VT("Neferneferuaten"), VT("Neferneferuaten")});
+    auto m3 = genGivenVals<DenseMatrix<int64_t>>(3, {0, 1, 0, 1, 0, 0, 0, 0, 1});
 
     SECTION("matrix") { checkEwBinaryMat(BinaryOpCode::GT, m1, m2, m3); }
 
@@ -562,15 +568,35 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("or"), TAG_KERNELS, (DATA_TYPES_NO_CSR), (V
 // string.
 // ****************************************************************************
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("concat"), TAG_KERNELS, (DenseMatrix), (ALL_STRING_VALUE_TYPES)) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("concat"), TAG_KERNELS, (DenseMatrix), FixedStr16) {
     using DT = TestType;
     using VT = typename DT::VT;
     using VTr = std::string;
 
-    auto m1 = genGivenVals<DT>(2, {VT("1"), VT("2"), VT(""), VT(""), VT("ab"), VT("abcd")});
-    auto m2 = genGivenVals<DT>(2, {VT(""), VT("0"), VT(""), VT("abc"), VT("ce"), VT("abcd")});
-    auto m3 =
-        genGivenVals<DenseMatrix<VTr>>(2, {VTr("1"), VTr("20"), VTr(""), VTr("abc"), VTr("abce"), VTr("abcdabcd")});
+    auto m1 = genGivenVals<DT>(
+        2, {VT("Hong "), VT("Buenos "), VT(""), VT("Saint "), VT("Alexandria in"), VT("Alexandria Prop")});
+    auto m2 =
+        genGivenVals<DT>(2, {VT("Kong"), VT("Aires"), VT(""), VT("Petersburg"), VT(" the Caucasus"), VT("hthasia")});
+    auto m3 = genGivenVals < DenseMatrix<VTr>(2, {VT("Hong Kong"), VT("Buenos Aires"), VT(""), VT("Saint Petersburg"),
+                                                  VT("Alexandria in the Caucasus"), VT("Alexandria Prophthasia")});
+
+    SECTION("matrix") { checkEwBinaryMat(BinaryOpCode::CONCAT, m1, m2, m3); }
+
+    DataObjectFactory::destroy(m1);
+    DataObjectFactory::destroy(m2);
+    DataObjectFactory::destroy(m3);
+}
+
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("concat"), TAG_KERNELS, (DenseMatrix), (FLEXIBLE_SIZE_STRING_VALUE_TYPES)) {
+    using DT = TestType;
+    using VT = typename DT::VT;
+
+    auto m1 = genGivenVals<DT>(
+        2, {VT("Hong "), VT("Buenos "), VT(""), VT("Saint "), VT("Alexandria in"), VT("Alexandria Prop")});
+    auto m2 =
+        genGivenVals<DT>(2, {VT("Kong"), VT("Aires"), VT(""), VT("Petersburg"), VT(" the Caucasus"), VT("hthasia")});
+    auto m3 = genGivenVals<DenseMatrix<VT>>(2, {VT("Hong Kong"), VT("Buenos Aires"), VT(""), VT("Saint Petersburg"),
+                                                VT("Alexandria in the Caucasus"), VT("Alexandria Prophthasia")});
 
     SECTION("matrix") { checkEwBinaryMat(BinaryOpCode::CONCAT, m1, m2, m3); }
 

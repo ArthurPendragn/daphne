@@ -40,9 +40,19 @@ template <BinaryOpCode opCode> void checkEwBinarySca(FixedStr16 lhs, FixedStr16 
     CHECK(ewBinarySca<int64_t, FixedStr16, FixedStr16>(opCode, lhs, rhs, nullptr) == exp);
 }
 
-template <typename VT> void checkEwBinarySca(VT lhs, VT rhs, std::string exp) {
-    CHECK(EwBinarySca<BinaryOpCode::CONCAT, std::string, VT, VT>::apply(lhs, rhs, nullptr) == exp);
-    CHECK(ewBinarySca<std::string, VT, VT>(BinaryOpCode::CONCAT, lhs, rhs, nullptr) == exp);
+template <BinaryOpCode opCode> void checkEwBinarySca(Umbra_t lhs, Umbra_t rhs, int64_t exp) {
+    CHECK(EwBinarySca<opCode, int64_t, Umbra_t, Umbra_t>::apply(lhs, rhs, nullptr) == exp);
+    CHECK(ewBinarySca<int64_t, Umbra_t, Umbra_t>(opCode, lhs, rhs, nullptr) == exp);
+}
+
+template <BinaryOpCode opCode> void checkEwBinarySca(NewUmbra_t lhs, NewUmbra_t rhs, int64_t exp) {
+    CHECK(EwBinarySca<opCode, int64_t, NewUmbra_t, NewUmbra_t>::apply(lhs, rhs, nullptr) == exp);
+    CHECK(ewBinarySca<int64_t, NewUmbra_t, NewUmbra_t>(opCode, lhs, rhs, nullptr) == exp);
+}
+
+template <typename VT> void checkEwBinarySca(VT lhs, VT rhs, VT exp) {
+    CHECK(EwBinarySca<BinaryOpCode::CONCAT, VT, VT, VT>::apply(lhs, rhs, nullptr) == exp);
+    CHECK(ewBinarySca<VT, VT, VT>(BinaryOpCode::CONCAT, lhs, rhs, nullptr) == exp);
 }
 
 // ****************************************************************************
@@ -82,15 +92,15 @@ TEMPLATE_TEST_CASE(TEST_NAME("eq"), TAG_KERNELS, VALUE_TYPES) {
 
 TEMPLATE_TEST_CASE(TEST_NAME("eq"), TAG_KERNELS, ALL_STRING_VALUE_TYPES) {
     using VT = TestType;
-    checkEwBinarySca<BinaryOpCode::EQ>(VT("abcd"), VT("abcd"), 1);
-    checkEwBinarySca<BinaryOpCode::EQ>(VT("abce"), VT("abcd"), 0);
-    checkEwBinarySca<BinaryOpCode::EQ>(VT("abcda"), VT("abcd"), 0);
-    checkEwBinarySca<BinaryOpCode::EQ>(VT("abc"), VT("abcd"), 0);
-    checkEwBinarySca<BinaryOpCode::EQ>(VT("ABCD"), VT("abcd"), 0);
-    checkEwBinarySca<BinaryOpCode::EQ>(VT("36abcd"), VT("30abcd"), 0);
-    checkEwBinarySca<BinaryOpCode::EQ>(VT("3"), VT("4"), 0);
-    checkEwBinarySca<BinaryOpCode::EQ>(VT(""), VT("abc"), 0);
-    checkEwBinarySca<BinaryOpCode::EQ>(VT(""), VT(""), 1);
+    checkEwBinarySca<BinaryOpCode::EQ>(VT(" "), VT(""), 0);
+    checkEwBinarySca<BinaryOpCode::EQ>(VT("Valentia"), VT("Valencia"), 0);
+    checkEwBinarySca<BinaryOpCode::EQ>(VT("Parisiorum Lute"), VT("Paris"), 0);
+    checkEwBinarySca<BinaryOpCode::EQ>(VT("Roma"), VT("Roma"), 1);
+    checkEwBinarySca<BinaryOpCode::EQ>(VT("Palma"), VT("PalmadeMallorca"), 0);
+    checkEwBinarySca<BinaryOpCode::EQ>(VT("Pompeii"), VT("Pompei"), 0);
+    checkEwBinarySca<BinaryOpCode::EQ>(VT("Thessalonica"), VT("Thessaloniki"), 0);
+    checkEwBinarySca<BinaryOpCode::EQ>(VT("Regium Lepidi"), VT("Reggio Emilia"), 0);
+    checkEwBinarySca<BinaryOpCode::EQ>(VT("Augusta Trevero"), VT("Augusta Trevero"), 1);
 }
 
 TEMPLATE_TEST_CASE(TEST_NAME("neq"), TAG_KERNELS, VALUE_TYPES) {
@@ -102,15 +112,15 @@ TEMPLATE_TEST_CASE(TEST_NAME("neq"), TAG_KERNELS, VALUE_TYPES) {
 
 TEMPLATE_TEST_CASE(TEST_NAME("neq"), TAG_KERNELS, ALL_STRING_VALUE_TYPES) {
     using VT = TestType;
-    checkEwBinarySca<BinaryOpCode::NEQ>(VT("abcd"), VT("abcd"), 0);
-    checkEwBinarySca<BinaryOpCode::NEQ>(VT("abce"), VT("abcd"), 1);
-    checkEwBinarySca<BinaryOpCode::NEQ>(VT("abcda"), VT("abcd"), 1);
-    checkEwBinarySca<BinaryOpCode::NEQ>(VT("abc"), VT("abcd"), 1);
-    checkEwBinarySca<BinaryOpCode::NEQ>(VT("ABCD"), VT("abcd"), 1);
-    checkEwBinarySca<BinaryOpCode::NEQ>(VT("36abcd"), VT("30abcd"), 1);
-    checkEwBinarySca<BinaryOpCode::NEQ>(VT("3"), VT("4"), 1);
-    checkEwBinarySca<BinaryOpCode::NEQ>(VT(""), VT("abc"), 1);
-    checkEwBinarySca<BinaryOpCode::NEQ>(VT(""), VT(""), 0);
+    checkEwBinarySca<BinaryOpCode::NEQ>(VT(" "), VT(""), 1);
+    checkEwBinarySca<BinaryOpCode::NEQ>(VT("Valentia"), VT("Valencia"), 1);
+    checkEwBinarySca<BinaryOpCode::NEQ>(VT("Parisiorum Lute"), VT("Paris"), 1);
+    checkEwBinarySca<BinaryOpCode::NEQ>(VT("Roma"), VT("Roma"), 0);
+    checkEwBinarySca<BinaryOpCode::NEQ>(VT("Palma"), VT("PalmadeMallorca"), 1);
+    checkEwBinarySca<BinaryOpCode::NEQ>(VT("Pompeii"), VT("Pompei"), 1);
+    checkEwBinarySca<BinaryOpCode::NEQ>(VT("Thessalonica"), VT("Thessaloniki"), 1);
+    checkEwBinarySca<BinaryOpCode::NEQ>(VT("Regium Lepidi"), VT("Reggio Emilia"), 1);
+    checkEwBinarySca<BinaryOpCode::NEQ>(VT("Augusta Trevero"), VT("Augusta Trevero"), 0);
 }
 
 TEMPLATE_TEST_CASE(TEST_NAME("lt"), TAG_KERNELS, VALUE_TYPES) {
@@ -122,15 +132,15 @@ TEMPLATE_TEST_CASE(TEST_NAME("lt"), TAG_KERNELS, VALUE_TYPES) {
 
 TEMPLATE_TEST_CASE(TEST_NAME("lt"), TAG_KERNELS, ALL_STRING_VALUE_TYPES) {
     using VT = TestType;
-    checkEwBinarySca<BinaryOpCode::LT>(VT("abcd"), VT("abcd"), 0);
-    checkEwBinarySca<BinaryOpCode::LT>(VT("abce"), VT("abcd"), 0);
-    checkEwBinarySca<BinaryOpCode::LT>(VT("abcb"), VT("abcd"), 1);
-    checkEwBinarySca<BinaryOpCode::LT>(VT("abcda"), VT("abcd"), 0);
-    checkEwBinarySca<BinaryOpCode::LT>(VT("abc"), VT("abcd"), 1);
-    checkEwBinarySca<BinaryOpCode::LT>(VT("ABCD"), VT("abcd"), 1);
-    checkEwBinarySca<BinaryOpCode::LT>(VT("abcD"), VT("abcd"), 1);
-    checkEwBinarySca<BinaryOpCode::LT>(VT("36abcd"), VT("30abcd"), 0);
-    checkEwBinarySca<BinaryOpCode::LT>(VT("3"), VT("4"), 1);
+    checkEwBinarySca<BinaryOpCode::LT>(VT("Tenochtitlan"), VT("Coixtlahuaca"), 0);
+    checkEwBinarySca<BinaryOpCode::LT>(VT("Tlacozauhtitlan"), VT("Quiauhteopan"), 0);
+    checkEwBinarySca<BinaryOpCode::LT>(VT("Texcoco"), VT("Temazcaltepec"), 0);
+    checkEwBinarySca<BinaryOpCode::LT>(VT("Cuauhchinanco"), VT("Tepecoacuilco"), 1);
+    checkEwBinarySca<BinaryOpCode::LT>(VT("Tlacopan"), VT("Tlacozauhtitlan"), 1);
+    checkEwBinarySca<BinaryOpCode::LT>(VT("Tochtepec"), VT("Tochpan"), 0);
+    checkEwBinarySca<BinaryOpCode::LT>(VT("Quetzaltecolotl"), VT("Quetzaltecolotl"), 0);
+    checkEwBinarySca<BinaryOpCode::LT>(VT("Chimalpopoca"), VT("Chimalpopoc"), 0);
+    checkEwBinarySca<BinaryOpCode::LT>(VT("Huitzilopochtl"), VT("Huitzilopochtli"), 1);
     checkEwBinarySca<BinaryOpCode::LT>(VT(""), VT("abc"), 1);
     checkEwBinarySca<BinaryOpCode::LT>(VT(""), VT(""), 0);
 }
@@ -151,15 +161,15 @@ TEMPLATE_TEST_CASE(TEST_NAME("gt"), TAG_KERNELS, VALUE_TYPES) {
 
 TEMPLATE_TEST_CASE(TEST_NAME("gt"), TAG_KERNELS, ALL_STRING_VALUE_TYPES) {
     using VT = TestType;
-    checkEwBinarySca<BinaryOpCode::GT>(VT("abcd"), VT("abcd"), 0);
-    checkEwBinarySca<BinaryOpCode::GT>(VT("abce"), VT("abcd"), 1);
-    checkEwBinarySca<BinaryOpCode::GT>(VT("abcb"), VT("abcd"), 0);
-    checkEwBinarySca<BinaryOpCode::GT>(VT("abcda"), VT("abcd"), 1);
-    checkEwBinarySca<BinaryOpCode::GT>(VT("abc"), VT("abcd"), 0);
-    checkEwBinarySca<BinaryOpCode::GT>(VT("ABCD"), VT("abcd"), 0);
-    checkEwBinarySca<BinaryOpCode::GT>(VT("abcD"), VT("abcd"), 0);
-    checkEwBinarySca<BinaryOpCode::GT>(VT("36abcd"), VT("30abcd"), 1);
-    checkEwBinarySca<BinaryOpCode::GT>(VT("3"), VT("4"), 0);
+    checkEwBinarySca<BinaryOpCode::GT>(VT("Tenochtitlan"), VT("Coixtlahuaca"), 1);
+    checkEwBinarySca<BinaryOpCode::GT>(VT("Tlacozauhtitlan"), VT("Quiauhteopan"), 1);
+    checkEwBinarySca<BinaryOpCode::GT>(VT("Texcoco"), VT("Temazcaltepec"), 1);
+    checkEwBinarySca<BinaryOpCode::GT>(VT("Cuauhchinanco"), VT("Tepecoacuilco"), 0);
+    checkEwBinarySca<BinaryOpCode::GT>(VT("Tlacopan"), VT("Tlacozauhtitlan"), 0);
+    checkEwBinarySca<BinaryOpCode::GT>(VT("Tochtepec"), VT("Tochpan"), 1);
+    checkEwBinarySca<BinaryOpCode::GT>(VT("Quetzaltecolotl"), VT("Quetzaltecolotl"), 0);
+    checkEwBinarySca<BinaryOpCode::GT>(VT("Chimalpopoca"), VT("Chimalpopoc"), 1);
+    checkEwBinarySca<BinaryOpCode::GT>(VT("Huitzilopochtl"), VT("Huitzilopochtli"), 0);
     checkEwBinarySca<BinaryOpCode::GT>(VT(""), VT("abc"), 0);
     checkEwBinarySca<BinaryOpCode::GT>(VT(""), VT(""), 0);
 }
@@ -224,14 +234,23 @@ TEMPLATE_TEST_CASE(TEST_NAME("or"), TAG_KERNELS, VALUE_TYPES) {
 // ****************************************************************************
 // String ops
 // ****************************************************************************
-
-TEMPLATE_TEST_CASE(TEST_NAME("concat"), TAG_KERNELS, ALL_STRING_VALUE_TYPES) {
+TEMPLATE_TEST_CASE(TEST_NAME("concat"), TAG_KERNELS, FixedStr16) {
     using VT = TestType;
-    checkEwBinarySca<VT>(VT("abcd"), VT("abcd"), std::string("abcdabcd"));
-    checkEwBinarySca<VT>(VT("ABCD"), VT("abcd"), std::string("ABCDabcd"));
-    checkEwBinarySca<VT>(VT("3"), VT("4"), std::string("34"));
-    checkEwBinarySca<VT>(VT(""), VT("abc"), std::string("abc"));
-    checkEwBinarySca<VT>(VT(""), VT(""), std::string(""));
+    using VTRes = std::string;
+    checkEwBinarySca<VT>(VT("Pachakutiy"), VT(" Inka Yupanki"), VTRes("Pachakutiy Inka Yupanki"));
+    checkEwBinarySca<VT>(VT("Tawantinsuyu:"), VT(" Chinchay Suyu"), VTRes("Tawantinsuyu: Chinchay Suyu"));
+    checkEwBinarySca<VT>(VT("Túpac Inca"), VT(" Yupanqui"), VTRes("Túpac Inca Yupanqui"));
+    checkEwBinarySca<VT>(VT(""), VT("abc"), VTRes("abc"));
+    checkEwBinarySca<VT>(VT(""), VT(""), VTRes(""));
+}
+
+TEMPLATE_TEST_CASE(TEST_NAME("concat"), TAG_KERNELS, FLEXIBLE_SIZE_STRING_VALUE_TYPES) {
+    using VT = TestType;
+    checkEwBinarySca<VT>(VT("Pachakutiy"), VT(" Inka Yupanki"), VT("Pachakutiy Inka Yupanki"));
+    checkEwBinarySca<VT>(VT("Tawantinsuyu:"), VT(" Chinchay Suyu"), VT("Tawantinsuyu: Chinchay Suyu"));
+    checkEwBinarySca<VT>(VT("Túpac Inca"), VT(" Yupanqui"), VT("Túpac Inca Yupanqui"));
+    checkEwBinarySca<VT>(VT(""), VT("abc"), VT("abc"));
+    checkEwBinarySca<VT>(VT(""), VT(""), VT(""));
 }
 
 // ****************************************************************************

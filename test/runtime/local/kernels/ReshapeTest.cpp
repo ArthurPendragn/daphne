@@ -94,8 +94,8 @@ TEMPLATE_PRODUCT_TEST_CASE("Reshape - string specific", TAG_KERNELS, (DATA_TYPES
     using VT = typename DT::VT;
     using DTView = typename std::conditional<std::is_same<DT, Matrix<VT>>::value, DenseMatrix<VT>, DT>::type;
 
-    std::vector<typename DT::VT> vals = {"ab",      "abcd",     "",          "a",   "abcde", "abcdef",
-                                         "abcdefg", "abcdefgh", "abcdefghi", " ab", " ",     "123"};
+    std::vector<typename DT::VT> vals = {"ab",       "abcd",          "",    "a", "abcde", "abcdef", "abcdefghijklm",
+                                         "abcdefgh", "abcdefghijklm", " ab", " ", "123"};
     DT *arg = genGivenVals<DT>(1, vals); // 1x12
 
     SECTION("valid reshape 1") {
@@ -111,15 +111,15 @@ TEMPLATE_PRODUCT_TEST_CASE("Reshape - string specific", TAG_KERNELS, (DATA_TYPES
     SECTION("view 1") {
         const DTView *initial = genGivenVals<DTView>(3, vals);                                      // 3x4
         const DT *view = static_cast<DT *>(DataObjectFactory::create<DTView>(initial, 0, 3, 2, 4)); // 3x2
-        const DT *exp = genGivenVals<DT>(2, {"", "a", "abcdefg", "abcdefgh", " ", "123"});          // 2x3
+        const DT *exp = genGivenVals<DT>(2, {"", "a", "abcdefghijklm", "abcdefgh", " ", "123"});    // 2x3
         checkReshape(view, 2, 3, exp);
 
         DataObjectFactory::destroy(exp, initial, view);
     }
     SECTION("view 2") {
-        const DTView *initial = genGivenVals<DTView>(2, vals);                                        // 2x6
-        const DT *view = static_cast<DT *>(DataObjectFactory::create<DTView>(initial, 1, 2, 0, 6));   // 1x6
-        const DT *exp = genGivenVals<DT>(3, {"abcdefg", "abcdefgh", "abcdefghi", " ab", " ", "123"}); // 3x2
+        const DTView *initial = genGivenVals<DTView>(2, vals);                                                  // 2x6
+        const DT *view = static_cast<DT *>(DataObjectFactory::create<DTView>(initial, 1, 2, 0, 6));             // 1x6
+        const DT *exp = genGivenVals<DT>(3, {"abcdefghijklm", "abcdefgh", "abcdefghijklm", " ab", " ", "123"}); // 3x2
         checkReshape(view, 3, 2, exp);
 
         DataObjectFactory::destroy(exp, initial, view);
@@ -127,7 +127,7 @@ TEMPLATE_PRODUCT_TEST_CASE("Reshape - string specific", TAG_KERNELS, (DATA_TYPES
     SECTION("view 3") {
         const DTView *initial = genGivenVals<DTView>(2, vals);                                      // 2x6
         const DT *view = static_cast<DT *>(DataObjectFactory::create<DTView>(initial, 1, 2, 0, 4)); // 1x4
-        const DT *exp = genGivenVals<DT>(2, {"abcdefg", "abcdefgh", "abcdefghi", " ab"});           // 2x2
+        const DT *exp = genGivenVals<DT>(2, {"abcdefghijklm", "abcdefgh", "abcdefghijklm", " ab"}); // 2x2
         checkReshape(view, 2, 2, exp);
 
         DataObjectFactory::destroy(exp, initial, view);

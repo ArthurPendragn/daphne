@@ -51,10 +51,11 @@ TEMPLATE_PRODUCT_TEST_CASE("SliceCol - string specific", TAG_KERNELS, (DenseMatr
     using DT = TestType;
     using VT = typename DT::VT;
 
-    std::vector<VT> vals = {VT("a"),  VT(""),  VT("1"),  VT("abc"), VT("e"),   VT("j"),    VT("abc"), VT("abcd"),
-                            VT("ab"), VT("a"), VT("f"),  VT("k"),   VT("ABC"), VT("34ab"), VT("ac"),  VT("b"),
-                            VT("g"),  VT("l"), VT("cd"), VT(" "),   VT("ad"),  VT("c"),    VT("h"),   VT(" ")};
-    std::vector<VT> valsExp = {VT(""), VT("1"), VT("abcd"), VT("ab"), VT("34ab"), VT("ac"), VT(" "), VT("ad")};
+    std::vector<VT> vals = {VT("a"),    VT(""),   VT("1"), VT("abc"), VT("e"),  VT("j"),   VT("abc"),
+                            VT("abcd"), VT("ab"), VT("a"), VT("f"),   VT("k"),  VT("ABC"), VT("34abcdefghijk"),
+                            VT("ac"),   VT("b"),  VT("g"), VT("l"),   VT("cd"), VT(" "),   VT("ad"),
+                            VT("c"),    VT("h"),  VT(" ")};
+    std::vector<VT> valsExp = {VT(""), VT("1"), VT("abcd"), VT("ab"), VT("34abcdefghijk"), VT("ac"), VT(" "), VT("ad")};
     auto arg = genGivenVals<DT>(4, vals);
     auto exp = genGivenVals<DT>(4, valsExp);
     DT *res = nullptr;
