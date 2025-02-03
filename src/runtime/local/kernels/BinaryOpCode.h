@@ -144,7 +144,7 @@ static constexpr bool supportsBinaryOp = false;
     SUPPORT_RLR(NEQ, VTRes, VTArg, VTArg)
 #define SUPPORT_STRING_RLR(VTRes, VTLhs, VTRhs)                                                                        \
     /* string concatenation operations. */                                                                             \
-    /*  Since the result may not fit in FixedStr16,*/                                                                  \
+    /*  Since the result may not fit in FixedStr,*/                                                                    \
     /*  it always return std::string*/                                                                                 \
     SUPPORT_RLR(CONCAT, VTRes, VTLhs, VTRhs)
 
@@ -182,12 +182,20 @@ SUPPORT_EQUALITY_RA(int64_t, NewUmbra_t)
 SUPPORT_EQUALITY_RA(int64_t, const char *)
 SUPPORT_COMPARISONS_RA(int64_t, std::string)
 SUPPORT_COMPARISONS_RA(int64_t, FixedStr16)
+SUPPORT_COMPARISONS_RA(int64_t, FixedStr32)
+SUPPORT_COMPARISONS_RA(int64_t, FixedStr64)
+SUPPORT_COMPARISONS_RA(int64_t, FixedStr128)
+SUPPORT_COMPARISONS_RA(int64_t, FixedStr256)
 SUPPORT_COMPARISONS_RA(int64_t, Umbra_t)
 SUPPORT_COMPARISONS_RA(int64_t, NewUmbra_t)
 SUPPORT_STRING_RLR(std::string, std::string, std::string)
 SUPPORT_STRING_RLR(Umbra_t, Umbra_t, Umbra_t)
 SUPPORT_STRING_RLR(NewUmbra_t, NewUmbra_t, NewUmbra_t)
 SUPPORT_STRING_RLR(std::string, FixedStr16, FixedStr16)
+SUPPORT_STRING_RLR(std::string, FixedStr32, FixedStr32)
+SUPPORT_STRING_RLR(std::string, FixedStr64, FixedStr64)
+SUPPORT_STRING_RLR(std::string, FixedStr128, FixedStr128)
+SUPPORT_STRING_RLR(std::string, FixedStr256, FixedStr256)
 SUPPORT_STRING_RLR(const char *, const char *, const char *)
 SUPPORT_STRING_RLR(std::string, std::string, const char *)
 SUPPORT_STRING_RLR(Umbra_t, Umbra_t, const char *)

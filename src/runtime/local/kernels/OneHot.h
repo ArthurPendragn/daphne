@@ -170,6 +170,34 @@ template <typename VT> struct OneHot<DenseMatrix<VT>, DenseMatrix<FixedStr16>> {
     }
 };
 
+template <typename VT> struct OneHot<DenseMatrix<VT>, DenseMatrix<FixedStr32>> {
+    static void apply(DenseMatrix<VT> *&res, const DenseMatrix<FixedStr32> *arg, const DenseMatrix<int64_t> *info,
+                      DCTX(ctx)) {
+        oneHotString<VT, FixedStr32>(res, arg, info, ctx);
+    }
+};
+
+template <typename VT> struct OneHot<DenseMatrix<VT>, DenseMatrix<FixedStr64>> {
+    static void apply(DenseMatrix<VT> *&res, const DenseMatrix<FixedStr64> *arg, const DenseMatrix<int64_t> *info,
+                      DCTX(ctx)) {
+        oneHotString<VT, FixedStr64>(res, arg, info, ctx);
+    }
+};
+
+template <typename VT> struct OneHot<DenseMatrix<VT>, DenseMatrix<FixedStr128>> {
+    static void apply(DenseMatrix<VT> *&res, const DenseMatrix<FixedStr128> *arg, const DenseMatrix<int64_t> *info,
+                      DCTX(ctx)) {
+        oneHotString<VT, FixedStr128>(res, arg, info, ctx);
+    }
+};
+
+template <typename VT> struct OneHot<DenseMatrix<VT>, DenseMatrix<FixedStr256>> {
+    static void apply(DenseMatrix<VT> *&res, const DenseMatrix<FixedStr256> *arg, const DenseMatrix<int64_t> *info,
+                      DCTX(ctx)) {
+        oneHotString<VT, FixedStr256>(res, arg, info, ctx);
+    }
+};
+
 template <typename VT> struct OneHot<DenseMatrix<VT>, DenseMatrix<Umbra_t>> {
     static void apply(DenseMatrix<VT> *&res, const DenseMatrix<Umbra_t> *arg, const DenseMatrix<int64_t> *info,
                       DCTX(ctx)) {

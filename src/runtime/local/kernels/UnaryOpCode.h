@@ -20,6 +20,7 @@
 #pragma once
 
 #include <runtime/local/datastructures/FixedSizeStringValueType.h>
+#include <runtime/local/datastructures/TemplatedFixedSizeString.h>
 #include <runtime/local/datastructures/Umbra.h>
 #include <runtime/local/datastructures/UmbraNew.h>
 
@@ -142,6 +143,10 @@ SUPPORT_NUMERIC(uint8_t)
 // String operations
 SUPPORT_STRING(std::string)
 SUPPORT_STRING(FixedStr16)
+SUPPORT_STRING(FixedStr32)
+SUPPORT_STRING(FixedStr64)
+SUPPORT_STRING(FixedStr128)
+SUPPORT_STRING(FixedStr256)
 SUPPORT_STRING(Umbra_t)
 SUPPORT_STRING(NewUmbra_t)
 SUPPORT_STRING(const char *)
