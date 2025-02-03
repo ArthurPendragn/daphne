@@ -348,13 +348,21 @@ class NewUmbra_t {
     }
 
     void set(const char *str) {
-
+        uint32_t new_length = static_cast<uint32_t>(std::strlen(str));
         if (is_long()) {
             delete get_pointer();
             clear_pointer();
         }
-
-        set_string(str);
+        length = new_length;
+        if (new_length <= BUFFER_LEN) {
+            std::copy(str, str + new_length, buffer);
+            std::fill(buffer + new_length, buffer + BUFFER_LEN, static_cast<uint8_t>('\0'));
+        } else {
+            std::copy(str, str + PREFIX_LEN, buffer);
+            std::string *ptr = new std::string(str);
+            uintptr_t address = reinterpret_cast<uintptr_t>(ptr);
+            std::memcpy(buffer + PREFIX_LEN, &address, sizeof(uintptr_t));
+        }
     }
 
     size_t size() const { return length; }
