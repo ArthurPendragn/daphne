@@ -287,6 +287,78 @@ TEMPLATE_PRODUCT_TEST_CASE("castObj, DenseMatrix<string> to DenseMatrix<int64_t>
         DataObjectFactory::destroy(arg_FixedStr16);
     }
 
+    SECTION("FixedStr32") {
+        auto arg_FixedStr32 = genGivenVals<DenseMatrix<FixedStr32>>(
+            numRows, {FixedStr32("123456789012345"), FixedStr32("123456789012344"), FixedStr32("123456789012343"),
+                      FixedStr32("123456789012342"), FixedStr32("123456789012341"), FixedStr32("123456789012340")});
+        DTRes *res_FixedStr32 = nullptr;
+        auto check_FixedStr32 =
+            genGivenVals<DenseMatrix<VTRes>>(numRows, {123456789012345, 123456789012344, 123456789012343,
+                                                       123456789012342, 123456789012341, 123456789012340});
+
+        castObj<DenseMatrix<VTRes>, DenseMatrix<FixedStr32>>(res_FixedStr32, arg_FixedStr32, nullptr);
+
+        CHECK(*res_FixedStr32 == *check_FixedStr32);
+
+        DataObjectFactory::destroy(check_FixedStr32);
+        DataObjectFactory::destroy(res_FixedStr32);
+        DataObjectFactory::destroy(arg_FixedStr32);
+    }
+
+    SECTION("FixedStr64") {
+        auto arg_FixedStr64 = genGivenVals<DenseMatrix<FixedStr64>>(
+            numRows, {FixedStr64("123456789012345"), FixedStr64("123456789012344"), FixedStr64("123456789012343"),
+                      FixedStr64("123456789012342"), FixedStr64("123456789012341"), FixedStr64("123456789012340")});
+        DTRes *res_FixedStr64 = nullptr;
+        auto check_FixedStr64 =
+            genGivenVals<DenseMatrix<VTRes>>(numRows, {123456789012345, 123456789012344, 123456789012343,
+                                                       123456789012342, 123456789012341, 123456789012340});
+
+        castObj<DenseMatrix<VTRes>, DenseMatrix<FixedStr64>>(res_FixedStr64, arg_FixedStr64, nullptr);
+
+        CHECK(*res_FixedStr64 == *check_FixedStr64);
+
+        DataObjectFactory::destroy(check_FixedStr64);
+        DataObjectFactory::destroy(res_FixedStr64);
+        DataObjectFactory::destroy(arg_FixedStr64);
+    }
+
+    SECTION("FixedStr128") {
+        auto arg_FixedStr128 = genGivenVals<DenseMatrix<FixedStr128>>(
+            numRows, {FixedStr128("123456789012345"), FixedStr128("123456789012344"), FixedStr128("123456789012343"),
+                      FixedStr128("123456789012342"), FixedStr128("123456789012341"), FixedStr128("123456789012340")});
+        DTRes *res_FixedStr128 = nullptr;
+        auto check_FixedStr128 =
+            genGivenVals<DenseMatrix<VTRes>>(numRows, {123456789012345, 123456789012344, 123456789012343,
+                                                       123456789012342, 123456789012341, 123456789012340});
+
+        castObj<DenseMatrix<VTRes>, DenseMatrix<FixedStr128>>(res_FixedStr128, arg_FixedStr128, nullptr);
+
+        CHECK(*res_FixedStr128 == *check_FixedStr128);
+
+        DataObjectFactory::destroy(check_FixedStr128);
+        DataObjectFactory::destroy(res_FixedStr128);
+        DataObjectFactory::destroy(arg_FixedStr128);
+    }
+
+    SECTION("FixedStr256") {
+        auto arg_FixedStr256 = genGivenVals<DenseMatrix<FixedStr256>>(
+            numRows, {FixedStr256("123456789012345"), FixedStr256("123456789012344"), FixedStr256("123456789012343"),
+                      FixedStr256("123456789012342"), FixedStr256("123456789012341"), FixedStr256("123456789012340")});
+        DTRes *res_FixedStr256 = nullptr;
+        auto check_FixedStr256 =
+            genGivenVals<DenseMatrix<VTRes>>(numRows, {123456789012345, 123456789012344, 123456789012343,
+                                                       123456789012342, 123456789012341, 123456789012340});
+
+        castObj<DenseMatrix<VTRes>, DenseMatrix<FixedStr256>>(res_FixedStr256, arg_FixedStr256, nullptr);
+
+        CHECK(*res_FixedStr256 == *check_FixedStr256);
+
+        DataObjectFactory::destroy(check_FixedStr256);
+        DataObjectFactory::destroy(res_FixedStr256);
+        DataObjectFactory::destroy(arg_FixedStr256);
+    }
+
     SECTION("Umbra_t") {
         auto arg_Umbra_t = genGivenVals<DenseMatrix<Umbra_t>>(
             numRows, {Umbra_t("123456789012345"), Umbra_t("123456789012344"), Umbra_t("123456789012343"),

@@ -36,6 +36,7 @@
 #define ALL_STRING_VALUE_TYPES                                                                                         \
     std::string, FixedStr16, FixedStr32, FixedStr64, FixedStr128, FixedStr256, Umbra_t, NewUmbra_t
 #define FLEXIBLE_SIZE_STRING_VALUE_TYPES std::string, Umbra_t, NewUmbra_t
+#define FIXED_SIZE_STRING_VALUE_TYPES FixedStr16, FixedStr32, FixedStr64, FixedStr128, FixedStr256
 
 struct ValueTypeUtils {
 

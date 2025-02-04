@@ -568,7 +568,7 @@ TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("or"), TAG_KERNELS, (DATA_TYPES_NO_CSR), (V
 // string.
 // ****************************************************************************
 
-TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("concat"), TAG_KERNELS, (DenseMatrix), FixedStr16) {
+TEMPLATE_PRODUCT_TEST_CASE(TEST_NAME("concat"), TAG_KERNELS, (DenseMatrix), FIXED_SIZE_STRING_VALUE_TYPES) {
     using DT = TestType;
     using VT = typename DT::VT;
     using VTr = std::string;
