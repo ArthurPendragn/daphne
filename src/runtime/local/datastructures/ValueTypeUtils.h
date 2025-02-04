@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <runtime/local/datastructures/FixedSizeStringValueType.h>
 #include <runtime/local/datastructures/TemplatedFixedSizeString.h>
 #include <runtime/local/datastructures/Umbra.h>
 #include <runtime/local/datastructures/UmbraNew.h>
